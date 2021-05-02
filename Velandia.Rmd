@@ -1,0 +1,80 @@
+---
+title: SELECCIÓN DE RASGOS FUNCIONALES DE LAS COMUNIDADES DE MACROINVERTEBRADOS PARA
+  SU USO COMO VARIABLES INDICADORAS DE CALIDAD EN DOS RÍOS DE LA SABANA DE BOGOTÁ
+author: "Michael Velandia"
+date: "29/04/2021"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+### Introducción
+
+% Macroinvertebrados como bioindicadores  
+
+Las condiciones ambientales de una gran cantidad de rios en los paises tropicales
+se ha ido deteriorando a raiz del  rapido crecimiento de las poblaciones humanas,
+los cambios en el uso del suelo, el desarrollo agricola e industrial, y las 
+actividades extractivas (Dudgeon, 2017). Si bien existen indices que hacen uso 
+de parametros fisicos y quimicos para la medición de la calidad de las aguas 
+de los rios y su integridad, las experiencias en paises templados (referencias)
+han demostrado que el uso de los macroinvertebrados para el biomonitoreo 
+presenta ventajas sobre estos, pues integran información de cambios al corto y el 
+largo plazo  en un amplio rango de variables ambientales (Dudgeon, 2017; 
+Fierro et al., 2017).  
+
+%Limitaciones método tradicional // Expandir un poco
+
+El uso de macroinvertebrados para el biomonitoreo de la calidad de agua ha 
+estado tradicionalmente enmarcado en un enfoque taxonómico que se basa en
+la tolerancia de ciertos taxones a la polución. Sin embargo, uno de los mayores
+limitantes para esta aproximación es la dificultad de hacer una determinación
+de los organismos de manera rápida y a un suficiente nivel de detalle (género
+o especie) para usarlos en programas de monitoreo(Cummins et al., 2015). 
+
+
+%Rasgos funcionales como alternativa // Revisar
+
+Desde hace algunas décadas, el estudio de los rasgos funcionales de las especies 
+de sistemas lóticos ha demostrado una gran utilidad como un buen indicador de la 
+respuesta de las comunidades a diversos tipos de disturbios, entre  los que se 
+encuentran los de naturaleza antrópica (Ding et al., 2017), y en consecuencia 
+se ha desarrollado un enfoque funcional para el biomonitoreo de sistemas lóticos, 
+principalmente en zonas templadas, con algunos ejemplos en el  Neotrópico
+(Tomanova et al., 2008). Un primer paso para el desarrollo de un índice biológico
+de invertebrados con un enfoque funcional de los ríos de la sabana de Bogotá, es
+la evaluación de los rasgos funcionales de las comunidades de dichos macroinvertebrados 
+para conocer qué rasgos podrían responder mejor a los cambios en los parámetros
+fisicoquímicos e hidrológicos de los cursos de agua, por lo que es necesario empezar
+a abordar este tipo de acercamientos en los ecosistemas acuáticos colombianos.
+
+%Perspectivas regionales y en el pais // Revisar 
+
+Gran parte de los estudios que se han realizado sobre el uso de la diversidad 
+y los rasgos funcionales en bioindicación se han ejecutado en países de zonas
+templadas (Charvet et al., 1998; Gayraud et al., 2003; Statzner et al., 2005;
+Dolédec et al.,2006), siendo mucho menor la cantidad de trabajos llevados a 
+cabo en el trópico (Ding et al., 2017). Una alta proporción de las 
+investigaciones en el Neotrópico sobre este tema se han hecho en Brasil, con
+algunos otros ejemplos en países como Ecuador o Bolivia (Fossati et al., 2001;
+Cummins et al., 2005; Tomanova et al., 2008). En Colombia se han realizado 
+algunos acercamientos sobre aspectos funcionales de los macroinvertebrados en
+la región insular (Motta Díaz et al., 2020), en Antioquia (Toro et al., 2020)
+y en Boyacá (Torres y Torres, 2016), pero en ninguno de ellos se ha buscado
+identificar los rasgos más apropiados para la construcción de índices biológicos.
+
+
+% Definición de objetivos // Revisar ¿Establecer pregunta?
+
+En el presente trabajo se busca evaluar la respuesta de los rasgos funcionales 
+de las comunidades de macroinvertebrados a la variación  en la calidad del 
+agua de los rios de la Sabana de Bogotá y comparar esta respuesta con las mediciones
+obtenidas con los tradicionales indices biológicos. 
+
+ 
+
+### Metodología  
+#### Área de estudio y muestreo
+#### Rasgos Funcionales 
+#### Métodos numéricos y estadísticos  

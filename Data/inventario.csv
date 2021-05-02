@@ -1,0 +1,83 @@
+Localidad,Lote,Familia ,Genero,Latitud,Longitud,Altitud,Fecha,Municipio,UHM,Ejemplares
+Rio Teusaca ,1,Notonectidae,Notonecta,"4°43'9.7"" N","73°58'26.0"" W",2730,20-07-2015,La Calera,Glide,71
+Rio Teusaca ,2,Physidae,Physa,"4°43'9.7"" N","73°58'26.0"" W",2730,20-07-2015,La Calera,Pool - Glide,30
+Rio Teusaca ,3,Chironomidae,Chiro_1,"4°43'9.7"" N","73°58'26.0"" W",2730,21-07-2015,La Calera,Riffle,2
+Rio Teusaca ,4,Hyalellidae,Hyalella,"4°43'28.9"" N","73°57'51.4"" W",2670,21-07-2015,La Calera,Pool ,51
+Rio Teusaca ,5,Corixidae,Tenegobia,"4°43'28.9"" N","73°57'51.4"" W",2670,22-07-2015,La Calera,Riffle - Glide,49
+Rio Frio ,6,Libellulidae,Sympetrum,"4°53'54"" N","74°2'51"" W",2560,12-08-2015,Cajica,Glide,1
+Rio Teusaca ,7,Glossiphoniidae,Hellobdella,"4°43'28.9"" N","73°57'51.4"" W",2670,21-07-2015,La Calera,Riffle ,2
+Rio Frio,8,Corixidae,Tenegobia,"4°54'0"" N","74°02'0"" W",2590,18-09-2015,Cajica,Riffle,13
+Rio Frio,9,Corixidae,Centrocorisa,"4°54'0"" N","74°02'0"" W",2590,18-09-2015,Cajica,Pool,12
+Humedal Guali ,10,Notonectidae,Notonecta,"4°43'43.7"" N","74°11'1.2"" W",2540,17-03-2016,Funza,Litoral,21
+Humedal Guali ,11,Physidae,Physa,"4°43'43.7"" N","74°11'1.2"" W",2540,17-03-2016,Funza,Litoral,688
+Humedal Guali ,12,Scirtidae,Elodes,"4°43'43.7"" N","74°11'1.2"" W",2540,17-03-2016,Funza,Litoral,103
+Humedal Guali ,13,Hyalellidae,Hyalella,"4°43'43.7"" N","74°11'1.2"" W",2540,17-03-2016,Funza,Litoral,1712
+Humedal Guali ,14,Tipulidae,Tipula,"4°43'43.7"" N","74°11'1.2"" W",2540,15-05-2016,Funza,Litoral,17
+Humedal Guali ,15,Glossiphoniidae,Hellobdella,"4°43'43.7"" N","74°11'1.2"" W",2540,15-05-2016,Funza,Litoral,120
+Humedal Guali ,16,Chironomidae,Chiro_1,"4°43'43.7"" N","74°11'1.2"" W",2540,15-05-2016,Funza,Litoral,136
+Humedal Guali ,17,Hydrobiidae,Amnicola,"4°43'43.7"" N","74°11'1.2"" W",2540,15-05-2016,Funza,Zona limnetica,200
+Humedal Guali ,18,Hydrophilidae,Tropisternus,"4°43'43.7"" N","74°11'1.2"" W",2540,17-06-2016,Funza,Litoral,54
+Humedal Guali ,19,Notonectidae,Buenoa,"4°43'43.7"" N","74°11'1.2"" W",2540,17-06-2016,Funza,Litoral,1
+Rio Frio ,20,Naididae,Tubifex,"4°55'28"" N","74°2'58"" W",2560,13-01-2017,Cajica,Glide,51
+Rio Frio,21,Hyalellidae,Hyalella,"4°55'28"" N","74°2'58"" W",2560,20-01-2017,Cajica,Glide,496
+Rio Frio,22,Physidae,Physa,"4°55'28"" N","74°2'58"" W",2560,13-01-2017,Cajica,Riffle,382
+Rio Frio,23,Corixidae,Tenegobia,"4°55'28"" N","74°2'58"" W",2560,02-03-2017,Cajica,Pool,27
+Rio Frio,24,Baetidae,Baetodes,"4°54'38"" N","74°2'48"" W",2570,06-02-2017,Cajica,Glide,4
+Rio Frio,25,Aeshnidae,Aeshna,"4°53'59"" N","74°2'49"" W",2565,06-02-2017,Cajica,Pool - Riffle,17
+Rio Frio ,26,Tipulidae,Tipula,"4°53'59"" N","74°2'49"" W",2565,06-02-2017,Cajica,Riffle,1
+Rio Frio ,27,Polycentropodidae,Polycentropus,"4°53'59"" N","74°2'49"" W",2565,06-02-2017,Cajica,Riffle,1
+Rio Frio ,28,Coenagrionidae,Acanthagrion,"4°55'9.38"" N","74°2'59.1"" W",2560,05-04-2017,Cajica,Riffle,2
+Rio Frio ,29,Corixidae,Hesperocorixa,"4°50'19.8"" N","74°4'40.7"" W",2550,08-05-2017,Chia,Riffle,10
+Rio Frio,30,Notonectidae,Buenoa,"4°55'28.2"" N","74°2'59.1"" W",2565,08-05-2017,Cajica,Riffle,6
+Rio Frio ,31,Gerridae,Eurygerris,"4°55'28.2"" N","74°2'59.1"" W",2565,08-05-2017,Cajica,Glide,23
+Rio Frio,32,Chironomidae,Chiro_1,"4°55'28.2"" N","74°2'59.1"" W",2565,08-05-2017,Cajica,Pool,43
+Rio Frio,33,Corixidae,Centrocorisa,"4°55'28.2"" N","74°2'59.1"" W",2565,08-05-2017,Cajica,Pool,11
+Rio Frio ,34,Sphaeriidae,Spha_1,"4°55'28.2"" N","74°2'59.1"" W",2565,08-05-2017,Cajica,Pool,163
+Rio Frio,35,Glossiphoniidae,Hellobdella,"4°51'17.9"" N","74°4'2.7"" W",2555,26-08-2017,Chia,Glide,31
+Rio Frio,36,Hydrophilidae,Tropisternus,"4°51'17.9"" N","74°4'2.7"" W",2555,26-08-2017,Chia,Glide,26
+Rio Frio,37,Notonectidae,Notonecta,"4°53'34"" N","74°2'57"" W",2560,16-10-2017,Cajica,Pool,17
+Rio Frio ,38,Planariidae,Plan_1,"4°53'34"" N","74°2'57"" W",2560,16-10-2017,Cajica,Pool,56
+Rio Frio,39,Lymnaeidae,Lymnaea,"4°55'5"" N","74°2'9"" W",2565,21-11-2017,Cajica,Glide,10
+Rio Lenguezaque ,40,Hyalellidae,Hyalella,"5°17'57"" N","73°42'35"" W",2593,22-11-2017,Lenguezaque,Riffle,1000
+Rio Lenguezaque ,41,Coenagrionidae,Argia,"5°17'57"" N","73°42'35"" W",2593,22-11-2017,Lenguezaque,Riffle,1
+Rio Lenguezaque ,42,Aeshnidae,Aeshna,"5°16'48"" N","73°42'26"" W",2630,23-11-2017,Lenguezaque,Glide,1
+Rio Lenguezaque ,43,Tricorythidae,Leptohyphes,"5°16'48"" N","73°42'26"" W",2630,30-11-2017,Lenguezaque,Glide,16
+Rio Frio,44,Baetidae,Baetodes,"4°54'6"" N","74°2.6'0"" W",2590,04-12-2017,Cajica,Riffle,5
+Rio Frio,45,Chironomidae,Chiro_1,"4°54'6"" N","74°2.6'0"" W",2590,04-12-2017,Cajica,Riffle,90
+Rio Frio,46,Sphaeriidae,Spha_1?,"4°54'6"" N","74°2.6'0"" W",2590,04-12-2017,Cajica,Riffle,4
+Rio Frio,47,Simuliidae,Simulium,"4°54'6"" N","74°2.6'0"" W",2590,04-12-2017,Cajica,Glide,190
+Rio Lenguezaque ,48,Gerridae,Eurygerris,"5°17'57"" N","73°42'35"" W",2593,16-1-2018,Lenguezaque,Glide,4
+Rio Lenguezaque ,49,Gerridae,Limnogonus,"5°17'57"" N","73°42'35"" W",2593,16-1-2018,Lenguezaque,Glide,2
+Rio Frio,50,Tipulidae,Tipula,"4°55'0"" N","74°2.9'0"" W",2595,12-03-2018,Cajica,Pool,4
+Rio Frio,51,Hyalellidae,Hyalella,"4°55'0"" N","74°2.9'0"" W",2595,12-03-2018,Cajica,Pool,13
+Rio Frio,52,Glossiphoniidae,Hellobdella,"4°55'0"" N","74°2.9'0"" W",2595,13-03-2018,Cajica,Pool,14
+Rio Frio ,53,Ceratopogonidae,Alluaudomyia,"4°55'0"" N","74°2.9'0"" W",2595,13-03-2018,Cajica,Pool,35
+Rio Frio,54,Leptoceridae,Triplectides,"4°55'0"" N","74°2.9'0"" W",2595,13-03-2018,Cajica,Riffle,7
+Rio Frio,55,Planorbidae,Gyraulus,"4°55'0"" N","74°2.9'0"" W",2595,13-03-2018,Cajica,Pool,9
+Rio Neusa ,56,Tipulidae,Tipula,"5°9'2.46"" N","73°58'57.2"" W",2990,6-4-2018,Cogua,Glide,6
+Rio Neusa ,57,Elmidae,Disersus,"5°9'2.46"" N","73°58'57.2"" W",2990,6-4-2018,Cogua,Glide,2
+Rio Neusa ,58,Helicopsychidae,Helicopsyche,"5°9'2.46"" N","73°58'57.2"" W",2990,6-4-2018,Cogua,Pool,8
+Rio Neusa ,59,Hydrophilidae,Tropisternus,"5°6'5.83"" N","73°57'44.7"" W",2615,6-4-2018,Cogua,Riffle,2
+Rio Neusa ,60,Tipulidae,Tipula,"5°6'5.83"" N","73°57'44.7"" W",2615,6-4-2018,Cogua,Riffle,24
+Rio Neusa ,61,Simuliidae,Simulium,"5°6'5.83"" N","73°57'44.7"" W",2615,6-4-2018,Cogua,Riffle,67
+Rio Guandoque - Neusa,62,Sphaeriidae,Spha_1,"5°9'38.1"" N","73°59'41.7"" W",3060,9-5-2018,Cogua,Riffle,21
+Rio Guandoque - Neusa,63,Baetidae,Baetodes,"5°9'38.1"" N","73°59'41.7"" W",3060,9-5-2018,Cogua,Riffle,23
+Rio Guandoque - Neusa,64,Hyalellidae,Hyalella,"5°9'38.1"" N","73°59'41.7"" W",3060,9-5-2018,Cogua,Riffle,3
+Rio Neusa ,65,Glossiphoniidae,Gloss_1,"5°5'0.58"" N","73°56'4.84"" W",2595,10-5-2018,Cogua,Pool,3
+Rio Neusa ,66,Gerridae,Eurygerris,"5°5'0.58"" N","73°56'4.84"" W",2595,10-5-2018,Cogua,Glide,1
+Rio Neusa ,67,Chironomidae,Chiro_1,"5°5'0.58"" N","73°56'4.84"" W",2595,10-5-2018,Cogua,Glide,233
+Rio Veraguas ,68,Dytiscidae,Thermonectus,"5°12'33.4"" N","74°11'33.5"" W",1570,12-6-2018,Pacho,Rapido,3
+Rio Veraguas,69,Sphaeriidae,Spha_1,"5°12'33.4"" N","74°11'33.5"" W",1570,12-6-2018,Pacho,Pool,46
+Rio Ubate,70,Leptoceridae,Atanatolica,"5°20'9"" N","73°47'44"" W",2554,13-6-2018,Ubate,Riffle,4
+Laguna Fuquene,71,Glossiphoniidae,Hellobdella,"5°27'57.7"" N","73°44'33.8"" W",2560,14-6-2018,Fumeque,Litoral,4
+Rio Bogota ,72,Naididae,Tubifex,"5°13'32"" N","73°35'32.1"" W",2730,18-6-2018,Villapinzon,Riffle,18
+Rio Bogota,73,Planariidae,Plan_1,"5°13'32"" N","73°35'32.1"" W",2730,18-6-2018,Villapinzon,Riffle,1
+Embalse Tomine,74,Empididae,Chelifera,"4°56'20.3"" N","73°51'53.9"" W",2590,19-6-2018,Guatavita,Litoral,3
+Embalse Tomine,75,Planariidae,Plan_1,"4°56'20.3"" N","73°51'53.9"" W",2590,19-6-2018,Guatavita,Litoral,16
+Rio Suarez,76,Simuliidae,Simulium,"5°31'18.3"" N","73°47'18"" W",2545,21-6-2018,San Miguel,Glide,321
+Rio Neusa ,77,Physidae,Physa,"5°5'0.58"" N","73°56'4.84"" W",2598,8-8-2018,Cogua,Glide,74
+Rio Neusa ,78,Chironomidae,Chiro_1,"5°5'0.58"" N","73°56'4.84"" W",2598,8-8-2018,Cogua,Glide,144
+Rio Neusa ,79,Baetidae,Baetodes,"5°7'40.2"" N","73°58'4.1"" W",2887,9-9-2018,Cogua,Boulder step,44
+Rio Guandoque - Neusa,80,Naididae,Tubifex,"5°9'36.7"" N","73°59'36.7"" W",3060,10-9-2018,Cogua,Glide,14
+Rio Guandoque - Neusa,81,Aeshnidae,Aeshna,"5°9'36.7"" N","73°59'36.7"" W",3060,10-9-2018,Cogua,Glide,18
+Rio Neusa ,82,Corixidae,Centrocorisa,"5°5'0.58"" N","73°56'4.84"" W",2598,10-9-2018,Cogua,Glide,36
