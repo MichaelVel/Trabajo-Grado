@@ -1,0 +1,39 @@
+Rasgo Biológico,Categoría ,Código
+Alimento,Partículas de sedimento ,SED
+Alimento,Detritos finos,FPMO
+Alimento,Detritos gruesos,CPOM
+Alimento,Microfitas,MiPh
+Alimento,Macrofitas,MaPh
+Alimento,Animales Muertos,DA
+Alimento,Microinvertebrados,Mic-In
+Alimento,Macroinvertebrados,Mac-In
+Hábitos alimenticios,Colector-recolector,CG
+Hábitos alimenticios,Triturador,SH
+Hábitos alimenticios,Raspador,SC
+Hábitos alimenticios,Colector-filtrador,CF
+Hábitos alimenticios,Perforador,PI
+Hábitos alimenticios,Predador,PR
+Hábitos alimenticios,Parásito,PA
+Respiración ,Tegumento,TEG
+Respiración ,Agallas,GLL
+Respiración ,Plastrón,PLA
+Respiración ,Espiraculos,STIG
+Respiración ,Pulmón ,PUL
+Movilidad y fijación al sustrato,Volador,FLI
+Movilidad y fijación al sustrato,Nadador de superficie,SwS
+Movilidad y fijación al sustrato,Nadador ,Sw
+Movilidad y fijación al sustrato,Arrastrador,CL
+Movilidad y fijación al sustrato,Excavador epibentonico,EpB
+Movilidad y fijación al sustrato,Excavador endobentonico,EnB
+Movilidad y fijación al sustrato,Temporalmente fijo al sutrato,TA
+Tamaño corporal máximo (mm),<2.5,-
+Tamaño corporal máximo (mm),2.5-5,-
+Tamaño corporal máximo (mm),5-10,-
+Tamaño corporal máximo (mm),10-20,-
+Tamaño corporal máximo (mm),20-40,-
+Tamaño corporal máximo (mm),40-80,-
+Tamaño corporal máximo (mm),>80,-
+Forma corporal,Hidrodinámico,STRM
+Forma corporal,Aplanado,FLAT
+Forma corporal,Cilindrico,CYL
+Forma corporal,Esferico,SPH

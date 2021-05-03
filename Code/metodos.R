@@ -4,8 +4,12 @@ library(stringr)
 library(rgbif)
 library(prettymapr)
 library(rosm)
+library(knitr)
+library(kableExtra)
 
-conv_coord <- function( data , med = NULL, ...){
+## Preprocessing functions 
+
+conv_coord <- function( data , med = NULL, ...){ ## Degrees Minutes Seconds to Decimal 
     if (med == 'lat') {
         if (any(str_detect(data$Latitud, ","))){
             data$Latitud <- gsub(",", ".", data$Latitud)}
@@ -32,7 +36,7 @@ conv_coord <- function( data , med = NULL, ...){
     return(data)
 }
 
-conv_alt <- function(data, user, ...) {
+conv_alt <- function(data, user, ...) { ## Obtain elevation from coordinates 
     elevation <- elevation(latitude = data$Latitud, longitude = data$Longitud,
                            username = user)
     data$Altitud <- elevation$elevation_geonames
@@ -47,9 +51,24 @@ load_data <- function(data, username, ...) {
     return(data)
 }
 
+estaciones_coord <- function(data, name = NULL){  ## Miscelaneous function
+    estacion <- subset(data, Estacion == name )
+    estacion$Latitud <- factor(as.character(estacion$Latitud))
+    estacion$Longitud <- factor(as.character(estacion$Longitud))
+    return(estacion)
+}
+
+levels_estaciones <- function(...){ ## Miscelaneous function
+    est <- estaciones_coord(...)
+    latitud <- levels(est$Latitud)
+    longitud <- levels(est$Longitud)
+    print(c(latitud, longitud))
+}
+
+## Plotting maps with the stations 
 
 mk_plot <- function(data, data2, bbox = NULL, expand = FALSE, 
-                    resolution = 200, ...){
+                    resolution = 200, ...){ ##return map with OpenStreetMap 
 
     if (expand == FALSE) { 
         return(prettymap({
@@ -58,7 +77,7 @@ mk_plot <- function(data, data2, bbox = NULL, expand = FALSE,
                    col = "red");
         osm.text(data$Longitud, data$Latitud  , 
                  data$Estacion, cex = 1, col = "black", pos = 1);
-        }))
+        }, drawbox = TRUE, drawarrow = TRUE))
     }
     else {
         return(prettymap({
@@ -69,11 +88,11 @@ mk_plot <- function(data, data2, bbox = NULL, expand = FALSE,
         osm.points(data2$Longitud, data2$Latitud, pch = 18, cex = 1.5, col = "blue");
         osm.text(data2$Longitud, data2$Latitud  , 
                  data2$Estacion, cex = 1, col = "blue", pos = 3);
-        }))
+        }, drawbox = TRUE, drawarrow = TRUE))
     }
 }
 
-plot_est <-  function(device = 'rmarkdown' ) {
+plot_est <-  function(device = 'rmarkdown' ) { ## Function to be passed to the document
     
     est_neusa <- read.csv("Data/rio_neusa.csv")
     est_frio <- read.csv("Data/rio_frio.csv")
@@ -96,10 +115,10 @@ plot_est <-  function(device = 'rmarkdown' ) {
         par(fig=c(0.5,1,0,1), new=TRUE)
         mk_plot(est_neusa, expand = FALSE, resolution = 150,
                 bbox = makebbox(w = -74.0060, s =5.0728, e = -73.9291, n = 5.1670)) 
-        
-        
-        neusa
+                
     } 
-    
-    
 }
+
+
+
+

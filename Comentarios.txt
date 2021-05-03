@@ -1,0 +1,49 @@
+
+ ### Respecto a la Introducción ### 
+
+Es necesario pulir los parrafos, actualmente se encuentra diseñada siguiendo 
+el hilo conductual(idea por parrafo): 
+ 
+ - Macroinvertebrados como bioindicadores 
+ - Limitaciones método tradicional
+ - Rasgos funcionales como alternativa
+ - Perspectivas regionales y en el pais del uso de resgos funcionales
+   para la bioindicación. 
+ - Definición de objetivos
+ 
+ La pregunta de investigación sería:
+  
+  ¿Que tan efectivos son los rasgos funcionales para la bioindicación en los 
+  rios de la sabana? ¿Como se comparan con otros indices biologicos?
+
+Teniendo en cuenta esas preguntas, quisiera saber si:
+ - La estructura basica de la introducción que propuse tiene sentido
+ - El orden de las ideas seria el correcto para la presentación del tema
+ - Se puede intuir la pregunta del texto, o si por el contrario es necesario
+   hacerla más explicita.
+
+
+### Respecto a la Metodologia ###
+
+La sección esta dividida en tres partes. 
+
+ - Area de muetreo:  Explicación del area de muestreo y los protocolos para la
+                     recolección de organismos.
+                    
+ - Rasgos Funcionales: Explicación de cuales rasgos fueron elegidos, por que y
+                       como se asignaron las categorias a las familias 
+                       (Fuzzy code).
+
+ - Metodos Numericos 
+   y Estadisticos:   Tratamiento de los datos, a medida que avance en el 
+                     analisis de datos, voy a ir completando esta sección.
+                                
+ 
+La Figura 1 es  un boceto de la figura final, una vez determinadas cuales
+de las estaciones se consideran estaciones de referencia, se deben resaltar 
+en el grafico. 
+
+La Tabla 1 por el momento es opcional, aun no se cuantas tablas y graficas más 
+vaya a requerir y dependiendo de las nuevas graficas, en estas se podria ubicar
+la definición de las categorias de los rasgos funcionales volviendo redundante 
+esta tabla. 

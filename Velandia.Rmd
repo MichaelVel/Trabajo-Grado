@@ -1,80 +1,176 @@
 ---
-title: SELECCIÓN DE RASGOS FUNCIONALES DE LAS COMUNIDADES DE MACROINVERTEBRADOS PARA
-  SU USO COMO VARIABLES INDICADORAS DE CALIDAD EN DOS RÍOS DE LA SABANA DE BOGOTÁ
-author: "Michael Velandia"
-date: "29/04/2021"
+title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos rios de la sabana de Bogotá"
+author: "Michael Sebastián Velandia Garavito"
+date: "2/05/2021"
 output:
-  pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
+  pdf_document: default
+always_allow_html: true
 ---
 
-### Introducción
+## Introducción
 
-% Macroinvertebrados como bioindicadores  
-
-Las condiciones ambientales de una gran cantidad de rios en los paises tropicales
-se ha ido deteriorando a raiz del  rapido crecimiento de las poblaciones humanas,
-los cambios en el uso del suelo, el desarrollo agricola e industrial, y las 
-actividades extractivas (Dudgeon, 2017). Si bien existen indices que hacen uso 
-de parametros fisicos y quimicos para la medición de la calidad de las aguas 
-de los rios y su integridad, las experiencias en paises templados (referencias)
-han demostrado que el uso de los macroinvertebrados para el biomonitoreo 
-presenta ventajas sobre estos, pues integran información de cambios al corto y el 
-largo plazo  en un amplio rango de variables ambientales (Dudgeon, 2017; 
-Fierro et al., 2017).  
-
-%Limitaciones método tradicional // Expandir un poco
+Las condiciones ambientales de una gran cantidad de ríos en las áreas tropicales
+se ha ido deteriorando a raíz del  rápido crecimiento de las poblaciones humanas,
+los cambios en el uso del suelo, el desarrollo agrícola e industrial, y las
+actividades extractivas (Dudgeon, 2017). Desde los años 90 se ha venido implementando
+el monitoreo con índices que integran las variables fisicoquímicas para la medición 
+de la calidad de las aguas de los ríos y su integridad, y más recientemente, se 
+han incorporado los índices bióticos que utilizan una variedad de grupos taxonómicos, 
+entre ellos, los macroinvertebrados (Pinilla, 2010). Las experiencias en países
+templados (Fierro, 2017; Metcalfe, 1989) han demostrado que el uso de los macroinvertebrados 
+para el biomonitoreo presenta ventajas sobre los índices físico químicos, pues 
+integran información de cambios al corto y el largo plazo  en un amplio rango de
+variables ambientales (Dudgeon, 2017; Fierro *et al*., 2017).  
 
 El uso de macroinvertebrados para el biomonitoreo de la calidad de agua ha 
 estado tradicionalmente enmarcado en un enfoque taxonómico que se basa en
 la tolerancia de ciertos taxones a la polución. Sin embargo, uno de los mayores
 limitantes para esta aproximación es la dificultad de hacer una determinación
 de los organismos de manera rápida y a un suficiente nivel de detalle (género
-o especie) para usarlos en programas de monitoreo(Cummins et al., 2015). 
-
-
-%Rasgos funcionales como alternativa // Revisar
+o especie) para usarlos en programas de monitoreo(Cummins *et al*., 2015). 
 
 Desde hace algunas décadas, el estudio de los rasgos funcionales de las especies 
 de sistemas lóticos ha demostrado una gran utilidad como un buen indicador de la 
 respuesta de las comunidades a diversos tipos de disturbios, entre  los que se 
-encuentran los de naturaleza antrópica (Ding et al., 2017), y en consecuencia 
-se ha desarrollado un enfoque funcional para el biomonitoreo de sistemas lóticos, 
-principalmente en zonas templadas, con algunos ejemplos en el  Neotrópico
-(Tomanova et al., 2008). Un primer paso para el desarrollo de un índice biológico
-de invertebrados con un enfoque funcional de los ríos de la sabana de Bogotá, es
-la evaluación de los rasgos funcionales de las comunidades de dichos macroinvertebrados 
-para conocer qué rasgos podrían responder mejor a los cambios en los parámetros
-fisicoquímicos e hidrológicos de los cursos de agua, por lo que es necesario empezar
-a abordar este tipo de acercamientos en los ecosistemas acuáticos colombianos.
-
-%Perspectivas regionales y en el pais // Revisar 
+encuentran los de naturaleza antrópica (Ding *et al*., 2017), y en consecuencia 
+se ha ido desarrollando un enfoque funcional para el biomonitoreo de sistemas 
+lóticos, principalmente en zonas templadas, con algunos ejemplos en el  Neotrópico
+(Tomanova *et al*., 2008).
 
 Gran parte de los estudios que se han realizado sobre el uso de la diversidad 
 y los rasgos funcionales en bioindicación se han ejecutado en países de zonas
-templadas (Charvet et al., 1998; Gayraud et al., 2003; Statzner et al., 2005;
-Dolédec et al.,2006), siendo mucho menor la cantidad de trabajos llevados a 
-cabo en el trópico (Ding et al., 2017). Una alta proporción de las 
+templadas (Charvet *et al*., 1998; Gayraud *et al*., 2003; Statzner *et al*., 2005;
+Dolédec *et al*.,2006), siendo mucho menor la cantidad de trabajos llevados a 
+cabo en el trópico (Ding *et al*., 2017). Una alta proporción de las 
 investigaciones en el Neotrópico sobre este tema se han hecho en Brasil, con
-algunos otros ejemplos en países como Ecuador o Bolivia (Fossati et al., 2001;
-Cummins et al., 2005; Tomanova et al., 2008). En Colombia se han realizado 
+algunos otros ejemplos en países como Ecuador o Bolivia (Fossati *et al*., 2001;
+Cummins *et al*., 2005; Tomanova *et al*., 2008). En Colombia se han realizado 
 algunos acercamientos sobre aspectos funcionales de los macroinvertebrados en
-la región insular (Motta Díaz et al., 2020), en Antioquia (Toro et al., 2020)
+la región insular (Motta Díaz *et al*., 2020), en Antioquia (Toro *et al*., 2020)
 y en Boyacá (Torres y Torres, 2016), pero en ninguno de ellos se ha buscado
 identificar los rasgos más apropiados para la construcción de índices biológicos.
 
+Un primer paso para el desarrollo de un índice biológico de macroinvertebrados con un 
+enfoque funcional en los ríos de la sabana de Bogotá, es la evaluación de los 
+rasgos funcionales de las comunidades de dichos macroinvertebrados con el fin de
+evaluar cual es su respuesta a los parámetros fisicoquímicos de estos cuerpos de 
+agua. En el presente trabajo se busca evaluar dicha respuesta  y hacer una 
+comparación con las mediciones obtenidas por  los tradicionales indices biológicos. 
 
-% Definición de objetivos // Revisar ¿Establecer pregunta?
 
-En el presente trabajo se busca evaluar la respuesta de los rasgos funcionales 
-de las comunidades de macroinvertebrados a la variación  en la calidad del 
-agua de los rios de la Sabana de Bogotá y comparar esta respuesta con las mediciones
-obtenidas con los tradicionales indices biológicos. 
+## Metodología  
 
- 
+### Área de estudio y muestreo 
 
-### Metodología  
-#### Área de estudio y muestreo
-#### Rasgos Funcionales 
-#### Métodos numéricos y estadísticos  
+Los macroinvertebrados utilizados provienen de una serie de muestreos realizados
+entre el año 2017 y el año 2019 en 12 estaciones de muestreo ubicadas en los ríos
+Frío y Neusa, en los municipios de Cajicá, Chía y Cogua (Figura 1), en el
+marco del “Programa nacional para la conservación de la especie endémica de
+Colombia pez capitán de la sabana (*Eremophilus mutisii*)” liderado por el Ministerio del
+Medio Ambiente y la Universidad Manuela Beltrán (Lemus *et al*., 2020). En cada
+punto de muestreo se tomaron datos hidrológicos y se midieron *in situ*
+las variables fisicoquímicas (oxígeno disuelto, conductividad, pH, temperatura
+y turbidez). Los macroinvertebrados se colectaron con metodologías estándar de
+amplio  reconocimiento, red Surber, red D, red de mano (Domínguez y Fernández, 2009). 
+
+```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
+source("Code/metodos.R")
+plot_est()
+```
+
+### Rasgos Funcionales 
+
+Los organismos, pertenecientes a la colección de  macroinvertebrados de la
+Universidad Manuela Beltrán, fueron identificados hasta Familia.  Los rasgos
+funcionales que fueron elegidos de acuerdo a la propuesta de Tomanova *et al*. (2008)
+incluyen rasgos tróficos (alimentación y hábitos alimenticios), fisiológicos
+(respiración) morfológicos (tamaño y forma corporal) y comportamentales (Movilidad
+y fijación al sustrato). Siguiendo la metodología del 'Fuzzy coding'  (Usseglio
+y Tachet, 1994) a cada familia se le asignó un valor entre 0 y 3 para cada una de
+las categorías de los rasgos funcionales (Tabla 1) por medio de observaciones y
+mediciones directas en el laboratorio, apoyadas en una revisión de la literatura
+disponible. 
+
+
+```{r table, echo=FALSE}
+library(kableExtra)
+data  <- read.csv("Data/rasgos_funcionales_tabla.csv", check.names = FALSE)
+doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+if (doc.type == "docx") {} else {
+  data %>%
+    kbl(booktabs = TRUE, escape = FALSE, caption = "
+        Categorias de los Rasgos Funcionales") %>%
+    collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
+    kable_styling(full_width = FALSE)
+}
+
+```
+
+### Métodos numéricos y estadísticos
+
+## Bibliografía
+
+ Charvet, S., Kosmala, A., & Statzner, B. (1998). Biomonitoring through biological traits of
+benthic macroinvertebrates: Perspectives for a general tool in stream management.
+Archiv Fuer Hydrobiologie, 142(4), 415-432.  
+
+Cummins, K. W., Merritt, R. W., & Andrade, P. C. (2005). The use of invertebrate
+functional groups to characterize ecosystem attributes in selected streams and rivers in
+south Brazil. Studies on Neotropical Fauna and Environment, 40(1), 69-89.  
+
+Ding, N., Yang, W., Zhou, Y., González-Bergonzoni, I., Zhang, J., Chen, K., Vidal, N.,
+Jeppesen, E., Liu, Z., & Wang, B. (2017). Different responses of functional traits and
+diversity of stream macroinvertebrates to environmental and spatial factors in the
+Xishuangbanna watershed of the upper Mekong River Basin, China. Science of The Total
+Environment, 574, 288-299.  
+
+Dolédec, S., Phillips, N., Scarsbrook, M., Riley, R. H., & Townsend, C. R. (2006).
+Comparison of structural and functional approaches to determining landuse effects on
+grassland stream invertebrate communities. Journal of the North American Benthological
+Society, 25(1), 44-60.  
+
+Domínguez, E., & Fernández, H (eds). (2019), Macroinvertebrados bentónicos
+sudamericanos. Sistemática y biología. Fundación Miguel Lillo, Tucumán, Argentina.
+Fossati, O., Wasson, J.-G., Héry, C., Salinas, G., & Marín, R. (2001). Impact of sediment
+releases on water chemistry and macroinvertebrate communities in clear water Andean
+streams (Bolivia). Archiv Für Hydrobiologie, 151(1), 33-50.  
+
+Dudgeon, D. (2011). Tropical Stream Ecology. Elsevier.  
+
+Fierro, P., Valdovinos, C., Vargas-Chacoff, L., Bertrán, C., & Arismendi, I. (2017). Macroinvertebrates and Fishes as Bioindicators of Stream Water Pollution. Water Quality. https://doi.org/10.5772/65084  
+
+Gayraud, S., Statzner, B., Bady, P., Haybachp, A., Schöll, F., Usseglio‐Polatera, P., &
+Bacchi, M. (2003). Invertebrate traits for the biomonitoring of large European rivers: An
+initial assessment of alternative metrics. Freshwater Biology, 48(11), 2045-2064.  
+
+Lemus-Portillo, C., Echavarria-Pedraza, M. C., Rojas, J. E., Alvarez-Diaz, J. E., León-Pardo, K. J., Aguilar-Orjuela, S., & Maldonado, J. F. (2020). Estado de conservación y distribución del pez de agua dulce Capitán de la Sabana Eremophilus mutisii en Cundinamarca, Colombia. Actualidades Biológicas, 42(112).  
+
+Metcalfe, J. L. (1989). Biological water quality assessment of running waters based on macroinvertebrate communities: History and present status in Europe. Environmental Pollution, 60(1), 101–139. https://doi.org/10.1016/0269-7491(89)90223-6  
+
+Motta Díaz, A. J., Longo, M., & Aranguren-Riaño, N. (2020). Variación temporal de la
+diversidad taxonómica y rasgos funcionales de los macroinvertebrados acuáticos en ríos
+temporales en la isla de Providencia, Colombia. Actualidades Biológicas, 39(107), 82-100.  
+
+Statzner, B., Bady, P., Dolédec, S., & Schöll, F. (2005). Invertebrate traits for the
+biomonitoring of large European rivers: An initial assessment of trait patterns in least
+impacted river reaches. Freshwater Biology, 50(12), 2136-2161.  
+
+Pinilla, G. (2010). An index of limnological conditions for urban wetlands of Bogotá city, Colombia. Ecological Indicators, 10(4), 848–856. https://doi.org/10.1016/j.ecolind.2010.01.006  
+
+
+Tomanova, S., Moya, N., & Oberdorff, T. (2008). Using macroinvertebrate biological traits
+for assessing biotic integrity of neotropical streams. River Research and Applications,
+24(9), 1230-1239. https://doi.org/10.1002/rra.1148.  
+
+Toro, J. A. R., Ramirez, N. J. A., Lopez, J. P. S., Atilano, E. H., & Macías, F. de J. V. (2020).
+Energía calórica, biomasa y estructura de los macroinvertebrados acuáticos en la reserva
+La Nitrera, Concordia, Antioquia, Colombia. Acta Biológica Colombiana, 25(1), 29-36.  
+
+Torres-Zambrano, N. N., & Torres-Zambrano, D. R. (2016). Macroinvertebrados acuáticos
+de la quebrada Los Alisos, Firavitoba—Boyacá. Intropica, 11, 47-56.  
+
+Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, and species richness: Aquatic insects in the Upper Rhône River and its floodplain. Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
+
+
