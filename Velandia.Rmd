@@ -3,9 +3,9 @@ title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrado
 author: "Michael Sebastián Velandia Garavito"
 date: "2/05/2021"
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 always_allow_html: true
 ---
 
@@ -109,6 +109,9 @@ if (doc.type == "docx") {} else {
 ```
 
 ### Métodos numéricos y estadísticos
+
+Voy a agregar la descripción de estos métodos conforme vaya avanzando en el 
+analisis de datos. 
 
 ## Bibliografía
 
