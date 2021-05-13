@@ -47,3 +47,21 @@ La Tabla 1 por el momento es opcional, aun no se cuantas tablas y graficas más
 vaya a requerir y dependiendo de las nuevas graficas, en estas se podria ubicar
 la definición de las categorias de los rasgos funcionales volviendo redundante 
 esta tabla. 
+
+
+###### Fuentes adicionales #####
+
+### Información geografica de la CAR
+ 
+ ## Subcuencas definidas en la CAR
+https://datosgeograficos.car.gov.co/datasets/delimitaci%C3%B3n-de-subcuencas-a-escala-125-000-en-la-jurisdicci%C3%B3n-car?geometry=-83.133%2C3.350%2C-64.808%2C7.178
+
+ ## Red hidrologica / estaciones de muestreo 
+https://datosgeograficos.car.gov.co/datasets/red-hidrometeorol%C3%B3gica-car/data?geometry=-74.135%2C4.847%2C-73.992%2C4.877&selectedAttribute=CATEGORIA_NOMBRE
+
+ ## Areas protegidas
+https://datosgeograficos.car.gov.co/datasets/%C3%A1reas-protegidas-declaradas-car/data?geometry=-74.683%2C4.973%2C-73.538%2C5.212
+
+## Delimitación rondas de rios
+https://datosgeograficos.car.gov.co/datasets/delimitaci%C3%B3n-de-rondas/data?geometry=-74.214%2C4.900%2C-73.927%2C4.960
+
