@@ -4,7 +4,8 @@ library(e1071)
 library(ggplot2)
 library(dplyr)
 library(factoextra)
-library(lubridate)
+library(ade4)
+library(tibble)
 
 ## Load and cleaning data
 
@@ -56,6 +57,48 @@ load_data <- function(ref_estations = FALSE) {
     }
 }
 
+filter_data <- function(data, parameters) {
+    
+    parameters <- c("Tipo_Estacion", "Estacion", "Muestra", parameters) 
+    
+    data[parameters] %>% 
+        distinct()  %>%
+        group_by(Tipo_Estacion, Estacion, Muestra) %>%
+        summarise(across(.cols = everything() , mean)) %>% 
+        return()
+    
+}
+
+load_rlq <- function(parameters = NULL ){
+    
+    ## Return an object with the R, L, and Q matrices, by default
+    ## work with physichochemicals parameters 
+    
+    if (is.null(parameters)) {
+        
+        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                        "Conductividad", "Turbidez") }
+    
+    enviromental <- load_data(ref_estations = TRUE) %>% 
+                    filter_data(parameters)
+    
+    traits <- read.csv('Data/rasgos_funcionales.csv', 
+                       stringsAsFactors = FALSE, encoding = 'UTF-8') %>% 
+              column_to_rownames(var = "Familia") %>%
+              prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+                                            Habitos_Alimenticios = 7, 
+                                            Respiracion = 5,
+                                            Movilidad = 4, 
+                                            Tamaño_Maximo = 7,
+                                            Forma_Corporal = 7))
+              
+    abundance <- read.csv('Data/abundancia.csv', stringsAsFactors = FALSE)
+    
+    RLQ <- list(R_table = enviromental, Q_table = traits, L_table = abundance)
+    
+    return(RLQ)
+    
+}
 
 ## Summary statistics (mean, median, quantiles, sd, skewness, kurtosis)
 
@@ -193,16 +236,6 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     
     data <- load_data(ref_estations = TRUE)
     
-    filter_data <- function(data, parameters) {
-        
-       parameters <- c("Tipo_Estacion", "Estacion", "Muestra", parameters) 
-       
-       data[parameters] %>% 
-            distinct()  %>% 
-            return()
-         
-     }
-    
     plots_pca_analysis <- function(results_pca, plot_type = "Estacion") {
         
         eigenvalues <- fviz_eig(results_pca)
@@ -221,9 +254,10 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
                                   repel = TRUE)
         
         biplot <- fviz_pca_biplot(results_pca,
-                                  label = "none", 
+                                  label = "var", 
                                   habillage = data[[plot_type]],
-                                  addEllipses = FALSE)
+                                  addEllipses = FALSE,
+                                  legend = "left")
         
         
         plot_pca <- list(eigenvalues = eigenvalues, 
@@ -276,26 +310,33 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     }
 }
 
+## Fuzzy Correspondence Analysis
 
-# ex <- read.csv('Data/rio_neusa.csv', stringsAsFactors = FALSE )
-# ex$Fecha <- dmy(ex$Fecha) 
-# ex$Mes <- month(ex$Fecha, label = TRUE, abbr = FALSE, locale = "es_CO.UTF-8" ) 
-# ex$Año <- year(ex$Fecha)
+make_fca <- function() {
+    
+}
+
+
+## RLQ analysis 
+
+make_rlq <- function() {
+    #rlq()
+}
+
+#x <- names(abundance)[-(1:3)] %in% traits$Familia
+
+# >  names(abundance)[-(1:3)][!x] 
+# [1] "Staphylinidae"   "Gyrinidae"       "Mesoveliidae"    "Philopotamidae"  "Hydroptilidae"  
+# [6] "Lumbricidae"     "Muscidae"        "Lepidoptera"     "Dytiscidae"          
+# [11] "Ptilodactylidae"
 # 
-# ex2 <- ex %>% 
-#     group_by(Estacion, Muestra, Epoca, Fecha, Mes, Año) %>% 
-#     summarise( Temperatura =mean(Temperatura))
-# 
-# subset(ex2, Estacion == "Neu7")
-# 
-# inventario <- read.csv('Data/inventario.csv', stringsAsFactors = FALSE )
-# inventario$Fecha <- dmy(inventario$Fecha) 
-# inventario$Mes <- month(inventario$Fecha, label = TRUE, abbr = FALSE, locale = "es_CO.UTF-8" ) 
-# inventario$Año <- year(inventario$Fecha)
-# 
-# inventario <- subset(inventario, Localidad == "Rio Frio")
-# 
-# inventario2 <- inventario %>% 
-#     group_by(Latitud, Longitud, Fecha, Mes, Año) %>% 
-#     summarise( Temperatura =mean(Ejemplares))
+#  > traits$Familia
+#  [1] "Aeshnidae"         "Baetidae"          "Ceratopogonidae"   "Chironomidae"     
+#  [5] "Coenagrionidae"    "Corixidae"         "Elmidae"           "Empididae"        
+#  [9] "Gerridae"          "Glossiphoniidae"   "Helicopsychidae"   "Hyalellidae"      
+#  [13] "Hydrophilidae"     "Leptoceridae"      "Libellulidae"      "Lymnaeidae"       
+#  [17] "Naididae"          "Notonectidae"      "Physidae"          "Planariidae"      
+#  [21] "Planorbidae"       "Polycentropodidae" "Simuliidae"        "Sphaeriidae"      
+#  [25] "Tipulidae"         "Tricorythidae"    
+
 
