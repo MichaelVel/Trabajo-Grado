@@ -6,6 +6,7 @@ library(dplyr)
 library(factoextra)
 library(ade4)
 library(tibble)
+library(tidyr)
 
 ## Load and cleaning data
 
@@ -76,32 +77,29 @@ load_rlq <- function(parameters = NULL ){
     
     if (is.null(parameters)) {
         
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
                         "Conductividad", "Turbidez") }
     
     enviromental <- load_data(ref_estations = TRUE) %>% 
                     filter_data(parameters)
     
-    traits <- read.csv('Data/rasgos_funcionales.csv', 
-                       stringsAsFactors = FALSE, encoding = 'UTF-8') %>% 
-              column_to_rownames(var = "Familia") %>%
-              prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
-                                            Habitos_Alimenticios = 7, 
-                                            Respiracion = 5,
-                                            Movilidad = 4, 
-                                            Tamaño_Maximo = 7,
-                                            Forma_Corporal = 7))
-              
     abundance <- read.csv('Data/abundancia.csv', stringsAsFactors = FALSE)
     
-    RLQ <- list(R_table = enviromental, Q_table = traits, L_table = abundance)
+    traits <- read.csv('Data/rasgos_funcionales.csv',
+                       stringsAsFactors = FALSE, encoding = 'UTF-8') %>% 
+              column_to_rownames( var = "Familia") %>%      
+              subset(rownames(.) %in% names(abundance))               
+              
+    all <-  load_data()
+    
+    RLQ <- list(R_table = enviromental, Q_table = traits,
+                L_table = abundance, all_table = all)
     
     return(RLQ)
     
 }
 
 ## Summary statistics (mean, median, quantiles, sd, skewness, kurtosis)
-
 
 summary_statistics <- function(...) {
     
@@ -172,7 +170,6 @@ summary_statistics <- function(...) {
 
 ## Graphical  eda
 
-
 univariate_graphical_eda <- function(type_plot, parameters = NULL){
     
     ## Make the boxplot, histogram or qq plot for the passed parameters, 
@@ -226,7 +223,6 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     return(ggobjtect_parameters)
     
 }
-
 
 make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     
@@ -310,33 +306,63 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     }
 }
 
-## Fuzzy Correspondence Analysis
+## Fuzzy Correspondence Analysis and RLQ analysis
 
 make_fca <- function() {
+
+   ## This function takes as imput a fuzzy coded table of traits  in each site
+   ## and a table of enviromental variables and perform a CCA. return a dudi
+   ## object of the class pcaiv
+
+
+   # with pcaiv
+
+   object <- dudi.fca(traits, scannf = FALSE, nf = 3 )
+   pcaiv(object, envir, scannf = FALSE, nf = 3)
+
+   scatter(object, csub = 3, clab.moda = 1.5)
+
+   # with varipart
+
+   
+}
+
+make_rlq <- function(data = load_rlq() ) {
     
+    
+      abundance <- data$L_table %>%  
+                   select(-Tipo_Estacion) %>%
+                   unite(col = names, Estacion, Muestra) %>%
+                   column_to_rownames('names') 
+      
+      abundance_test <- dudi.coa(abundance, scannf = FALSE, nf = 3)
+  
+      envir <- data$R_table %>% ungroup() %>%
+             select(-Tipo_Estacion) %>%
+             unite(col = names, Estacion, Muestra) %>%
+             column_to_rownames('names') 
+      
+      envir_test <-  dudi.pca(envir, scannf = FALSE, nf = 3, 
+                              row.w = abundance_test$lw)
+    
+      traits <- data$Q_table %>%
+                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+                                              Habitos_Alimenticios = 7, 
+                                              Respiracion = 5,
+                                              Forma_Corporal = 4, 
+                                              Movilidad = 7,
+                                              Tamaño_Maximo= 6),
+                               row.w = abundance_test$cw) 
+      traits_test <-  dudi.fca(traits, scannf = FALSE, nf = 3)
+      
+    rlq1 <- rlq(envir_test, abundance_test, traits_test,  scannf = FALSE, nf = 2)
+    
+    # plot(rlq1)
+    # summary(rlq1)
+    # randtest(rlq1)
+    # fourthcorner.rlq(rlq1,type="Q.axes")
+    # a <- fourthcorner.rlq(rlq1,type="R.axes")
+    return(rlq)
+
 }
-
-
-## RLQ analysis 
-
-make_rlq <- function() {
-    #rlq()
-}
-
-#x <- names(abundance)[-(1:3)] %in% traits$Familia
-
-# >  names(abundance)[-(1:3)][!x] 
-# [1] "Staphylinidae"   "Gyrinidae"       "Mesoveliidae"    "Philopotamidae"  "Hydroptilidae"  
-# [6] "Lumbricidae"     "Muscidae"        "Lepidoptera"     "Dytiscidae"          
-# [11] "Ptilodactylidae"
-# 
-#  > traits$Familia
-#  [1] "Aeshnidae"         "Baetidae"          "Ceratopogonidae"   "Chironomidae"     
-#  [5] "Coenagrionidae"    "Corixidae"         "Elmidae"           "Empididae"        
-#  [9] "Gerridae"          "Glossiphoniidae"   "Helicopsychidae"   "Hyalellidae"      
-#  [13] "Hydrophilidae"     "Leptoceridae"      "Libellulidae"      "Lymnaeidae"       
-#  [17] "Naididae"          "Notonectidae"      "Physidae"          "Planariidae"      
-#  [21] "Planorbidae"       "Polycentropodidae" "Simuliidae"        "Sphaeriidae"      
-#  [25] "Tipulidae"         "Tricorythidae"    
-
 
