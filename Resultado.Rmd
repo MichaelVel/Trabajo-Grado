@@ -1,0 +1,40 @@
+---
+title: "Resultados"
+author: "Michael Velandia"
+date: "17/05/2021"
+output: 
+ pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("Code/eda.R")
+```
+
+En la tabla 1 se pueden obser
+```{r summary}
+summary_data <- summary_statistics()
+mean <-  summary_data$mean %>% 
+         column_to_rownames("Estacion") %>%
+         round(digits = 2)
+for (i in 2:5){
+a <- paste0(, '±', summary_data$sd[[i]]) 
+print(a)
+}
+
+```
+
+```{r eda}
+
+```
+
+```{r rlq}
+
+```
+
+```{r anexos}
+
+```
+
