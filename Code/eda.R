@@ -7,7 +7,8 @@ library(factoextra)
 library(ade4)
 library(tibble)
 library(tidyr)
-
+library(kableExtra)
+library(flextable)
 ## Load and cleaning data
 
 load_data <- function(ref_estations = FALSE) {
@@ -69,7 +70,7 @@ filter_data <- function(data, parameters) {
         return()
     
 }
-
+    
 load_rlq <- function(parameters = NULL ){
     
     ## Return an object with the R, L, and Q matrices, by default
@@ -97,7 +98,7 @@ load_rlq <- function(parameters = NULL ){
     
     return(RLQ)
     
-}
+}     
 
 ## Summary statistics (mean, median, quantiles, sd, skewness, kurtosis)
 
@@ -122,7 +123,7 @@ summary_statistics <- function(...) {
                 
                 load_data() %>% 
                     group_by(Estacion) %>% 
-                    summarise( Number_Families = n_distinct(Familia),
+                    summarise( Familias = n_distinct(Familia),
                                Total_Macro = sum(Individuos)) %>%
                     return()   
             }
@@ -166,6 +167,41 @@ summary_statistics <- function(...) {
                                skewness = skewness, kurtosis = kurtosis, 
                                macroinvertebrates = macroinvertebrates)
     return(summary_stats)
+}
+
+make_manova <- function( type = 'fisicoquimicos' ) {
+    
+    data <- load_data(ref_estations = TRUE)
+    
+    if (type == 'fisicoquimicos') {
+        
+        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                        "Conductividad", "Turbidez") 
+        
+        data_physicochemicals <- filter_data(data, parameters)
+       
+        results_manova <- manova(cbind(Temperatura, Ox_disuelto, pH, 
+                                   Conductividad, Turbidez) ~ Estacion, 
+                                 data = data_physicochemicals )
+        
+        if (plot) {
+            
+            plot_pca <- plots_pca_analysis(results_pca, ...)
+            return(plot_pca)
+            
+        } else {
+            
+            return(results_pca)
+        }
+        
+    } else if (type == 'hidrologicos') {
+        
+        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                        "Conductividad", "Turbidez") 
+        
+        data <- filter_data(data, parameters)
+        data_hydrological  <- data[parameters]
+        }
 }
 
 ## Graphical  eda
@@ -223,7 +259,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     return(ggobjtect_parameters)
     
 }
-
+          
 make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     
     ## perform the PCA analysis and return a list with  the ggplot objects
