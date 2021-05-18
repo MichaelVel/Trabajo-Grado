@@ -9,41 +9,43 @@ library(kableExtra)
 
 ## Preprocessing functions 
 
-conv_coord <- function( data , med = NULL, ...){ ## Degrees Minutes Seconds to Decimal 
-    if (med == 'lat') {
-        if (any(str_detect(data$Latitud, ","))){
-            data$Latitud <- gsub(",", ".", data$Latitud)}
-        data$Latitud <- str_remove(data$Latitud, " N")
-        data$Latitud <- trimws(data$Latitud)
-        data$Latitud <- gsub("°", " ", data$Latitud) 
-        data$Latitud <- gsub("'", " ", data$Latitud) 
-        data$Latitud <- gsub("\"", "", data$Latitud)
-        data$Latitud <- conv_unit(data$Latitud, from = 'deg_min_sec', to = 'dec_deg')
-        data$Latitud <- as.numeric(data$Latitud)
-    }
-    else if (med == 'lon') {
-        if (any(str_detect(data$Longitud, ","))){
-            data$Longitud <- gsub(",", ".", data$Longitud)}
-        data$Longitud <- str_remove(data$Longitud, " W")
-        data$Longitud <- trimws(data$Longitud)
-        data$Longitud <- paste0("-", data$Longitud) 
-        data$Longitud <- gsub("°", " ", data$Longitud) 
-        data$Longitud <- gsub("'", " ", data$Longitud) 
-        data$Longitud <- gsub("\"", "", data$Longitud)
-        data$Longitud <- conv_unit(data$Longitud, from = 'deg_min_sec', to = 'dec_deg')
-        data$Longitud <- as.numeric(data$Longitud)
-    }
-    return(data)
-}
 
-conv_alt <- function(data, user, ...) { ## Obtain elevation from coordinates 
-    elevation <- elevation(latitude = data$Latitud, longitude = data$Longitud,
-                           username = user)
-    data$Altitud <- elevation$elevation_geonames
-    return(data)
-}
-
-load_data <- function(data, username, ...) {
+load_data_met <- function(data, username, ...) {
+    
+    conv_coord <- function(data , med = NULL, ...){ ## Degrees Minutes Seconds to Decimal 
+        if (med == 'lat') {
+            if (any(str_detect(data$Latitud, ","))){
+                data$Latitud <- gsub(",", ".", data$Latitud)}
+            data$Latitud <- str_remove(data$Latitud, " N")
+            data$Latitud <- trimws(data$Latitud)
+            data$Latitud <- gsub("°", " ", data$Latitud) 
+            data$Latitud <- gsub("'", " ", data$Latitud) 
+            data$Latitud <- gsub("\"", "", data$Latitud)
+            data$Latitud <- conv_unit(data$Latitud, from = 'deg_min_sec', to = 'dec_deg')
+            data$Latitud <- as.numeric(data$Latitud)
+        }
+        else if (med == 'lon') {
+            if (any(str_detect(data$Longitud, ","))){
+                data$Longitud <- gsub(",", ".", data$Longitud)}
+            data$Longitud <- str_remove(data$Longitud, " W")
+            data$Longitud <- trimws(data$Longitud)
+            data$Longitud <- paste0("-", data$Longitud) 
+            data$Longitud <- gsub("°", " ", data$Longitud) 
+            data$Longitud <- gsub("'", " ", data$Longitud) 
+            data$Longitud <- gsub("\"", "", data$Longitud)
+            data$Longitud <- conv_unit(data$Longitud, from = 'deg_min_sec', to = 'dec_deg')
+            data$Longitud <- as.numeric(data$Longitud)
+        }
+        return(data)
+    }
+    
+    conv_alt <- function(data, user, ...) { ## Obtain elevation from coordinates 
+        elevation <- elevation(latitude = data$Latitud, longitude = data$Longitud,
+                               username = user)
+        data$Altitud <- elevation$elevation_geonames
+        return(data)
+    }
+    
     data <- read.csv(data)
     data <- conv_coord(data, med = 'lat')
     data <- conv_coord(data, med = 'lon')
