@@ -3,7 +3,7 @@ title: "Resultados"
 author: "Michael Velandia"
 date: "17/05/2021"
 output: 
- pdf_document: default
+  pdf_document: default
   html_document: default
   word_document: default
 ---
@@ -14,16 +14,48 @@ source("Code/eda.R")
 ```
 
 En la tabla 1 se pueden obser
-```{r summary}
-summary_data <- summary_statistics()
-mean <-  summary_data$mean %>% 
-         column_to_rownames("Estacion") %>%
-         round(digits = 2)
-for (i in 2:5){
-a <- paste0(, '±', summary_data$sd[[i]]) 
-print(a)
-}
+```{r summary, echo=FALSE }
 
+summary_data <- (function () {
+    summary_data <- summary_statistics()
+    mean <-  summary_data$mean %>% 
+             column_to_rownames("Estacion") %>%
+             round(digits = 2)
+    sd <-  summary_data$sd %>% 
+             column_to_rownames("Estacion") %>%
+             round(digits = 2)
+    data <- list(Estacion = summary_data$mean[["Estacion"]])
+    
+    for (i in 1:5){
+        a <- paste0( mean[[i]], '±', sd[[i]]) 
+        data[[1+i]] <- a
+    }
+    
+    data <- as.data.frame(data)
+    names(data) <- names(summary_data$mean)
+    data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
+    
+    
+    return(data)
+})()
+
+doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+
+if (doc.type == "docx" | doc.type == "pdf" ) {
+    
+  summary_data %>%
+      flextable() %>%
+      set_caption( caption = "New York Air Quality Measurements") ## Change caption and footer
+      add_footer_lines("Daily air quality measurements in New York,
+                       May to September 1973.")
+
+} else {
+    
+  summary_data %>%
+      kbl(booktabs = TRUE, escape = FALSE, caption = " Categorias de los Rasgos Funcionales") %>%
+      collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
+      kable_styling(full_width = FALSE)
+}
 ```
 
 ```{r eda}
@@ -34,7 +66,18 @@ print(a)
 
 ```
 
-```{r anexos}
+## Anexos 
 
+### Analisis univarido
+
+En las figuras ?-1 al ?-10 se observan los diagramas de caja y los graficos
+cuantil-cuantil que corresponden a un analisis exploratorio de las variables 
+fisicoquimicas.   
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+for (i in 1:5) plot(qq_plots[[i]])
+for (i in 1:5) plot(box_plots[[i]])
 ```
 
