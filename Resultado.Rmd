@@ -3,9 +3,9 @@ title: "Resultados"
 author: "Michael Velandia"
 date: "17/05/2021"
 output: 
+  word_document: default
   pdf_document: default
   html_document: default
-  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,8 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 source("Code/eda.R")
 ```
 
-En la tabla 1 se pueden obser
-```{r summary, echo=FALSE }
+## Resultados 
+
+En la tabla 1 se pueden observar qu
+
+```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
 
 summary_data <- (function () {
     summary_data <- summary_statistics()
@@ -41,13 +44,12 @@ summary_data <- (function () {
 
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
-if (doc.type == "docx" | doc.type == "pdf" ) {
+if (doc.type == "docx") {
     
   summary_data %>%
       flextable() %>%
-      set_caption( caption = "New York Air Quality Measurements") ## Change caption and footer
-      add_footer_lines("Daily air quality measurements in New York,
-                       May to September 1973.")
+      set_caption( caption = "New York Air Quality Measurements") %>% ## Change caption and footer
+      add_footer_lines(values = "Daily air quality measurements in New Y")
 
 } else {
     
@@ -58,7 +60,22 @@ if (doc.type == "docx" | doc.type == "pdf" ) {
 }
 ```
 
-```{r eda}
+```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
+plot_pca <- make_pca()
+
+layout <- "
+AAAAAAACCCC
+AAAAAAABBBB
+AAAAAAABBBB
+AAAAAAABBBB
+"
+plot_pca$biplot + 
+  plot_pca$variables + 
+  plot_pca$eigenvalues + 
+  plot_layout(design = layout, guides = 'collect') +
+  guide_area() +
+  plot_annotation(tag_levels = 'A') 
+  
 
 ```
 
@@ -73,11 +90,29 @@ if (doc.type == "docx" | doc.type == "pdf" ) {
 En las figuras ?-1 al ?-10 se observan los diagramas de caja y los graficos
 cuantil-cuantil que corresponden a un analisis exploratorio de las variables 
 fisicoquimicas.   
-```{r anexos_eda, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE}
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
-for (i in 1:5) plot(qq_plots[[i]])
-for (i in 1:5) plot(box_plots[[i]])
+
+  qq_plots$Ox_disuelto + 
+  qq_plots$Turbidez +
+  qq_plots$pH +
+  box_plots$Ox_disuelto + 
+  box_plots$Turbidez +
+  box_plots$pH +
+  plot_layout(ncol = 2, byrow = FALSE ) 
+  
+```
+```{r, , message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+qq_plots$Conductividad + 
+  qq_plots$Temperatura +
+    box_plots$Conductividad + 
+  box_plots$Temperatura +
+  plot_layout(ncol = 2, byrow = FALSE )
+
 ```
 

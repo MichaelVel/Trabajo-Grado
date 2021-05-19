@@ -9,6 +9,8 @@ library(tibble)
 library(tidyr)
 library(kableExtra)
 library(flextable)
+library(patchwork)
+
 ## Load and cleaning data
 
 load_data <- function(ref_estations = FALSE) {
@@ -221,7 +223,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
         if (type_plot == "boxplot") { 
             plot <- load_data() %>%
                 ggplot(mapping = aes(x = Estacion, y = .data[[parameter]])) +
-                geom_boxplot() 
+                geom_boxplot() + theme_classic()
             
             return(plot)
             
@@ -230,7 +232,8 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
             plot <- load_data() %>%
                 ggplot(mapping = aes(.data[[parameter]])) +
                 geom_histogram() +
-                facet_wrap(vars(Estacion))
+                facet_wrap(vars(Estacion)) +
+                theme_classic()
             
             
             return(plot)
@@ -241,7 +244,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
                 ggplot(data, mapping = aes(sample = .data[[parameter]])) +
                 stat_qq() + 
                 stat_qq_line(fullrange = TRUE) +
-                facet_wrap(vars(Estacion))
+                facet_wrap(vars(Estacion)) + theme_classic()
             
             return(plot)
         }
@@ -270,26 +273,32 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     
     plots_pca_analysis <- function(results_pca, plot_type = "Estacion") {
         
-        eigenvalues <- fviz_eig(results_pca)
+        eigenvalues <- fviz_eig(results_pca, main = "", 
+                                ylab = "% Varianza", xlab = "Componentes") +
+          theme_classic()
         
         
         individuals <- fviz_pca_ind(results_pca,
                                     col.ind = "cos2", 
                                     gradient.cols = c("#00AFBB", "#E7B800",
                                                       "#FC4E07"),
-                                    repel = FALSE)
+                                    repel = FALSE) +
+          theme_classic()
         
         variables <- fviz_pca_var(results_pca,
                                   col.var = "contrib",
                                   gradient.cols = c("#00AFBB", "#E7B800",
                                                     "#FC4E07"),
-                                  repel = TRUE)
+                                  repel = TRUE,  title = "") +
+          theme_classic()
         
         biplot <- fviz_pca_biplot(results_pca,
                                   label = "var", 
                                   habillage = data[[plot_type]],
                                   addEllipses = FALSE,
-                                  legend = "left")
+                                  legend = "left", 
+                                  palette = "rainbow", 
+                                  title = "") 
         
         
         plot_pca <- list(eigenvalues = eigenvalues, 
@@ -300,7 +309,7 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
         return(plot_pca)
         
     }
-    
+  
     if (type == 'fisicoquimicos') {
         
         parameters <- c("Temperatura", "Ox_disuelto", "pH", 
