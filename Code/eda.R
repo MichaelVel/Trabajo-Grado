@@ -44,13 +44,15 @@ load_data <- function(ref_estations = FALSE) {
     
     if (ref_estations) {
         
-        rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4', 'Fri5')
-        rio_neusa <- c('Neu4', 'Neu6', 'Neu7')
-        reference <- c('Neu1', 'Neu2', 'Neu3')
+        rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4')
+        rio_frio2 <- c('Fri5')
+        rio_neusa2 <- c('Neu4', 'Neu6', 'Neu7')
+        rio_neusa <- c('Neu1', 'Neu2', 'Neu3')
         
-        data$Tipo_Estacion[data$Estacion %in% rio_frio] <- 'Rio_Frio'
-        data$Tipo_Estacion[data$Estacion %in% rio_neusa] <- 'Rio_Neusa'
-        data$Tipo_Estacion[data$Estacion %in% reference] <- 'Referencia'
+        data$Tipo_Estacion[data$Estacion %in% rio_frio] <- 'FrioB'
+        data$Tipo_Estacion[data$Estacion %in% rio_frio2] <- 'FrioA'
+        data$Tipo_Estacion[data$Estacion %in% rio_neusa2] <- 'NeusaB'
+        data$Tipo_Estacion[data$Estacion %in% rio_neusa] <- 'NeusaA'
         
         return(data)
         
@@ -171,7 +173,7 @@ summary_statistics <- function(...) {
     return(summary_stats)
 }
 
-make_manova <- function( type = 'fisicoquimicos' ) {
+make_manova <- function( type = 'fisicoquimicos', rio = "all"  ) {
     
     data <- load_data(ref_estations = TRUE)
     
@@ -181,22 +183,19 @@ make_manova <- function( type = 'fisicoquimicos' ) {
                         "Conductividad", "Turbidez") 
         
         data_physicochemicals <- filter_data(data, parameters)
+        
+        
+        data_physicochemicals <- subset(data_physicochemicals, 
+                                        Tipo_Estacion != "Rio Neusa2" )
        
         results_manova <- manova(cbind(Temperatura, Ox_disuelto, pH, 
-                                   Conductividad, Turbidez) ~ Estacion, 
+                                   Conductividad, Turbidez) ~ Tipo_Estacion, 
                                  data = data_physicochemicals )
         
-        if (plot) {
-            
-            plot_pca <- plots_pca_analysis(results_pca, ...)
-            return(plot_pca)
-            
-        } else {
-            
-            return(results_pca)
-        }
+        summary(results_manova)
+        return(results_manova)
         
-    } else if (type == 'hidrologicos') {
+     } else if (type == 'hidrologicos') {
         
         parameters <- c("Temperatura", "Ox_disuelto", "pH", 
                         "Conductividad", "Turbidez") 
@@ -297,7 +296,7 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
                                   habillage = data[[plot_type]],
                                   addEllipses = FALSE,
                                   legend = "left", 
-                                  palette = "rainbow", 
+                                  palette = "futurama", 
                                   title = "") 
         
         
@@ -337,6 +336,7 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
         
         data <- filter_data(data, parameters)
         data_hydrological  <- data[parameters]
+       
         results_pca <- prcomp(data_hydrological, scale. = TRUE)
         
         if (plot) {
@@ -351,6 +351,34 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
     }
 }
 
+make_cluster <- function() {
+        
+    data <- load_data(ref_estations = TRUE)
+    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                    "Conductividad", "Turbidez") 
+    
+    data_physicochemicals <- filter_data(data, parameters) %>%
+                subset(select= -Muestra) %>%
+                group_by(Tipo_Estacion, Estacion) %>%
+                summarise(across(.cols = everything() , mean))
+    
+    distance_matrix <-  data_physicochemicals[-1] %>%
+                        column_to_rownames(var = 'Estacion') %>%
+                        scale() %>%
+                        dist() 
+    
+    cluster <-  hclust(distance_matrix, method = "average")
+    
+    dendogram <- fviz_dend(cluster, k = 4, main = "", palette = 'futurama') +
+                geom_hline(yintercept = 1.8, linetype = "dashed", colour = 'blue')
+    
+    results <- list(hc = cluster, dendogram = dendogram)
+    
+    return(results)
+ 
+} 
+
+  
 ## Fuzzy Correspondence Analysis and RLQ analysis
 
 make_fca <- function() {
@@ -407,7 +435,7 @@ make_rlq <- function(data = load_rlq() ) {
     # randtest(rlq1)
     # fourthcorner.rlq(rlq1,type="Q.axes")
     # a <- fourthcorner.rlq(rlq1,type="R.axes")
-    return(rlq)
+    return(rlq1)
 
 }
 

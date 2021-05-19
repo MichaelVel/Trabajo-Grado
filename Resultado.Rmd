@@ -3,9 +3,9 @@ title: "Resultados"
 author: "Michael Velandia"
 date: "17/05/2021"
 output: 
-  word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +15,7 @@ source("Code/eda.R")
 
 ## Resultados 
 
-En la tabla 1 se pueden observar qu
+Los resultados 
 
 ```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
 
@@ -35,9 +35,9 @@ summary_data <- (function () {
     }
     
     data <- as.data.frame(data)
-    names(data) <- names(summary_data$mean)
+    names(data) <-  names(summary_data$mean)
     data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
-    
+    names(data) <- gsub("_", " ", names(data))
     
     return(data)
 })()
@@ -61,8 +61,8 @@ if (doc.type == "docx") {
 ```
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
-plot_pca <- make_pca()
-
+plot_pca <- make_pca(type = 'hidrologicos', plot_type = "Tipo_Estacion")
+plot_cluster <-  make_cluster()
 layout <- "
 AAAAAAACCCC
 AAAAAAABBBB
@@ -70,7 +70,7 @@ AAAAAAABBBB
 AAAAAAABBBB
 "
 plot_pca$biplot + 
-  plot_pca$variables + 
+  plot_cluster$dendogram + 
   plot_pca$eigenvalues + 
   plot_layout(design = layout, guides = 'collect') +
   guide_area() +
@@ -79,8 +79,9 @@ plot_pca$biplot +
 
 ```
 
-```{r rlq}
-
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
+rlq1 <- make_rlq()
+plot(rlq1)
 ```
 
 ## Anexos 
@@ -104,6 +105,7 @@ box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
   plot_layout(ncol = 2, byrow = FALSE ) 
   
 ```
+
 ```{r, , message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
@@ -114,5 +116,12 @@ qq_plots$Conductividad +
   box_plots$Temperatura +
   plot_layout(ncol = 2, byrow = FALSE )
 
+```
+
+```{r}
+ make_manova()
+print(summary(make_manova(rio = 'Rio Frio')))
+print(summary(make_manova(rio = 'Rio Neusa1')))
+print(summary(make_manova(rio = 'Rio Neusa2')))
 ```
 
