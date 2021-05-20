@@ -3,8 +3,8 @@ title: "Resultados"
 author: "Michael Velandia"
 date: "17/05/2021"
 output: 
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 
@@ -54,9 +54,8 @@ if (doc.type == "docx") {
 } else {
     
   summary_data %>%
-      kbl(booktabs = TRUE, escape = FALSE, caption = " Categorias de los Rasgos Funcionales") %>%
-      collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
-      kable_styling(full_width = FALSE)
+      kbl(booktabs = TRUE, escape = FALSE, caption = " Categorias de los Rasgos Funcionales")
+
 }
 ```
 
@@ -91,7 +90,7 @@ plot(rlq1)
 En las figuras ?-1 al ?-10 se observan los diagramas de caja y los graficos
 cuantil-cuantil que corresponden a un analisis exploratorio de las variables 
 fisicoquimicas.   
-```{r anexos_eda, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
@@ -106,7 +105,7 @@ box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
   
 ```
 
-```{r, , message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+```{r, , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
@@ -118,10 +117,21 @@ qq_plots$Conductividad +
 
 ```
 
-```{r}
- make_manova()
-print(summary(make_manova(rio = 'Rio Frio')))
-print(summary(make_manova(rio = 'Rio Neusa1')))
-print(summary(make_manova(rio = 'Rio Neusa2')))
+```{r,  message=FALSE, warning=FALSE,}
+results_manova <- list(
+NeuA_NeuB  = make_manova(est1 = "NeusaA", est2 = "NeusaB"),
+NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
+NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
+NeuB_FrioA =  make_manova(est1 = "NeusaB", est2 = "FrioA"),
+NeuB_FrioB =  make_manova(est1 = "NeusaB", est2 = "FrioB"),
+FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
+)
+
+ for (i in 1:6) { 
+     print(names(results_manova[i]))
+     print(results_manova[[i]])
+     print("\n")
+ }
+
 ```
 

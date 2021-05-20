@@ -10,6 +10,7 @@ library(tidyr)
 library(kableExtra)
 library(flextable)
 library(patchwork)
+library(Hotelling)
 
 ## Load and cleaning data
 
@@ -173,7 +174,7 @@ summary_statistics <- function(...) {
     return(summary_stats)
 }
 
-make_manova <- function( type = 'fisicoquimicos', rio = "all"  ) {
+make_manova <- function(funct = hotelling.test ,type = 'fisicoquimicos', est1, est2 ) {
     
     data <- load_data(ref_estations = TRUE)
     
@@ -185,14 +186,15 @@ make_manova <- function( type = 'fisicoquimicos', rio = "all"  ) {
         data_physicochemicals <- filter_data(data, parameters)
         
         
-        data_physicochemicals <- subset(data_physicochemicals, 
-                                        Tipo_Estacion != "Rio Neusa2" )
+        data_physicochemicals <- filter(data_physicochemicals, 
+                                        Tipo_Estacion == est1 |
+                                            Tipo_Estacion == est2)
        
-        results_manova <- manova(cbind(Temperatura, Ox_disuelto, pH, 
+        results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
                                    Conductividad, Turbidez) ~ Tipo_Estacion, 
                                  data = data_physicochemicals )
         
-        summary(results_manova)
+       
         return(results_manova)
         
      } else if (type == 'hidrologicos') {
@@ -204,6 +206,16 @@ make_manova <- function( type = 'fisicoquimicos', rio = "all"  ) {
         data_hydrological  <- data[parameters]
         }
 }
+
+# results_manova <- list(
+#     NeuA_NeuB <-  make_manova(est1 = "NeusaA", est2 = "NeusaB"),
+#     NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
+#     NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
+#     NeuB_FrioA =  make_manova(est1 = "NeusaB", est2 = "FrioA"),
+#     NeuB_FrioB =  make_manova(est1 = "NeusaB", est2 = "FrioB"),
+#     FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
+# )
+#print(hotelling.test(xs + ys + zs ~ group))
 
 ## Graphical  eda
 
