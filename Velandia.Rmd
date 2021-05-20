@@ -1,5 +1,5 @@
 ---
-title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos rios de la sabana de Bogotá"
+title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
 date: "2/05/2021"
 output:
@@ -29,7 +29,7 @@ estado tradicionalmente enmarcado en un enfoque taxonómico que se basa en
 la tolerancia de ciertos taxones a la polución. Sin embargo, uno de los mayores
 limitantes para esta aproximación es la dificultad de hacer una determinación
 de los organismos de manera rápida y a un suficiente nivel de detalle (género
-o especie) para usarlos en programas de monitoreo(Cummins *et al*., 2015). 
+o especie) para usarlos en programas de monitoreo(Cummins *et al*., 2005). 
 
 Desde hace algunas décadas, el estudio de los rasgos funcionales de las especies 
 de sistemas lóticos ha demostrado una gran utilidad como un buen indicador de la 
@@ -49,8 +49,9 @@ algunos otros ejemplos en países como Ecuador o Bolivia (Fossati *et al*., 2001
 Cummins *et al*., 2005; Tomanova *et al*., 2008). En Colombia se han realizado 
 algunos acercamientos sobre aspectos funcionales de los macroinvertebrados en
 la región insular (Motta Díaz *et al*., 2020), en Antioquia (Toro *et al*., 2020)
-y en Boyacá (Torres y Torres, 2016), pero en ninguno de ellos se ha buscado
-identificar los rasgos más apropiados para la construcción de índices biológicos.
+y en Boyacá (Torres-Zambrano y Torres-Zambrano, 2016), pero en ninguno de ellos 
+se ha buscado identificar los rasgos más apropiados para la construcción de 
+índices biológicos.
 
 Un primer paso para el desarrollo de un índice biológico de macroinvertebrados con un 
 enfoque funcional en los ríos de la sabana de Bogotá, es la evaluación de los 
@@ -69,10 +70,10 @@ entre el año 2017 y el año 2019 en 12 estaciones de muestreo ubicadas en los r
 Frío y Neusa, en los municipios de Cajicá, Chía y Cogua (Figura 1), en el
 marco del “Programa nacional para la conservación de la especie endémica de
 Colombia pez capitán de la sabana (*Eremophilus mutisii*)” liderado por el Ministerio del
-Medio Ambiente y la Universidad Manuela Beltrán (Lemus *et al*., 2020). En cada
+Medio Ambiente y la Universidad Manuela Beltrán (Lemus-Portillo *et al*., 2020). En cada
 punto de muestreo se tomaron datos hidrológicos y se midieron *in situ*
-las variables fisicoquímicas (oxígeno disuelto, conductividad, pH, temperatura
-y turbidez). Los macroinvertebrados se colectaron con metodologías estándar de
+las variables fisicoquímicas oxígeno disuelto, conductividad, pH, temperatura
+y turbidez. Los macroinvertebrados se colectaron con metodologías estándar de
 amplio  reconocimiento, red Surber, red D, red de mano (Domínguez y Fernández, 2009). 
 
 ```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
@@ -87,11 +88,11 @@ Universidad Manuela Beltrán, fueron identificados hasta Familia.  Los rasgos
 funcionales que fueron elegidos de acuerdo a la propuesta de Tomanova *et al*. (2008)
 incluyen rasgos tróficos (alimentación y hábitos alimenticios), fisiológicos
 (respiración) morfológicos (tamaño y forma corporal) y comportamentales (Movilidad
-y fijación al sustrato). Siguiendo la metodología del 'Fuzzy coding'  (Usseglio
-y Tachet, 1994) a cada familia se le asignó un valor entre 0 y 3 para cada una de
-las categorías de los rasgos funcionales (Tabla 1) por medio de observaciones y
-mediciones directas en el laboratorio, apoyadas en una revisión de la literatura
-disponible. 
+y fijación al sustrato). Siguiendo la metodología del 'Fuzzy coding'  
+(Usseglio‐Polatera, 1994) a cada familia se le asignó un valor entre 0 y 3 para 
+cada una de las categorías de los rasgos funcionales (Tabla 1) por medio de 
+observaciones y mediciones directas en el laboratorio, apoyadas en una revisión 
+de la literatura disponible. 
 
 
 ```{r table, echo=FALSE}
@@ -101,7 +102,8 @@ doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 if (doc.type == "docx") {} else {
   data %>%
     kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Categorias de los Rasgos Funcionales") %>%
+        Categorias de los Rasgos Funcionales. Tomado y modificado de 
+        Tomanova et al. (2008) ") %>%
     collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
     kable_styling(full_width = FALSE)
 }
@@ -115,9 +117,12 @@ analisis de datos.
 
 ## Bibliografía
 
- Charvet, S., Kosmala, A., & Statzner, B. (1998). Biomonitoring through biological traits of
+Charvet, S., Kosmala, A., & Statzner, B. (1998). Biomonitoring through biological traits of
 benthic macroinvertebrates: Perspectives for a general tool in stream management.
 Archiv Fuer Hydrobiologie, 142(4), 415-432.  
+
+Chevenet, F., Dolédec, S. and Chessel, D. (1994) A fuzzy coding approach for the analysis 
+of long-term ecological data. Freshwater Biology, 31, 295–309.
 
 Cummins, K. W., Merritt, R. W., & Andrade, P. C. (2005). The use of invertebrate
 functional groups to characterize ecosystem attributes in selected streams and rivers in
@@ -140,17 +145,24 @@ Fossati, O., Wasson, J.-G., Héry, C., Salinas, G., & Marín, R. (2001). Impact 
 releases on water chemistry and macroinvertebrate communities in clear water Andean
 streams (Bolivia). Archiv Für Hydrobiologie, 151(1), 33-50.  
 
-Dudgeon, D. (2011). Tropical Stream Ecology. Elsevier.  
+Dudgeon, D. (2011). Tropical Stream Ecology. Elsevier. Usa
 
-Fierro, P., Valdovinos, C., Vargas-Chacoff, L., Bertrán, C., & Arismendi, I. (2017). Macroinvertebrates and Fishes as Bioindicators of Stream Water Pollution. Water Quality. https://doi.org/10.5772/65084  
+Fierro, P., Valdovinos, C., Vargas-Chacoff, L., Bertrán, C., & Arismendi, I. (2017).
+Macroinvertebrates and Fishes as Bioindicators of Stream Water Pollution. Water Quality. 
+https://doi.org/10.5772/65084  
 
 Gayraud, S., Statzner, B., Bady, P., Haybachp, A., Schöll, F., Usseglio‐Polatera, P., &
 Bacchi, M. (2003). Invertebrate traits for the biomonitoring of large European rivers: An
 initial assessment of alternative metrics. Freshwater Biology, 48(11), 2045-2064.  
 
-Lemus-Portillo, C., Echavarria-Pedraza, M. C., Rojas, J. E., Alvarez-Diaz, J. E., León-Pardo, K. J., Aguilar-Orjuela, S., & Maldonado, J. F. (2020). Estado de conservación y distribución del pez de agua dulce Capitán de la Sabana Eremophilus mutisii en Cundinamarca, Colombia. Actualidades Biológicas, 42(112).  
+Lemus-Portillo, C., Echavarria-Pedraza, M. C., Rojas, J. E., Alvarez-Diaz, J. E.,
+León-Pardo, K. J., Aguilar-Orjuela, S., & Maldonado, J. F. (2020). Estado de conservación
+y distribución del pez de agua dulce Capitán de la Sabana Eremophilus mutisii 
+en Cundinamarca, Colombia. Actualidades Biológicas, 42(112).  
 
-Metcalfe, J. L. (1989). Biological water quality assessment of running waters based on macroinvertebrate communities: History and present status in Europe. Environmental Pollution, 60(1), 101–139. https://doi.org/10.1016/0269-7491(89)90223-6  
+Metcalfe, J. L. (1989). Biological water quality assessment of running waters 
+based on macroinvertebrate communities: History and present status in Europe. 
+Environmental Pollution, 60(1), 101–139. https://doi.org/10.1016/0269-7491(89)90223-6  
 
 Motta Díaz, A. J., Longo, M., & Aranguren-Riaño, N. (2020). Variación temporal de la
 diversidad taxonómica y rasgos funcionales de los macroinvertebrados acuáticos en ríos
@@ -160,7 +172,8 @@ Statzner, B., Bady, P., Dolédec, S., & Schöll, F. (2005). Invertebrate traits 
 biomonitoring of large European rivers: An initial assessment of trait patterns in least
 impacted river reaches. Freshwater Biology, 50(12), 2136-2161.  
 
-Pinilla, G. (2010). An index of limnological conditions for urban wetlands of Bogotá city, Colombia. Ecological Indicators, 10(4), 848–856. https://doi.org/10.1016/j.ecolind.2010.01.006  
+Pinilla, G. (2010). An index of limnological conditions for urban wetlands of 
+Bogotá city, Colombia. Ecological Indicators, 10(4), 848–856. https://doi.org/10.1016/j.ecolind.2010.01.006  
 
 
 Tomanova, S., Moya, N., & Oberdorff, T. (2008). Using macroinvertebrate biological traits
@@ -174,6 +187,9 @@ La Nitrera, Concordia, Antioquia, Colombia. Acta Biológica Colombiana, 25(1), 2
 Torres-Zambrano, N. N., & Torres-Zambrano, D. R. (2016). Macroinvertebrados acuáticos
 de la quebrada Los Alisos, Firavitoba—Boyacá. Intropica, 11, 47-56.  
 
-Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, and species richness: Aquatic insects in the Upper Rhône River and its floodplain. Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
+Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, and
+species richness: Aquatic insects in the Upper Rhône River and its floodplain.
+Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
+
 
 

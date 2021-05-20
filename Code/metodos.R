@@ -96,8 +96,9 @@ mk_plot <- function(data, data2, bbox = NULL, expand = FALSE,
 
 plot_est <-  function(device = 'rmarkdown' ) { ## Function to be passed to the document
     
-    est_neusa <- read.csv("Data/rio_neusa.csv")
-    est_frio <- read.csv("Data/rio_frio.csv")
+    data <-  read.csv("Data/estaciones.csv")
+    est_frio <- subset(data, Rio == "Frio")
+    est_neusa <- subset(data, Rio == "Neusa")
     
     if (device == 'png'){ 
         
