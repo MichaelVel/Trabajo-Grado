@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 source("Code/eda.R")
 ```
 
@@ -105,7 +105,7 @@ box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
   
 ```
 
-```{r, , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+```{r anexos_eda2 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 

@@ -9,6 +9,15 @@ output:
 always_allow_html: true
 ---
 
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+
+source("Code/metodos.R")
+source("Code/eda.R")
+
+```
+
 ## Introducción
 
 Las condiciones ambientales de una gran cantidad de ríos en las áreas tropicales
@@ -19,10 +28,10 @@ el monitoreo con índices que integran las variables fisicoquímicas para la med
 de la calidad de las aguas de los ríos y su integridad, y más recientemente, se 
 han incorporado los índices bióticos que utilizan una variedad de grupos taxonómicos, 
 entre ellos, los macroinvertebrados (Pinilla, 2010). Las experiencias en países
-templados (Fierro, 2017; Metcalfe, 1989) han demostrado que el uso de los macroinvertebrados 
-para el biomonitoreo presenta ventajas sobre los índices físico químicos, pues 
-integran información de cambios al corto y el largo plazo  en un amplio rango de
-variables ambientales (Dudgeon, 2017; Fierro *et al*., 2017).  
+templados (Fierro, 2017; Metcalfe, 1989) han demostrado que el uso de los 
+macroinvertebrados para el biomonitoreo presenta ventajas sobre los índices 
+físico químicos, pues integran información de cambios al corto y el largo plazo
+en un amplio rango de variables ambientales (Dudgeon, 2017; Fierro *et al*., 2017).  
 
 El uso de macroinvertebrados para el biomonitoreo de la calidad de agua ha 
 estado tradicionalmente enmarcado en un enfoque taxonómico que se basa en
@@ -77,7 +86,7 @@ y turbidez. Los macroinvertebrados se colectaron con metodologías estándar de
 amplio  reconocimiento, red Surber, red D, red de mano (Domínguez y Fernández, 2009). 
 
 ```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
-source("Code/metodos.R")
+
 plot_est()
 ```
 
@@ -96,7 +105,7 @@ de la literatura disponible.
 
 
 ```{r table, echo=FALSE}
-library(kableExtra)
+
 data  <- read.csv("Data/rasgos_funcionales_tabla.csv", check.names = FALSE)
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 if (doc.type == "docx") {} else {
@@ -112,8 +121,90 @@ if (doc.type == "docx") {} else {
 
 ### Métodos numéricos y estadísticos
 
-Voy a agregar la descripción de estos métodos conforme vaya avanzando en el 
-analisis de datos. 
+Con el fin de establecer el gradiente ambiental, se realizo un análisis de cluster
+y un análisis de componentes principales (PCA), para establecer diferencias entre
+las condiciones fisicoquimicas de las estaciones se realizo un análisis de 
+varianza multivariado (MANOVA). La evaluación de la respuesta de los rasgos 
+funcionales al gradiente ambiental se realizo con un análisis de coinercia RLQ,
+que vincula las matrices de variables ambientales *R* y rasgos funcionales *Q* por 
+medio de una matriz de abundancia *L* (Dolédec *et al*.,2006). Para probar las 
+asociaciones individuales de cada rasgo funcional con las variables ambientales
+se realizo un análisis *fourth corner* (Dray y Legendre, 2008). Todos los analisis 
+fueron realizados en el software R version 3.6.3 (R Core Team, 2020), utilizando
+el paquete ade4 (Dray, 2007). 
+
+## Resultados
+
+```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
+
+summary_data <- (function () {
+    summary_data <- summary_statistics()
+    mean <-  summary_data$mean %>% 
+             column_to_rownames("Estacion") %>%
+             round(digits = 2)
+    sd <-  summary_data$sd %>% 
+             column_to_rownames("Estacion") %>%
+             round(digits = 2)
+    data <- list(Estacion = summary_data$mean[["Estacion"]])
+    
+    for (i in 1:5){
+        a <- paste0( mean[[i]], '±', sd[[i]]) 
+        data[[1+i]] <- a
+    }
+    
+    data <- as.data.frame(data)
+    names(data) <-  names(summary_data$mean)
+    data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
+    names(data) <- gsub("_", " ", names(data))
+    
+    return(data)
+})()
+
+doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+
+if (doc.type == "docx") {
+    
+  summary_data %>%
+      flextable() %>%
+      set_caption( caption = "New York Air Quality Measurements") %>% ## Change caption and footer
+      add_footer_lines(values = "Daily air quality measurements in New Y")
+
+} else {
+    
+  summary_data %>%
+      kbl(booktabs = TRUE, escape = FALSE, caption = " Categorias de los Rasgos Funcionales")
+
+}
+```
+
+```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
+plot_pca <- make_pca(type = 'hidrologicos', plot_type = "Tipo_Estacion")
+plot_cluster <-  make_cluster()
+layout <- "
+AAAAAAACCCC
+AAAAAAABBBB
+AAAAAAABBBB
+AAAAAAABBBB
+"
+plot_pca$biplot + 
+  plot_cluster$dendogram + 
+  plot_pca$eigenvalues + 
+  plot_layout(design = layout, guides = 'collect') +
+  guide_area() +
+  plot_annotation(tag_levels = 'A') 
+  
+
+```
+
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
+rlq1 <- make_rlq()
+plot(rlq1)
+```
+
+## Discusión
+
+## Conclusiones
+
 
 ## Bibliografía
 
@@ -134,6 +225,10 @@ diversity of stream macroinvertebrates to environmental and spatial factors in t
 Xishuangbanna watershed of the upper Mekong River Basin, China. Science of The Total
 Environment, 574, 288-299.  
 
+Doledec, S., Chessel, D., ter Braak, C.J.F. and Champely, S. (1996) Matching species 
+traits to environmental variables: a new three-table ordination method. Environmental
+and Ecological Statistics, 3, 143–166.
+
 Dolédec, S., Phillips, N., Scarsbrook, M., Riley, R. H., & Townsend, C. R. (2006).
 Comparison of structural and functional approaches to determining landuse effects on
 grassland stream invertebrate communities. Journal of the North American Benthological
@@ -143,9 +238,16 @@ Domínguez, E., & Fernández, H (eds). (2019), Macroinvertebrados bentónicos
 sudamericanos. Sistemática y biología. Fundación Miguel Lillo, Tucumán, Argentina.
 Fossati, O., Wasson, J.-G., Héry, C., Salinas, G., & Marín, R. (2001). Impact of sediment
 releases on water chemistry and macroinvertebrate communities in clear water Andean
-streams (Bolivia). Archiv Für Hydrobiologie, 151(1), 33-50.  
+streams (Bolivia). Archiv Für Hydrobiologie, 151(1), 33-50. 
 
-Dudgeon, D. (2011). Tropical Stream Ecology. Elsevier. Usa
+Dray S, Dufour A (2007). “The ade4 Package: Implementing the Duality Diagram for Ecologists.” 
+Journal of Statistical Software_, *22*(4), 1-20. doi: 10.18637/jss.v022.i04 (URL:
+https://doi.org/10.18637/jss.v022.i04).
+
+Dray, S. and Legendre, P. (2008) Testing the species traits-environment relationships: 
+the fourth-corner problem revisited. Ecology, 89, 3400–3412.
+
+Dudgeon, D. (2011). Tropical Stream Ecology. Elsevier. USA
 
 Fierro, P., Valdovinos, C., Vargas-Chacoff, L., Bertrán, C., & Arismendi, I. (2017).
 Macroinvertebrates and Fishes as Bioindicators of Stream Water Pollution. Water Quality. 
@@ -175,6 +277,8 @@ impacted river reaches. Freshwater Biology, 50(12), 2136-2161.
 Pinilla, G. (2010). An index of limnological conditions for urban wetlands of 
 Bogotá city, Colombia. Ecological Indicators, 10(4), 848–856. https://doi.org/10.1016/j.ecolind.2010.01.006  
 
+R Core Team (2020). R: A language and environment for statistical computing.
+R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
 
 Tomanova, S., Moya, N., & Oberdorff, T. (2008). Using macroinvertebrate biological traits
 for assessing biotic integrity of neotropical streams. River Research and Applications,
@@ -191,5 +295,50 @@ Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, an
 species richness: Aquatic insects in the Upper Rhône River and its floodplain.
 Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
 
+## Anexos
 
 
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+
+  qq_plots$Ox_disuelto + 
+  qq_plots$Turbidez +
+  qq_plots$pH +
+  box_plots$Ox_disuelto + 
+  box_plots$Turbidez +
+  box_plots$pH +
+  plot_layout(ncol = 2, byrow = FALSE ) 
+  
+```
+
+```{r anexos_eda2 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+qq_plots$Conductividad + 
+  qq_plots$Temperatura +
+    box_plots$Conductividad + 
+  box_plots$Temperatura +
+  plot_layout(ncol = 2, byrow = FALSE )
+
+```
+
+```{r,  message=FALSE, warning=FALSE,}
+results_manova <- list(
+NeuA_NeuB  = make_manova(est1 = "NeusaA", est2 = "NeusaB"),
+NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
+NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
+NeuB_FrioA =  make_manova(est1 = "NeusaB", est2 = "FrioA"),
+NeuB_FrioB =  make_manova(est1 = "NeusaB", est2 = "FrioB"),
+FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
+)
+
+ for (i in 1:6) { 
+     print(names(results_manova[i]))
+     print(results_manova[[i]])
+     print("\n")
+ }
+
+```
