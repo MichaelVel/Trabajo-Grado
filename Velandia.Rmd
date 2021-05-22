@@ -75,7 +75,7 @@ comparación con las mediciones obtenidas por  los tradicionales indices biológ
 ### Área de estudio y muestreo 
 
 Los macroinvertebrados utilizados provienen de una serie de muestreos realizados
-entre el año 2017 y el año 2019 en 12 estaciones de muestreo ubicadas en los ríos
+entre el año 2017 y el año 2019 en 11 estaciones de muestreo ubicadas en los ríos
 Frío y Neusa, en los municipios de Cajicá, Chía y Cogua (Figura 1), en el
 marco del “Programa nacional para la conservación de la especie endémica de
 Colombia pez capitán de la sabana (*Eremophilus mutisii*)” liderado por el Ministerio del
@@ -121,19 +121,34 @@ if (doc.type == "docx") {} else {
 
 ### Métodos numéricos y estadísticos
 
-Con el fin de establecer el gradiente ambiental, se realizo un análisis de cluster
+Con el fin de establecer el gradiente ambiental, se realizó un análisis de cluster
 y un análisis de componentes principales (PCA), para establecer diferencias entre
-las condiciones fisicoquimicas de las estaciones se realizo un análisis de 
-varianza multivariado (MANOVA). La evaluación de la respuesta de los rasgos 
-funcionales al gradiente ambiental se realizo con un análisis de coinercia RLQ,
-que vincula las matrices de variables ambientales *R* y rasgos funcionales *Q* por 
-medio de una matriz de abundancia *L* (Dolédec *et al*.,2006). Para probar las 
+las condiciones fisicoquímicas de las estaciones se realizó un análisis de
+varianza multivariado (MANOVA). La evaluación de la respuesta de los rasgos
+funcionales al gradiente ambiental se realizó con un análisis de coinercia RLQ,
+que vincula las matrices de variables ambientales *R* y rasgos funcionales *Q* por
+medio de una matriz de abundancia *L* (Dolédec *et al*.,2006). Para probar las
 asociaciones individuales de cada rasgo funcional con las variables ambientales
-se realizo un análisis *fourth corner* (Dray y Legendre, 2008). Todos los analisis 
-fueron realizados en el software R version 3.6.3 (R Core Team, 2020), utilizando
-el paquete ade4 (Dray, 2007). 
+se realizó un análisis *fourth corner* (Dray y Legendre, 2008). Todos los análisis
+fueron realizados en el software R versión 3.6.3 (R Core Team, 2020), utilizando
+el paquete ade4 (Dray, 2007).
+
 
 ## Resultados
+
+### Evaluación gradiente ambiental 
+
+Las características medioambientales de las estaciones evaluadas se encuentran
+resumidas en la tabla 2. Los resultados del análisis  de cluster muestran que
+las estaciones evaluadas se pueden clasificar en cuatro grupos diferentes (Fig 2B),
+que muestra una clara diferencia entre las estaciones del río Frío y las estaciones
+del río Frío. En el río Frío se observa que las estaciones ubicadas en la vereda Canelon
+de Cajicá forman un grupo (FrioB) y la estación ubicada en la zona urbana de Chía
+forma el otro (FrioA). En el río Neusa se observa una diferencia de las estaciones
+en las condiciones físico químicas antes del embalse del Neusa (NeusaA) y después
+(NeusaB). Los resultados del MANOVA y del análisis post hoc entre estos cuatro grupos
+indica que existen diferencias significativas entre ellos (Anexo 3).  
+
 
 ```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
 
@@ -177,6 +192,17 @@ if (doc.type == "docx") {
 }
 ```
 
+Los resultados del PCA muestran que el 70% de la varianza de las variables 
+fisicoquimicas se concentra en los dos primeros componentes (Fig 2C). El primer
+componente esta explicado principalmente por el oxigeno disuelto, el pH y la 
+turbidez y es por tanto el eje más relevante en la calidad del agua de las estaciones
+evaluadas. En el gráfico del PCA (Fig 2A) se puede observar que existe un gradiente 
+desde el grupo NeusaA hasta el grupo FrioA en el que se acidifica el agua y disminuye
+el oxigeno disuelto y aumenta la turbidez. La conductividad entre estaciones no 
+varia demasiado entre estaciones salvo por la estación Frio5 que presenta una 
+alta conductividad (Tabla 2 y Anexo 2).
+
+
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
 plot_pca <- make_pca(type = 'hidrologicos', plot_type = "Tipo_Estacion")
 plot_cluster <-  make_cluster()
@@ -196,10 +222,13 @@ plot_pca$biplot +
 
 ```
 
+### Respuesta de los rasgos funcionales
+
 ```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
 rlq1 <- make_rlq()
 plot(rlq1)
 ```
+
 
 ## Discusión
 
