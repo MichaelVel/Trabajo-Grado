@@ -162,7 +162,7 @@ summary_data <- (function () {
              round(digits = 2)
     data <- list(Estacion = summary_data$mean[["Estacion"]])
     
-    for (i in 1:5){
+    for (i in 1:8){
         a <- paste0( mean[[i]], '±', sd[[i]]) 
         data[[1+i]] <- a
     }
@@ -204,7 +204,7 @@ alta conductividad (Tabla 2 y Anexo 2).
 
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
-plot_pca <- make_pca(type = 'hidrologicos', plot_type = "Tipo_Estacion")
+plot_pca <- make_pca(plot_type = "Tipo_Estacion")
 plot_cluster <-  make_cluster()
 layout <- "
 AAAAAAACCCC
@@ -350,6 +350,20 @@ qq_plots$Conductividad +
   qq_plots$Temperatura +
     box_plots$Conductividad + 
   box_plots$Temperatura +
+  plot_layout(ncol = 2, byrow = FALSE )
+
+```
+
+```{r anexos_eda3 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+qq_plots$Area + 
+  qq_plots$Profundidad +
+  qq_plots$Velocidad + 
+  box_plots$Area +
+  box_plots$Profundidad + 
+  box_plots$Velocidad +
   plot_layout(ncol = 2, byrow = FALSE )
 
 ```

@@ -80,7 +80,33 @@ plot_pca$biplot +
 
 ```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
 rlq1 <- make_rlq()
-plot(rlq1)
+
+ambiental_scores <- rlq1$lR
+
+
+s.label(rlq1$mR)
+s.label(rlq1$lR)
+points(rlq1$lR)
+```
+
+```{r}
+rlq1 <- make_rlq()
+
+f4_res <- fourthcorner(envir, abundance, traits, tr01 = TRUE, modeltype = 6, nrepet = 1000)
+
+a <- summary(f4_res)
+aa <- print(f4_res)
+```
+
+```{r CA }
+rlq1 <- make_rlq()
+eig_CA <- round(abundance_test$eig / sum(abundance_test$eig) * 100,2)
+table_ca <- data_frame(Dimensiones = 1:10, '% Varianza' = eig_CA[1:10])
+
+ca_table <- tableGrob(table_ca, rows = NULL)
+ca_plot <- fviz_ca(abundance_test, col.row = data$L_table[["Tipo_Estacion"]], geom.row = "point")
+
+ca_plot + ca_table
 ```
 
 ## Anexos 
@@ -113,6 +139,20 @@ qq_plots$Conductividad +
   qq_plots$Temperatura +
     box_plots$Conductividad + 
   box_plots$Temperatura +
+  plot_layout(ncol = 2, byrow = FALSE )
+
+```
+
+```{r anexos_eda3 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
+box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+qq_plots$Area + 
+  qq_plots$Profundidad +
+  qq_plots$Velocidad + 
+  box_plots$Area +
+  box_plots$Profundidad + 
+  box_plots$Velocidad +
   plot_layout(ncol = 2, byrow = FALSE )
 
 ```
