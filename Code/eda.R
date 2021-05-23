@@ -11,6 +11,7 @@ library(kableExtra)
 library(flextable)
 library(patchwork)
 library(Hotelling)
+library(gridExtra)
 
 ## Load and cleaning data
 
@@ -84,12 +85,23 @@ load_rlq <- function(parameters = NULL ){
     if (is.null(parameters)) {
         
     parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                        "Conductividad", "Turbidez") }
+                    "Conductividad", "Turbidez") }
     
     enviromental <- load_data(ref_estations = TRUE) %>% 
                     filter_data(parameters)
     
     abundance <- read.csv('Data/abundancia.csv', stringsAsFactors = FALSE)
+    
+    rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4')
+    rio_frio2 <- c('Fri5')
+    rio_neusa2 <- c('Neu4', 'Neu6', 'Neu7')
+    rio_neusa <- c('Neu1', 'Neu2', 'Neu3')
+    
+    abundance$Tipo_Estacion[abundance$Estacion %in% rio_frio] <- 'FrioB'
+    abundance$Tipo_Estacion[abundance$Estacion %in% rio_frio2] <- 'FrioA'
+    abundance$Tipo_Estacion[abundance$Estacion %in% rio_neusa2] <- 'NeusaB'
+    abundance$Tipo_Estacion[abundance$Estacion %in% rio_neusa] <- 'NeusaA'
+    
     
     traits <- read.csv('Data/rasgos_funcionales.csv',
                        stringsAsFactors = FALSE, encoding = 'UTF-8') %>% 
@@ -143,7 +155,10 @@ summary_statistics <- function(...) {
                                Ox_disuelto = funct(Ox_disuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
-                               Turbidez = funct(Turbidez)) %>% ## Añadir hidrologicos
+                               Turbidez = funct(Turbidez),
+                               Area = funct(Area),
+                               Profundidad = funct(Profundidad),
+                               Velocidad = funct(Velocidad)) %>% 
                     return()
                 
             } else {
@@ -154,7 +169,10 @@ summary_statistics <- function(...) {
                                Ox_disuelto = funct(Ox_disuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
-                               Turbidez = funct(Turbidez)) %>%
+                               Turbidez = funct(Turbidez), 
+                               Area = funct(Area),
+                               Profundidad = funct(Profundidad),
+                               Velocidad = funct(Velocidad)) %>%
                     return()
             }
             
@@ -174,48 +192,32 @@ summary_statistics <- function(...) {
     return(summary_stats)
 }
 
-make_manova <- function(funct = hotelling.test ,type = 'fisicoquimicos', est1, est2 ) {
+make_manova <- function(funct = hotelling.test , est1, est2 ) {
     
     data <- load_data(ref_estations = TRUE)
     
-    if (type == 'fisicoquimicos') {
+   
         
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                        "Conductividad", "Turbidez") 
-        
-        data_physicochemicals <- filter_data(data, parameters)
-        
-        
-        data_physicochemicals <- filter(data_physicochemicals, 
-                                        Tipo_Estacion == est1 |
-                                            Tipo_Estacion == est2)
-       
-        results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
-                                   Conductividad, Turbidez) ~ Tipo_Estacion, 
-                                 data = data_physicochemicals )
-        
-       
-        return(results_manova)
-        
-     } else if (type == 'hidrologicos') {
-        
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                        "Conductividad", "Turbidez") 
-        
-        data <- filter_data(data, parameters)
-        data_hydrological  <- data[parameters]
-        }
-}
+    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                    "Conductividad", "Turbidez") 
 
-# results_manova <- list(
-#     NeuA_NeuB <-  make_manova(est1 = "NeusaA", est2 = "NeusaB"),
-#     NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
-#     NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
-#     NeuB_FrioA =  make_manova(est1 = "NeusaB", est2 = "FrioA"),
-#     NeuB_FrioB =  make_manova(est1 = "NeusaB", est2 = "FrioB"),
-#     FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
-# )
-#print(hotelling.test(xs + ys + zs ~ group))
+    
+    data_physicochemicals <- filter_data(data, parameters)
+    
+    
+    data_physicochemicals <- filter(data_physicochemicals, 
+                                    Tipo_Estacion == est1 |
+                                        Tipo_Estacion == est2)
+   
+    results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
+                               Conductividad, Turbidez) ~ Tipo_Estacion, 
+                             data = data_physicochemicals )
+        
+       
+    return(results_manova)
+        
+     
+}
 
 ## Graphical  eda
 
@@ -225,8 +227,10 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     ## by default physicochemical parameters. 
     
     if (is.null(parameters)) {
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                        "Conductividad", "Turbidez")}
+      parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                      "Conductividad", "Turbidez", "Area",
+                      "Profundidad", "Velocidad") }
+  
     ggobjtect_parameters <- list()
     
     eda_plots  <- function(parameter , type_plot = "boxplot" ){
@@ -274,7 +278,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     
 }
           
-make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
+make_pca <- function( plot = TRUE, ... ) {
     
     ## perform the PCA analysis and return a list with  the ggplot objects
     ## relevants to the analysis. If plot = FALSE, returns the raw results
@@ -321,51 +325,30 @@ make_pca <- function(type = 'fisicoquimicos', plot = TRUE, ... ) {
         
     }
   
-    if (type == 'fisicoquimicos') {
+    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                      "Conductividad", "Turbidez") 
         
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                       "Conductividad", "Turbidez") 
+    data <- filter_data(data, parameters)
+    data_physicochemicals <- data[parameters]
+    
+    results_pca <- prcomp(data_physicochemicals, scale. = TRUE)
+    
+    if (plot) {
         
-        data <- filter_data(data, parameters)
-        data_physicochemicals <- data[parameters]
+        plot_pca <- plots_pca_analysis(results_pca, ...)
+        return(plot_pca)
         
-        results_pca <- prcomp(data_physicochemicals, scale. = TRUE)
+    } else {
         
-        if (plot) {
-            
-            plot_pca <- plots_pca_analysis(results_pca, ...)
-            return(plot_pca)
-            
-        } else {
-            
-            return(results_pca)
-        }
-        
-    } else if (type == 'hidrologicos') {
-        
-        parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                       "Conductividad", "Turbidez") 
-        
-        data <- filter_data(data, parameters)
-        data_hydrological  <- data[parameters]
-       
-        results_pca <- prcomp(data_hydrological, scale. = TRUE)
-        
-        if (plot) {
-            
-            plot_pca <- plots_pca_analysis(results_pca, ...)
-            return(plot_pca)
-            
-        } else {
-            
-            return(results_pca)
-        }
+        return(results_pca)
     }
+        
 }
 
 make_cluster <- function() {
         
     data <- load_data(ref_estations = TRUE)
+    
     parameters <- c("Temperatura", "Ox_disuelto", "pH", 
                     "Conductividad", "Turbidez") 
     
@@ -397,40 +380,63 @@ make_fca <- function() {
 
    ## This function takes as imput a fuzzy coded table of traits  in each site
    ## and a table of enviromental variables and perform a CCA. return a dudi
-   ## object of the class pcaiv
+   ## object of the class pcai
 
+    data <- load_rlq()    
+    
+    abundance <- data$L_table %>%  
+      select(-Tipo_Estacion) %>%
+      unite(col = names, Estacion, Muestra) %>%
+      column_to_rownames('names') 
+    
+    
+    envir <- data$R_table %>% ungroup() %>%
+      select(-Tipo_Estacion) %>%
+      unite(col = names, Estacion, Muestra) %>%
+      column_to_rownames('names') 
+    
+    traits <- data$Q_table 
+    
+    traits_by_site <- as.matrix(abundance) %*% as.matrix(traits)
+    traits_by_site <- as.data.frame(traits_by_site)
+    traits_by_site <- traits_by_site %>%
+      prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+                                    Habitos_Alimenticios = 7, 
+                                    Respiracion = 5,
+                                    Forma_Corporal = 4, 
+                                    Movilidad = 7,
+                                    Tamaño_Maximo= 6))
+                    
+    object <- dudi.fca(traits_by_site, scannf = FALSE, nf = 3 )
+    
+    
+    pcaiv <- pcaiv(object, envir, scannf = FALSE, nf = 3)
+  
+    return(pcaiv)
 
-   # with pcaiv
-
-   object <- dudi.fca(traits, scannf = FALSE, nf = 3 )
-   pcaiv(object, envir, scannf = FALSE, nf = 3)
-
-   scatter(object, csub = 3, clab.moda = 1.5)
-
-   # with varipart
-
-   
+  
 }
 
 make_rlq <- function(data = load_rlq() ) {
     
-    
-      abundance <- data$L_table %>%  
+      data <<- data    
+  
+      abundance <<- data$L_table %>%  
                    select(-Tipo_Estacion) %>%
                    unite(col = names, Estacion, Muestra) %>%
                    column_to_rownames('names') 
       
-      abundance_test <- dudi.coa(abundance, scannf = FALSE, nf = 3)
+      abundance_test <<- dudi.coa(abundance, scannf = FALSE, nf = 3)
   
-      envir <- data$R_table %>% ungroup() %>%
+      envir <<- data$R_table %>% ungroup() %>%
              select(-Tipo_Estacion) %>%
              unite(col = names, Estacion, Muestra) %>%
              column_to_rownames('names') 
       
-      envir_test <-  dudi.pca(envir, scannf = FALSE, nf = 3, 
+      envir_test <<-  dudi.pca(envir, scannf = FALSE, nf = 3, 
                               row.w = abundance_test$lw)
     
-      traits <- data$Q_table %>%
+      traits <<- data$Q_table %>%
                 prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
                                               Habitos_Alimenticios = 7, 
                                               Respiracion = 5,
@@ -438,16 +444,26 @@ make_rlq <- function(data = load_rlq() ) {
                                               Movilidad = 7,
                                               Tamaño_Maximo= 6),
                                row.w = abundance_test$cw) 
-      traits_test <-  dudi.fca(traits, scannf = FALSE, nf = 3)
+      traits_test <<-  dudi.fca(traits, scannf = FALSE, nf = 3)
       
     rlq1 <- rlq(envir_test, abundance_test, traits_test,  scannf = FALSE, nf = 2)
-    
-    # plot(rlq1)
-    # summary(rlq1)
-    # randtest(rlq1)
-    # fourthcorner.rlq(rlq1,type="Q.axes")
-    # a <- fourthcorner.rlq(rlq1,type="R.axes")
+  
     return(rlq1)
 
 }
 
+make_fourthcorner <- function() {
+#  rlq1 <- make_rlq()
+#  plot(rlq1)
+#  summary(rlq1)
+#  randtest(rlq1)
+  plot(fourthcorner.rlq(rlq1,type="Q.axes"))
+  plot(fourthcorner.rlq(rlq1,type="R.axes"))
+  fourthcorner.rlq(rlq1)
+#  
+ nrepet <- 1000 # the higher, the longer the run lasts
+ four.comb. <- fourthcorner(envir, abundance,
+                                 traits, modeltype = 6, p.adjust.method.G = "none",
+                                 p.adjust.method.D = "none", nrepet = nrepet)
+# plot(four.comb.aravo)
+}
