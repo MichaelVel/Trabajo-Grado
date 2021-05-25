@@ -2,16 +2,16 @@
 
 library(e1071)
 library(ggplot2)
-library(dplyr)
 library(factoextra)
 library(ade4)
 library(tibble)
-library(tidyr)
 library(kableExtra)
 library(flextable)
 library(patchwork)
 library(Hotelling)
 library(gridExtra)
+library(tidyr)
+library(dplyr)
 
 ## Load and cleaning data
 
@@ -192,8 +192,11 @@ summary_statistics <- function(...) {
     return(summary_stats)
 }
 
-make_manova <- function(funct = hotelling.test , est1, est2 ) {
+make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
     
+    ## If run with the hotelling.test function of the Hotelling package 
+    ## the results are the same
+  
     data <- load_data(ref_estations = TRUE)
     
    
@@ -202,21 +205,36 @@ make_manova <- function(funct = hotelling.test , est1, est2 ) {
                     "Conductividad", "Turbidez") 
 
     
-    data_physicochemicals <- filter_data(data, parameters)
-    
-    
-    data_physicochemicals <- filter(data_physicochemicals, 
-                                    Tipo_Estacion == est1 |
-                                        Tipo_Estacion == est2)
+    if (global) {
+      
+      data_physicochemicals <- filter_data(data, parameters)
    
-    results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
-                               Conductividad, Turbidez) ~ Tipo_Estacion, 
-                             data = data_physicochemicals )
+    
+      results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
+                                    Conductividad, Turbidez) ~ Tipo_Estacion, 
+                              data = data_physicochemicals )
+      
+      
+      return(results_manova)
+    }
+    
+    else {
+      
+        data_physicochemicals <- filter_data(data, parameters)
         
+        
+        data_physicochemicals <- filter(data_physicochemicals, 
+                                        Tipo_Estacion == est1 |
+                                            Tipo_Estacion == est2)
        
-    return(results_manova)
+        results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
+                                   Conductividad, Turbidez) ~ Tipo_Estacion, 
+                                 data = data_physicochemicals )
+            
+           
+        return(results_manova)
         
-     
+    } 
 }
 
 ## Graphical  eda
@@ -278,7 +296,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     
 }
           
-make_pca <- function( plot = TRUE, ... ) {
+make_pca <- function(parameters = NULL, plot = TRUE, ... ) {
     
     ## perform the PCA analysis and return a list with  the ggplot objects
     ## relevants to the analysis. If plot = FALSE, returns the raw results
@@ -325,8 +343,10 @@ make_pca <- function( plot = TRUE, ... ) {
         
     }
   
-    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
-                      "Conductividad", "Turbidez") 
+    if (is.null(parameters)) {
+      
+      parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+                      "Conductividad", "Turbidez") }
         
     data <- filter_data(data, parameters)
     data_physicochemicals <- data[parameters]
@@ -376,36 +396,37 @@ make_cluster <- function() {
   
 ## Fuzzy Correspondence Analysis and RLQ analysis
 
-make_fca <- function() {
+make_fca <- function(data = load_rlq(), presence_ausence = FALSE ) {
 
    ## This function takes as imput a fuzzy coded table of traits  in each site
    ## and a table of enviromental variables and perform a CCA. return a dudi
    ## object of the class pcai
 
-    data <- load_rlq()    
-    
     abundance <- data$L_table %>%  
-      select(-Tipo_Estacion) %>%
-      unite(col = names, Estacion, Muestra) %>%
-      column_to_rownames('names') 
+        select(-Tipo_Estacion) %>%
+        unite(col = names, Estacion, Muestra) %>%
+        column_to_rownames('names') 
     
+    if (presence_ausence) {
+        abundance[abundance>0] <-1
+    }
     
     envir <- data$R_table %>% ungroup() %>%
-      select(-Tipo_Estacion) %>%
-      unite(col = names, Estacion, Muestra) %>%
-      column_to_rownames('names') 
+        select(-Tipo_Estacion) %>%
+        unite(col = names, Estacion, Muestra) %>%
+        column_to_rownames('names') 
     
     traits <- data$Q_table 
     
     traits_by_site <- as.matrix(abundance) %*% as.matrix(traits)
     traits_by_site <- as.data.frame(traits_by_site)
     traits_by_site <- traits_by_site %>%
-      prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+      prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 7, 
                                     Habitos_Alimenticios = 7, 
                                     Respiracion = 5,
                                     Forma_Corporal = 4, 
-                                    Movilidad = 7,
-                                    Tamaño_Maximo= 6))
+                                    Movilidad = 6,
+                                    Tamaño_Maximo= 5))
                     
     object <- dudi.fca(traits_by_site, scannf = FALSE, nf = 3 )
     
@@ -417,10 +438,8 @@ make_fca <- function() {
   
 }
 
-make_rlq <- function(data = load_rlq() ) {
+make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
     
-      data <<- data    
-  
       abundance <<- data$L_table %>%  
                    select(-Tipo_Estacion) %>%
                    unite(col = names, Estacion, Muestra) %>%
@@ -437,33 +456,65 @@ make_rlq <- function(data = load_rlq() ) {
                               row.w = abundance_test$lw)
     
       traits <<- data$Q_table %>%
-                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 7, 
                                               Habitos_Alimenticios = 7, 
                                               Respiracion = 5,
                                               Forma_Corporal = 4, 
-                                              Movilidad = 7,
-                                              Tamaño_Maximo= 6),
+                                              Movilidad = 6,
+                                              Tamaño_Maximo= 5),
                                row.w = abundance_test$cw) 
       traits_test <<-  dudi.fca(traits, scannf = FALSE, nf = 3)
       
     rlq1 <- rlq(envir_test, abundance_test, traits_test,  scannf = FALSE, nf = 2)
+    
+
+    
+    if (fourthcorner) {
+        
+        f4c_R <- fourthcorner.rlq(rlq1,type="R.axes")
+        f4c_Q <- fourthcorner.rlq(rlq1,type="Q.axes")
+        f4c <-  list(envir = f4c_R, traits = f4c_Q)   
+        return(f4c)
+    }
+    
+    else {
+      
+        return(rlq1)
+    }
+}
+
+make_fourthcorner <- function(data = load_rlq(), nrepet = NULL) {
+ 
+   if (is.null(nrepet)) {
+      nrepet <- 1000 # the higher, the longer the run lasts
+   }
   
-    return(rlq1)
+    abundance <- data$L_table %>%  
+        select(-Tipo_Estacion) %>%
+        unite(col = names, Estacion, Muestra) %>%
+        column_to_rownames('names') 
+    
+    envir <- data$R_table %>% ungroup() %>%
+        select(-Tipo_Estacion) %>%
+        unite(col = names, Estacion, Muestra) %>%
+        column_to_rownames('names') 
+      
+    traits <- data$Q_table %>%
+        prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
+                                      Habitos_Alimenticios = 7, 
+                                      Respiracion = 5,
+                                      Forma_Corporal = 4, 
+                                      Movilidad = 7,
+                                      Tamaño_Maximo= 6)
+                       ) 
+    
+ fourthcorner_results <- fourthcorner(envir, abundance, traits, 
+                                      modeltype = 6, 
+                                      p.adjust.method.G = "none",
+                                      p.adjust.method.D = "none",
+                                      nrepet = nrepet)
+ return(fourthcorner_results)
+ 
 
 }
 
-make_fourthcorner <- function() {
-#  rlq1 <- make_rlq()
-#  plot(rlq1)
-#  summary(rlq1)
-#  randtest(rlq1)
-  plot(fourthcorner.rlq(rlq1,type="Q.axes"))
-  plot(fourthcorner.rlq(rlq1,type="R.axes"))
-  fourthcorner.rlq(rlq1)
-#  
- nrepet <- 1000 # the higher, the longer the run lasts
- four.comb. <- fourthcorner(envir, abundance,
-                                 traits, modeltype = 6, p.adjust.method.G = "none",
-                                 p.adjust.method.D = "none", nrepet = nrepet)
-# plot(four.comb.aravo)
-}

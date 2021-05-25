@@ -17,7 +17,7 @@ source("Code/eda.R")
 
 Los resultados 
 
-```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
+```{r summary, echo=FALSE,  message=FALSE, warning=FALSE, fig.height= 6, fig.width= 9, fig.align='center' }
 
 summary_data <- (function () {
     summary_data <- summary_statistics()
@@ -29,7 +29,7 @@ summary_data <- (function () {
              round(digits = 2)
     data <- list(Estacion = summary_data$mean[["Estacion"]])
     
-    for (i in 1:5){
+    for (i in 1:8){
         a <- paste0( mean[[i]], '±', sd[[i]]) 
         data[[1+i]] <- a
     }
@@ -60,7 +60,7 @@ if (doc.type == "docx") {
 ```
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
-plot_pca <- make_pca(type = 'hidrologicos', plot_type = "Tipo_Estacion")
+plot_pca <- make_pca( plot_type = "Tipo_Estacion")
 plot_cluster <-  make_cluster()
 layout <- "
 AAAAAAACCCC
@@ -78,35 +78,164 @@ plot_pca$biplot +
 
 ```
 
-```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10}
 rlq1 <- make_rlq()
+data <- load_rlq()$R_table
+estations <- cbind( Grupo =factor(data$Tipo_Estacion),rlq1$mR) 
+mean_estations <- estations %>% 
+                 group_by(Grupo) %>%
+                summarise(across(.cols = everything() , mean))
 
-ambiental_scores <- rlq1$lR
+custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
+rasgos <-  c("Tipo Alimento", 
+            "Habitos Alimenticios", 
+            "Respiracion",
+            "Forma Corporal", 
+            "Movilidad",
+            "Tamaño Maximo")
 
+{
+    par(mfrow= c(3,2))
 
-s.label(rlq1$mR)
-s.label(rlq1$lR)
-points(rlq1$lR)
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[1:7,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[1], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+      
+    }
+  
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[8:14,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[2], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+      
+    }
+  
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[15:19,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[3], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[20:23,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[4], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[24:29,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[5], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.label(rlq1$co[30:34,], boxes = FALSE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[6], csub = 2.5);
+        s.arrow(rlq1$l1, boxes = TRUE, add.plot = TRUE, clabel = 2);
+    }
+}
+  
+
 ```
 
-```{r}
-rlq1 <- make_rlq()
+```{r , fig.height= 3, fig.width= 10}
+{
+   par(mfrow = c(1,3)) 
+   s.corcircle(rlq1$aR, sub = "enviromental axes", csub = 2, clabel = 1.25)
+   barplot((rlq1$eig/sum(rlq1$eig)), names.arg = 1:5, 
+          ylab = '% Varianza explicada', xlab = 'Dimensión', ylim = c(0,1))
+   s.corcircle(rlq1$aQ, sub = "traits axes", csub = 2, clabel = 1.25) 
+}
+```
 
-f4_res <- fourthcorner(envir, abundance, traits, tr01 = TRUE, modeltype = 6, nrepet = 1000)
+```{r fourthcorner}
+fourth_corner <- make_rlq(fourthcorner = TRUE)
 
-a <- summary(f4_res)
-aa <- print(f4_res)
+
 ```
 
 ```{r CA }
-rlq1 <- make_rlq()
-eig_CA <- round(abundance_test$eig / sum(abundance_test$eig) * 100,2)
-table_ca <- data_frame(Dimensiones = 1:10, '% Varianza' = eig_CA[1:10])
 
-ca_table <- tableGrob(table_ca, rows = NULL)
-ca_plot <- fviz_ca(abundance_test, col.row = data$L_table[["Tipo_Estacion"]], geom.row = "point")
-
-ca_plot + ca_table
+# REFACTORIZE NOT WORK ANYMORE
+# rlq1 <- make_rlq()
+# 
+# eig_CA <- round(abundance_test$eig / sum(abundance_test$eig) * 100,2)
+# table_ca <- data_frame(Dimensiones = 1:10, '% Varianza' = eig_CA[1:10])
+# 
+# ca_table <- tableGrob(table_ca, rows = NULL)
+# ca_plot <- fviz_ca(abundance_test, col.row = data$L_table[["Tipo_Estacion"]], geom.row = "point")
+# 
+# ca_plot + ca_table
 ```
 
 ## Anexos 
@@ -172,6 +301,12 @@ FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
      print(results_manova[[i]])
      print("\n")
  }
+
+```
+
+```{r}
+plot_pca <- make_pca(parameters = c('Area', 'Profundidad', 'Velocidad' ), plot_type = "Tipo_Estacion")
+plot_pca
 
 ```
 
