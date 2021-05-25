@@ -2,6 +2,10 @@
 title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
 date: "2/05/2021"
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
 output:
   pdf_document: default
   html_document: default
@@ -150,7 +154,7 @@ en las condiciones físico químicas antes del embalse del Neusa (NeusaA) y desp
 indica que existen diferencias significativas entre ellos (Anexo 3).  
 
 
-```{r summary, echo=FALSE,  message=FALSE, warning=FALSE }
+```{r summary, echo=FALSE,  message=FALSE, warning=FALSE, fig.height= 6, fig.width= 11, fig.align='center' }
 
 summary_data <- (function () {
     summary_data <- summary_statistics()
@@ -179,7 +183,10 @@ doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
 if (doc.type == "docx") {
     
-  summary_data %>%
+   summary_data %>%
+      column_to_rownames("Estacion") %>%
+      as.matrix() %>%
+      t() %>%
       flextable() %>%
       set_caption( caption = "New York Air Quality Measurements") %>% ## Change caption and footer
       add_footer_lines(values = "Daily air quality measurements in New Y")
@@ -187,7 +194,10 @@ if (doc.type == "docx") {
 } else {
     
   summary_data %>%
-      kbl(booktabs = TRUE, escape = FALSE, caption = " Categorias de los Rasgos Funcionales")
+      kbl(booktabs = TRUE, escape = FALSE, 
+          caption = "Condiciones ambientales de los rios Neusa y Frio
+                     en las estaciones trabajadas ") %>% 
+      kable_styling(latex_options="scale_down")
 
 }
 ```
@@ -202,8 +212,7 @@ el oxigeno disuelto y aumenta la turbidez. La conductividad entre estaciones no
 varia demasiado entre estaciones salvo por la estación Frio5 que presenta una 
 alta conductividad (Tabla 2 y Anexo 2).
 
-
-```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center'}
+```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center', fig.cap= " Analisis de Componentes Principales y Analisis Jerarquico de Cluster. A) Proyección de las variables fisicoquimicas en el plano del ACP. B) Dendrogama de las estaciones. Se utilizo como la distancia euclidia como metrica de similitud y se computo utilizando el algoritmo UPGMA C) Varianza explicada por los componentes del ACP. "}
 plot_pca <- make_pca(plot_type = "Tipo_Estacion")
 plot_cluster <-  make_cluster()
 layout <- "
@@ -222,18 +231,146 @@ plot_pca$biplot +
 
 ```
 
+Las características hidrologicas de los ríos no varían en gran medida entre 
+estaciones (Anexo 2) y por lo tanto aportan poco al gradiente ambiental, por lo 
+que fueron excluidas de los análisis posteriores.  
+
 ### Respuesta de los rasgos funcionales
 
-```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 9, fig.width= 10}
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los rios estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 89% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se encuentran en la tabla 1"}
 rlq1 <- make_rlq()
-plot(rlq1)
+data <- load_rlq()$R_table
+estations <- cbind( Grupo =factor(data$Tipo_Estacion),rlq1$mR) 
+mean_estations <- estations %>% 
+                 group_by(Grupo) %>%
+                summarise(across(.cols = everything() , mean))
+
+custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
+rasgos <-  c("A) Tipo Alimento", 
+             "B) Habitos Alimenticios", 
+             "C) Respiracion",
+             "D) Forma Corporal", 
+             "E) Movilidad",
+             "F) Tamaño Maximo")
+
+{
+    par(mfrow= c(3,2))
+
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[1:7,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[1], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+      
+    }
+  
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[8:14,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[2], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+      
+    }
+  
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[15:19,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[3], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[20:23,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[4], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[24:29,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[5], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+      
+    }
+    
+    {
+        plot(1, type="n", xlab="", ylab="", 
+             ylim = c(-3,3), xlim = c(-3,3), axes = FALSE);
+        palette(custom_palette)
+        points(estations[[2]], estations[[3]],
+               col = estations$Grupo, pch = 18);
+        text(mean_estations[[2]], mean_estations[[3]],
+               labels =  mean_estations$Grupo,
+               col = custom_palette)
+        par(new= TRUE);
+        palette(gray(0:1));
+        s.arrow(rlq1$co[30:34,], boxes = TRUE,  clabel = 2,
+                ylim = c(-1,1), xlim = c(-1.5,1.5),
+                sub = rasgos[6], csub = 2.5);
+        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+    }
+}
+  
+
 ```
 
 
 ## Discusión
 
 ## Conclusiones
-
 
 ## Bibliografía
 
@@ -324,8 +461,50 @@ Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, an
 species richness: Aquatic insects in the Upper Rhône River and its floodplain.
 Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
 
+
 ## Anexos
 
+### Anexo 1
+\newpage
+\blandscape
+
+
+
+```{r rasgos }
+rasgos_func <- read.csv("Data/rasgos_funcionales.csv")
+rasgos <-  c("A) Tipo Alimento", 
+             "B) Habitos Alimenticios", 
+             "C) Respiracion",
+             "D) Forma Corporal", 
+             "E) Movilidad",
+             "F) Tamaño Maximo")
+
+rasgos_func %>%
+  kbl(booktabs = TRUE, escape = FALSE, caption = "
+        Clasificación de los rasgos funcionales  basados en 
+        la metodologia del Fuzzy Code para las familias de 
+        macroinvertebrados presentes en los rios de la Sabana 
+        de Bogotá.") %>%
+     kable_styling(latex_options="scale_down") %>%
+     add_header_above(c("",
+                      "Tipo Alimento" = 7, 
+                      "Habitos Alimenticios" = 7, 
+                      "Respiracion" = 5,
+                      "Forma Corporal" = 4, 
+                      "Movilidad" = 6,
+                      "Tamaño Maximo" = 5))
+
+```
+\elandscape
+
+\newpage
+
+### Anexo 2
+
+El análisis univariado de las variables fisicoquimicas e hidrologicas. En las 
+figuras se observan los diagramas de caja que corresponde a un análisis descriptivo
+de las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan 
+las variables a una distribución normal.  
 
 ```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
@@ -354,7 +533,7 @@ qq_plots$Conductividad +
 
 ```
 
-```{r anexos_eda3 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+```{r anexos_eda3 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
@@ -368,8 +547,15 @@ qq_plots$Area +
 
 ```
 
-```{r,  message=FALSE, warning=FALSE,}
+### Anexo 3
+
+Resultados del análisis de varianza multivariado de los grupos generados por el 
+análisis de cluster. El análisis post hoc incluyo multiples tests de hotelling 
+entre los pares de grupos. 
+
+```{r manova,  message=FALSE, warning=FALSE,}
 results_manova <- list(
+Global =  make_manova(global = TRUE),
 NeuA_NeuB  = make_manova(est1 = "NeusaA", est2 = "NeusaB"),
 NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
 NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
@@ -379,9 +565,12 @@ FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
 )
 
  for (i in 1:6) { 
+     
+     cat(" ")  
      print(names(results_manova[i]))
-     print(results_manova[[i]])
-     print("\n")
+     print(summary(results_manova[[i]]))
+     cat(" ")
+     
  }
 
 ```
