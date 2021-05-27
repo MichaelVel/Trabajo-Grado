@@ -1,7 +1,7 @@
 ---
 title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
-date: "2/05/2021"
+date: "26/05/2021"
 header-includes:
 - \usepackage{pdflscape}
 - \newcommand{\blandscape}{\begin{landscape}}
@@ -153,6 +153,9 @@ en las condiciones físico químicas antes del embalse del Neusa (NeusaA) y desp
 (NeusaB). Los resultados del MANOVA y del análisis post hoc entre estos cuatro grupos
 indica que existen diferencias significativas entre ellos (Anexo 3).  
 
+Las características hidrologicas de los ríos no varían en gran medida entre las
+estaciones (Tabla 2 y Anexo 2) y por lo tanto aportan poco al gradiente ambiental, 
+por lo que fueron excluidas de los análisis posteriores.  
 
 ```{r summary, echo=FALSE,  message=FALSE, warning=FALSE, fig.height= 6, fig.width= 11, fig.align='center' }
 
@@ -166,51 +169,66 @@ summary_data <- (function () {
              round(digits = 2)
     data <- list(Estacion = summary_data$mean[["Estacion"]])
     
+    names <- c("Estacion", "Temperatura (C°)", "Ox disuelto (mg/L)", "pH",
+             "Conductividad (µS/cm)", "Turbidez (NTU)", "Area (m²)",
+             "Profundidad (cm)", "Velocidad (m/s)",
+             "Altitud (msnm)","Familias", "Total Macro")
+    
     for (i in 1:8){
         a <- paste0( mean[[i]], '±', sd[[i]]) 
         data[[1+i]] <- a
     }
     
     data <- as.data.frame(data)
-    names(data) <-  names(summary_data$mean)
+    names(data) <-  names(summary_data$mean[1:9])
+    data <- cbind(data,summary_data$mean[["Altitud"]])
     data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
-    names(data) <- gsub("_", " ", names(data))
+    names(data) <- names
+    
+    data <- data %>%
+      column_to_rownames("Estacion") %>%
+      as.matrix(data) %>%
+      t() %>%
+      as.data.frame()
+
     
     return(data)
 })()
 
-doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
-if (doc.type == "docx") {
-    
-   summary_data %>%
-      column_to_rownames("Estacion") %>%
-      as.matrix() %>%
-      t() %>%
-      flextable() %>%
-      set_caption( caption = "New York Air Quality Measurements") %>% ## Change caption and footer
-      add_footer_lines(values = "Daily air quality measurements in New Y")
-
-} else {
-    
   summary_data %>%
       kbl(booktabs = TRUE, escape = FALSE, 
           caption = "Condiciones ambientales de los rios Neusa y Frio
                      en las estaciones trabajadas ") %>% 
       kable_styling(latex_options="scale_down")
+    
 
-}
 ```
 
 Los resultados del PCA muestran que el 70% de la varianza de las variables 
 fisicoquimicas se concentra en los dos primeros componentes (Fig 2C). El primer
-componente esta explicado principalmente por el oxigeno disuelto, el pH y la 
-turbidez y es por tanto el eje más relevante en la calidad del agua de las estaciones
-evaluadas. En el gráfico del PCA (Fig 2A) se puede observar que existe un gradiente 
-desde el grupo NeusaA hasta el grupo FrioA en el que se acidifica el agua y disminuye
-el oxigeno disuelto y aumenta la turbidez. La conductividad entre estaciones no 
-varia demasiado entre estaciones salvo por la estación Frio5 que presenta una 
-alta conductividad (Tabla 2 y Anexo 2).
+componente esta explicado principalmente por el oxigeno disuelto, la 
+turbidez y la temperatura de las aguas y es por tanto el eje más relevante en 
+la evaluación del gradiente ambiental de las estaciones evaluadas. En el gráfico
+del PCA (Fig 2A) se puede observar un gradiente de derecha a izquierda en el que
+se acidifica el agua, se disminuye el oxigeno disuelto y aumenta la turbidez de 
+las aguas.  Si bien también se observa un gradiente de temperatura, este no 
+necesariamente esta relacionado con el gradiente ambiental, sino que se debe a 
+las diferencias de altura entre estaciones (Tabla 2).  
+
+Las mediciones de pH realizadas en el río Frio muestran una  alta variabilidad
+entre los muestreos que contrasta con las mediciones del río Neusa que en general
+son más homogéneas y presentan un pH neutro. La conductividad también presenta 
+un comportamiento diferencial entre los ríos. En el caso del río Neusa, las 
+estaciones anteriores a la represa (Neusa A) presentan valores más elevados que
+los presentes en las estaciones posteriores a la represa (Neusa B), sin embargo 
+cabe resaltar que en las estaciones del grupo Neusa A, la varibilidad  entre 
+muestreos es mucho más elevada (Anexo 2) que en el resto de estaciones,  razón 
+por la cual esta alta conductividad podría deberse a razones puntuales en
+los periodos de muestreo.  En el río Frio el gradiente de conductividad es el 
+esperado, sin muchas diferencias entre las estaciones río arriba (Frio B) y una 
+alta conductividad en la estación Frio5. 
+
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center', fig.cap= " Analisis de Componentes Principales y Analisis Jerarquico de Cluster. A) Proyección de las variables fisicoquimicas en el plano del ACP. B) Dendrogama de las estaciones. Se utilizo como la distancia euclidia como metrica de similitud y se computo utilizando el algoritmo UPGMA C) Varianza explicada por los componentes del ACP. "}
 plot_pca <- make_pca(plot_type = "Tipo_Estacion")
@@ -231,13 +249,31 @@ plot_pca$biplot +
 
 ```
 
-Las características hidrologicas de los ríos no varían en gran medida entre 
-estaciones (Anexo 2) y por lo tanto aportan poco al gradiente ambiental, por lo 
-que fueron excluidas de los análisis posteriores.  
 
 ### Respuesta de los rasgos funcionales
 
-```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los rios estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 89% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se encuentran en la tabla 1"}
+Las proyecciones de las categorías de cada rasgo funcional  se proyectaron en 
+el plano factorial producido por el análisis RLQ (figura 3), siendo el primer eje 
+el más relevante en el análisis puesto que comprime el 85% de la inercia observada
+en las tablas de condiciones ambientales (R) y rasgos funcionales (Q).   
+
+El análisis fourthcorner revela que existen correlaciones significativas (p = 0.05) 
+entre la temperatura, la turbidez y el oxigeno disuelto con el primer eje del plano
+factorial (Anexo 4) confirmando las tendencias observadas en el PCA.  
+
+Cuando en el plano aumenta el oxigeno disuelto y disminuye la turbidez
+se puede ver una tendencia hacia  el aumento de organismos raspadores que se 
+alimentan principalmente de algas y detritos finos (Fig 3 A y B) de pequeños
+tamaños (<1cm) con cuerpos redondeados  y/o aplanados y que presentan
+hábitos natatorios o excavadores (Fig 3 D, E y F). Cuando la acidez y la turbidez
+del agua aumenta la tendencia favorece a los organismos trituradores y a los 
+predadores (Fig 3 A y B) de forma cilíndrica y tamaño medio (1-2 cm) que se
+encuentran sobre la superficie bentónica (Fig 3 D, E y F). La figura 3C muestra 
+que las formas de respiración de los macroinvertebrados no presentan tendencias 
+fuertes en relación a el gradiente ambiental.
+
+
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los rios estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 85% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se pueden encontrar en la tabla 1."}
 rlq1 <- make_rlq()
 data <- load_rlq()$R_table
 estations <- cbind( Grupo =factor(data$Tipo_Estacion),rlq1$mR) 
@@ -267,7 +303,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[1:7,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[1:6,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[1], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -285,7 +321,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[8:14,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[7:11,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[2], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -303,7 +339,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[15:19,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[12:15,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[3], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -321,7 +357,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[20:23,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[16:19,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[4], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -339,7 +375,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[24:29,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[20:25,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[5], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -357,7 +393,7 @@ rasgos <-  c("A) Tipo Alimento",
                col = custom_palette)
         par(new= TRUE);
         palette(gray(0:1));
-        s.arrow(rlq1$co[30:34,], boxes = TRUE,  clabel = 2,
+        s.arrow(rlq1$co[26:30,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[6], csub = 2.5);
         s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
@@ -367,10 +403,23 @@ rasgos <-  c("A) Tipo Alimento",
 
 ```
 
+Sin embargo, los resultados del análisis fourthcorner solo respaldan algunas de 
+estas tendencias, encontrándose correlaciones negativas (p = 0.5) entre el 
+primer eje del plano factorial y los organismos que se alimentan de algas (Miph)
+o presentan formas  esféricas (SPH) y correlaciones positivas cuando los organismos 
+son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medio
+(Anexo 4). 
+
+### Indices bioticos 
+
+Trabajando en los indices BMWP-Col y el  ASPT con el proposito de contrastar los 
+resultados obtenidos. 
 
 ## Discusión
 
 ## Conclusiones
+
+\newpage
 
 ## Bibliografía
 
@@ -464,11 +513,8 @@ Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.t
 
 ## Anexos
 
-### Anexo 1
 \newpage
 \blandscape
-
-
 
 ```{r rasgos }
 rasgos_func <- read.csv("Data/rasgos_funcionales.csv")
@@ -481,15 +527,15 @@ rasgos <-  c("A) Tipo Alimento",
 
 rasgos_func %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Clasificación de los rasgos funcionales  basados en 
+        Anexo1 : Clasificación de los rasgos funcionales  basados en 
         la metodologia del Fuzzy Code para las familias de 
         macroinvertebrados presentes en los rios de la Sabana 
         de Bogotá.") %>%
      kable_styling(latex_options="scale_down") %>%
      add_header_above(c("",
-                      "Tipo Alimento" = 7, 
-                      "Habitos Alimenticios" = 7, 
-                      "Respiracion" = 5,
+                      "Tipo Alimento" = 6, 
+                      "Habitos Alimenticios" = 5, 
+                      "Respiracion" = 4,
                       "Forma Corporal" = 4, 
                       "Movilidad" = 6,
                       "Tamaño Maximo" = 5))
@@ -506,29 +552,29 @@ figuras se observan los diagramas de caja que corresponde a un análisis descrip
 de las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan 
 las variables a una distribución normal.  
 
-```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
 
-  qq_plots$Ox_disuelto + 
+  qq_plots$OxDisuelto + 
   qq_plots$Turbidez +
-  qq_plots$pH +
-  box_plots$Ox_disuelto + 
+  box_plots$OxDisuelto + 
   box_plots$Turbidez +
-  box_plots$pH +
   plot_layout(ncol = 2, byrow = FALSE ) 
   
 ```
 
-```{r anexos_eda2 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+```{r anexos_eda2 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
-qq_plots$Conductividad + 
+  qq_plots$Conductividad + 
   qq_plots$Temperatura +
-    box_plots$Conductividad + 
+  qq_plots$pH +
+  box_plots$Conductividad + 
   box_plots$Temperatura +
+  box_plots$pH +
   plot_layout(ncol = 2, byrow = FALSE )
 
 ```
@@ -553,7 +599,7 @@ Resultados del análisis de varianza multivariado de los grupos generados por el
 análisis de cluster. El análisis post hoc incluyo multiples tests de hotelling 
 entre los pares de grupos. 
 
-```{r manova,  message=FALSE, warning=FALSE,}
+```{r manova,  message=FALSE, warning=FALSE}
 results_manova <- list(
 Global =  make_manova(global = TRUE),
 NeuA_NeuB  = make_manova(est1 = "NeusaA", est2 = "NeusaB"),
@@ -574,3 +620,53 @@ FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
  }
 
 ```
+
+
+```{r fourthcorner1, message= FALSE, warning= FALSE, include= FALSE, cache= FALSE}
+
+fourth_corner <- make_rlq(fourthcorner = TRUE)
+fourth_corner$envir
+
+f4c_traits <- as.data.frame(print(fourth_corner$traits), 
+                     stringsAsFactors = FALSE, row.names = NULL, 
+                     optional = TRUE) %>%
+subset(select= -Stat) %>%
+subset(select= -Alter) 
+ 
+f4c_traits <- f4c_traits %>% 
+  subset(grepl("AxcR1", .$Test)) %>%
+  remove_rownames() %>%
+  column_to_rownames("Test")
+
+f4c_envir <- as.data.frame(print(fourth_corner$envir), 
+                     stringsAsFactors = FALSE, row.names = NULL, 
+                     optional = TRUE) %>%
+subset(select= -Stat) %>%
+subset(select= -Alter) 
+ 
+f4c_envir <- f4c_envir %>% 
+  subset(grepl("AxcQ1", .$Test)) %>%
+  remove_rownames() %>%
+  column_to_rownames("Test")
+
+
+
+```
+
+```{r fourthcorner2, message= FALSE, warning= FALSE }
+res_4c <- rbind(f4c_traits, f4c_envir)
+
+res_4c %>%
+      kbl(booktabs = TRUE, escape = FALSE,
+          caption = "Anexo 4: Resultados del Analisis Fourthcorner de las correlaciones
+                     (Pearson) entre el primer eje del plano factorial RLQ y los
+                      rasgos funcionales y las variables ambientales.
+                      Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 ") %>%
+      kableExtra::group_rows("Traits", 1, 30) %>%
+      kableExtra::group_rows("Enviromental", 31, 35)
+
+```
+
+
+
+

@@ -84,7 +84,7 @@ load_rlq <- function(parameters = NULL ){
     
     if (is.null(parameters)) {
         
-    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+    parameters <- c("Temperatura", "OxDisuelto", "pH", 
                     "Conductividad", "Turbidez") }
     
     enviromental <- load_data(ref_estations = TRUE) %>% 
@@ -152,7 +152,7 @@ summary_statistics <- function(...) {
                 load_data() %>% 
                     group_by(Estacion, Muestra) %>% 
                     summarise( Temperatura =funct(Temperatura),
-                               Ox_disuelto = funct(Ox_disuelto),
+                               OxDisuelto = funct(OxDisuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
                                Turbidez = funct(Turbidez),
@@ -166,13 +166,14 @@ summary_statistics <- function(...) {
                 load_data() %>% 
                     group_by(Estacion) %>% 
                     summarise( Temperatura =funct(Temperatura),
-                               Ox_disuelto = funct(Ox_disuelto),
+                               OxDisuelto = funct(OxDisuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
                                Turbidez = funct(Turbidez), 
                                Area = funct(Area),
                                Profundidad = funct(Profundidad),
-                               Velocidad = funct(Velocidad)) %>%
+                               Velocidad = funct(Velocidad),
+                               Altitud = funct(Altitud)) %>%
                     return()
             }
             
@@ -201,7 +202,7 @@ make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
     
    
         
-    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+    parameters <- c("Temperatura", "OxDisuelto", "pH", 
                     "Conductividad", "Turbidez") 
 
     
@@ -210,7 +211,7 @@ make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
       data_physicochemicals <- filter_data(data, parameters)
    
     
-      results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
+      results_manova <- funct(cbind(Temperatura, OxDisuelto, pH, 
                                     Conductividad, Turbidez) ~ Tipo_Estacion, 
                               data = data_physicochemicals )
       
@@ -227,7 +228,7 @@ make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
                                         Tipo_Estacion == est1 |
                                             Tipo_Estacion == est2)
        
-        results_manova <- funct(cbind(Temperatura, Ox_disuelto, pH, 
+        results_manova <- funct(cbind(Temperatura, OxDisuelto, pH, 
                                    Conductividad, Turbidez) ~ Tipo_Estacion, 
                                  data = data_physicochemicals )
             
@@ -245,7 +246,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     ## by default physicochemical parameters. 
     
     if (is.null(parameters)) {
-      parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+      parameters <- c("Temperatura", "OxDisuelto", "pH", 
                       "Conductividad", "Turbidez", "Area",
                       "Profundidad", "Velocidad") }
   
@@ -345,7 +346,7 @@ make_pca <- function(parameters = NULL, plot = TRUE, ... ) {
   
     if (is.null(parameters)) {
       
-      parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+      parameters <- c("Temperatura", "OxDisuelto", "pH", 
                       "Conductividad", "Turbidez") }
         
     data <- filter_data(data, parameters)
@@ -369,7 +370,7 @@ make_cluster <- function() {
         
     data <- load_data(ref_estations = TRUE)
     
-    parameters <- c("Temperatura", "Ox_disuelto", "pH", 
+    parameters <- c("Temperatura", "OxDisuelto", "pH", 
                     "Conductividad", "Turbidez") 
     
     data_physicochemicals <- filter_data(data, parameters) %>%
@@ -456,9 +457,9 @@ make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
                               row.w = abundance_test$lw)
     
       traits <<- data$Q_table %>%
-                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 7, 
-                                              Habitos_Alimenticios = 7, 
-                                              Respiracion = 5,
+                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6, 
+                                              Habitos_Alimenticios = 5, 
+                                              Respiracion = 4,
                                               Forma_Corporal = 4, 
                                               Movilidad = 6,
                                               Tamaño_Maximo= 5),
@@ -471,8 +472,14 @@ make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
     
     if (fourthcorner) {
         
-        f4c_R <- fourthcorner.rlq(rlq1,type="R.axes")
-        f4c_Q <- fourthcorner.rlq(rlq1,type="Q.axes")
+        f4c_R <- fourthcorner.rlq(rlq1,type="R.axes",
+                                  p.adjust.method.G = "none",
+                                  p.adjust.method.D = "none",
+                                  nrepet = 5000)
+        f4c_Q <- fourthcorner.rlq(rlq1,type="Q.axes", 
+                                  p.adjust.method.G = "none",
+                                  p.adjust.method.D = "none",
+                                  nrepet = 5000)
         f4c <-  list(envir = f4c_R, traits = f4c_Q)   
         return(f4c)
     }
@@ -500,12 +507,12 @@ make_fourthcorner <- function(data = load_rlq(), nrepet = NULL) {
         column_to_rownames('names') 
       
     traits <- data$Q_table %>%
-        prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 8, 
-                                      Habitos_Alimenticios = 7, 
-                                      Respiracion = 5,
+        prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6 , 
+                                      Habitos_Alimenticios = 5, 
+                                      Respiracion = 4,
                                       Forma_Corporal = 4, 
-                                      Movilidad = 7,
-                                      Tamaño_Maximo= 6)
+                                      Movilidad = 6,
+                                      Tamaño_Maximo= 5)
                        ) 
     
  fourthcorner_results <- fourthcorner(envir, abundance, traits, 

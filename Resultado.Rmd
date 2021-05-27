@@ -219,9 +219,14 @@ rasgos <-  c("Tipo Alimento",
 ```
 
 ```{r fourthcorner}
+
 fourth_corner <- make_rlq(fourthcorner = TRUE)
-
-
+plot(fourth_corner$traits)
+plot(fourth_corner$envir)
+fourth_corner$traits
+fourth_corner$envir
+summary(fourth_corner$envir)
+summary(fourth_corner$traits)
 ```
 
 ```{r CA }
