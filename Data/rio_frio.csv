@@ -1,4 +1,4 @@
-Estacion,Muestra,Epoca,Fecha,Latitud,Longitud,Altitud,Temperatura,Ox_disuelto,pH,Area,Profundidad,Velocidad,Conductividad,Turbidez,Familia,Individuos
+Estacion,Muestra,Epoca,Fecha,Latitud,Longitud,Altitud,Temperatura,OxDisuelto,pH,Area,Profundidad,Velocidad,Conductividad,Turbidez,Familia,Individuos
 Fri4,1,Lluvia,,4.89305555555556,-74.0493611111111,2563,14.1,3.76,6.66,86.4,62.4,0.68,71.7,17.12,Aeshnidae,1
 Fri4,1,Lluvia,,4.89305555555556,-74.0493611111111,2563,14.1,3.76,6.66,86.4,62.4,0.68,71.7,17.12,Chironomidae,13
 Fri4,1,Lluvia,,4.89305555555556,-74.0493611111111,2563,14.1,3.76,6.66,86.4,62.4,0.68,71.7,17.12,Glossiphoniidae,12
