@@ -412,8 +412,22 @@ son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medi
 
 ### Indices bioticos 
 
-Trabajando en los indices BMWP-Col y el  ASPT con el proposito de contrastar los 
-resultados obtenidos. 
+```{r biological_index}
+
+data <- read.csv("Data/abundancia.csv") %>% 
+    select(-c(Tipo_Estacion, Muestra)) %>%
+    group_by(Estacion) %>%
+    summarise(across(everything(), sum)) %>%
+    column_to_rownames("Estacion") %>%
+    as.matrix() %>%
+    t() 
+    
+bmwp_COL(data)
+hillsenhoff_index(data, scores_adjusted = FALSE)
+hillsenhoff_index(data)
+
+```
+
 
 ## Discusión
 
@@ -552,46 +566,23 @@ figuras se observan los diagramas de caja que corresponde a un análisis descrip
 de las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan 
 las variables a una distribución normal.  
 
-```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 6, fig.width= 6, fig.align='center'}
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 9, fig.align='center'}
 qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
 box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
 
-
-  qq_plots$OxDisuelto + 
-  qq_plots$Turbidez +
   box_plots$OxDisuelto + 
   box_plots$Turbidez +
-  plot_layout(ncol = 2, byrow = FALSE ) 
-  
-```
-
-```{r anexos_eda2 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
-qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
-box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
-
-  qq_plots$Conductividad + 
-  qq_plots$Temperatura +
-  qq_plots$pH +
   box_plots$Conductividad + 
   box_plots$Temperatura +
   box_plots$pH +
-  plot_layout(ncol = 2, byrow = FALSE )
-
-```
-
-```{r anexos_eda3 , message=FALSE, warning=FALSE, cache=TRUE ,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 6, fig.align='center'}
-qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
-box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
-
-qq_plots$Area + 
-  qq_plots$Profundidad +
-  qq_plots$Velocidad + 
   box_plots$Area +
   box_plots$Profundidad + 
   box_plots$Velocidad +
-  plot_layout(ncol = 2, byrow = FALSE )
-
+  plot_layout(ncol = 3, byrow = FALSE ) 
+  
 ```
+
+
 
 ### Anexo 3
 
