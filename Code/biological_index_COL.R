@@ -1,4 +1,7 @@
 
+library(tidyr)
+library(dplyr)
+library(tibble)
 
 bmwp_COL <- function(data) {
     
@@ -374,11 +377,8 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
     )
   }
   
-  
-  
   data <- data[row.names(data) %in% names(family_scores),]
   n_ind <- colSums(data) 
-  
   
   for (i in 1:nrow(data)) {
     
@@ -430,11 +430,10 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
   return(data_frame)
 }
 
-data <- read.csv("Data/abundancia.csv") %>% 
-  select(-c(Tipo_Estacion, Muestra)) %>%
-  group_by(Estacion) %>%
-  summarise(across(everything(), sum)) %>%
-  column_to_rownames("Estacion") %>%
-  as.matrix() %>%
-  t() 
-
+abundance_metrics <- function(data, absolute = FALSE ) {
+  
+}
+  
+  
+  
+  

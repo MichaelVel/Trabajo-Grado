@@ -5,11 +5,10 @@ library(taxize)
 
 main <- function() {
 
-        data <- read.csv("Data/abundancia.csv") %>% 
-        select(-c(Tipo_Estacion, Muestra)) %>%
-        group_by(Estacion) %>%
-        summarise(across(everything(), sum)) %>%
-        column_to_rownames("Estacion") %>%
+    data <- read.csv("Data/abundancia.csv") %>% 
+        select(-Tipo_Estacion) %>%
+        unite(col = names, Estacion, Muestra) %>%
+        column_to_rownames('names')  %>%
         as.matrix() %>%
         t() %>%
         as.data.frame() %>%
@@ -49,6 +48,8 @@ main <- function() {
             as.matrix() %>%
             t() %>%
             as.data.frame() %>%
+            rownames_to_column(var = "names") %>%
+            separate(names, c("Estacion", "Muestra")) %>%
             return()
         
     }

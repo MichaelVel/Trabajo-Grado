@@ -417,7 +417,7 @@ son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medi
 data <- read.csv("Data/abundancia.csv") %>% 
     select(-c(Tipo_Estacion, Muestra)) %>%
     group_by(Estacion) %>%
-    summarise(across(everything(), sum)) %>%
+    summarise(across(everything(), mean)) %>%
     column_to_rownames("Estacion") %>%
     as.matrix() %>%
     t() 
