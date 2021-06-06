@@ -13,124 +13,64 @@ library(gridExtra)
 library(tidyr)
 library(dplyr)
 
-## Load and cleaning data
+## Load data
 
-load_data <- function(ref_estations = FALSE) {
-    
-    ## Accesory function to load and filter the data
-    
-    file1 <- "Data/rio_frio.csv"
-    file2 <- "Data/rio_neusa.csv"
-    
-    join_data <- function(data1, data2){
-        
-        data_1 <- read.csv(data1, stringsAsFactors = FALSE)
-        data_2 <- read.csv(data2, stringsAsFactors = FALSE) 
-        data_2 <- data_2[names(data_2) %in% names(data_1)]
-        data_joined <- bind_rows(data_1, data_2)
-        return(data_joined)
-        }
-    
-    data <- join_data(file1,file2) %>% subset(Estacion != 'Neu5') 
-    data$tmp <- paste0(data$Estacion, '_', data$Muestra) ## temporal variable
-    
-    data <- data %>%     ## All stations with 6 samples
-        subset(tmp != 'Neu1_11' & tmp != 'Neu1_4') %>%
-        subset(tmp != 'Neu2_11' & tmp != 'Neu2_8' & tmp != 'Neu2_4') %>%
-        subset(tmp != 'Neu3_11' & tmp != 'Neu3_10') %>%
-        subset(tmp != 'Neu6_11' & tmp != 'Neu6_10' & 
-               tmp != 'Neu2_8' & tmp != 'Neu2_1') %>%
-        subset(tmp != 'Neu7_11' & tmp != 'Neu7_10' & tmp != 'Neu7_1') %>%
-        subset(select = -tmp)
-        
-    
-    if (ref_estations) {
-        
-        rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4')
-        rio_frio2 <- c('Fri5')
-        rio_neusa2 <- c('Neu4', 'Neu6', 'Neu7')
-        rio_neusa <- c('Neu1', 'Neu2', 'Neu3')
-        
-        data$Tipo_Estacion[data$Estacion %in% rio_frio] <- 'FrioB'
-        data$Tipo_Estacion[data$Estacion %in% rio_frio2] <- 'FrioA'
-        data$Tipo_Estacion[data$Estacion %in% rio_neusa2] <- 'NeusaB'
-        data$Tipo_Estacion[data$Estacion %in% rio_neusa] <- 'NeusaA'
-        
-        return(data)
-        
-    } else {
-    
-        return(data)
-    
-    }
+Tipo_estacion <- function(data) {
+  
+  rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4')
+  rio_frio2 <- c('Fri5')
+  rio_neusa2 <- c('Neu4', 'Neu6', 'Neu7')
+  rio_neusa <- c('Neu1', 'Neu2', 'Neu3')
+  
+  data$Tipo_Estacion[data$Estacion %in% rio_frio] <- 'FrioB'
+  data$Tipo_Estacion[data$Estacion %in% rio_frio2] <- 'FrioA'
+  data$Tipo_Estacion[data$Estacion %in% rio_neusa2] <- 'NeusaB'
+  data$Tipo_Estacion[data$Estacion %in% rio_neusa] <- 'NeusaA'
+  
+  return(data)
+  
 }
 
-filter_data <- function(data, parameters) {
-    
-    parameters <- c("Tipo_Estacion", "Estacion", "Muestra", parameters) 
-    
-    data[parameters] %>% 
-        distinct()  %>%
-        group_by(Tipo_Estacion, Estacion, Muestra) %>%
-        summarise(across(.cols = everything() , mean)) %>% 
-        return()
-    
-}
-    
-load_rlq <- function(parameters = NULL ){
+load_rlq <- function(RTable, LTable, QTable){
     
     ## Return an object with the R, L, and Q matrices, by default
     ## work with physichochemicals parameters 
     
-    if (is.null(parameters)) {
-        
-    parameters <- c("Temperatura", "OxDisuelto", "pH", 
-                    "Conductividad", "Turbidez") }
     
-    enviromental <- load_data(ref_estations = TRUE) %>% 
-                    filter_data(parameters)
+    enviromental <- read.csv(RTable, stringsAsFactors = FALSE) %>% 
+                    Tipo_estacion()
     
-    abundance <- read.csv('Data/abundancia.csv', stringsAsFactors = FALSE)
-    
-    rio_frio <- c('Fri1', 'Fri2', 'Fri3', 'Fri4')
-    rio_frio2 <- c('Fri5')
-    rio_neusa2 <- c('Neu4', 'Neu6', 'Neu7')
-    rio_neusa <- c('Neu1', 'Neu2', 'Neu3')
-    
-    abundance$Tipo_Estacion[abundance$Estacion %in% rio_frio] <- 'FrioB'
-    abundance$Tipo_Estacion[abundance$Estacion %in% rio_frio2] <- 'FrioA'
-    abundance$Tipo_Estacion[abundance$Estacion %in% rio_neusa2] <- 'NeusaB'
-    abundance$Tipo_Estacion[abundance$Estacion %in% rio_neusa] <- 'NeusaA'
-    
-    
-    traits <- read.csv('Data/rasgos_funcionales.csv',
-                       stringsAsFactors = FALSE, encoding = 'UTF-8') %>% 
+    abundance <- read.csv(LTable, stringsAsFactors = FALSE) %>% 
+                 Tipo_estacion()
+
+
+    traits <- read.csv(QTable, stringsAsFactors = FALSE) %>% 
               column_to_rownames( var = "Familia") %>%      
               subset(rownames(.) %in% names(abundance))               
               
-    all <-  load_data()
-    
     RLQ <- list(R_table = enviromental, Q_table = traits,
-                L_table = abundance, all_table = all)
+                L_table = abundance)
     
     return(RLQ)
     
-}     
+} 
 
 ## Summary statistics (mean, median, quantiles, sd, skewness, kurtosis)
 
-summary_statistics <- function(...) {
+summary_statistics <- function(data, ...) {
     
     ## Make a summary of the data for station by default. Pass 'by_sample = TRUE'
     ## argument to make a summary by each sampling event.  
+  
+    ## data = read.csv("../Data/muestreo_completo.csv)
     
-    summary_data  <- function(funct, by_sample = FALSE, macroinvertebrates = FALSE) {
+    summary_data  <- function(data, funct, by_sample = FALSE, macroinvertebrates = FALSE) {
         
         if (macroinvertebrates) { 
             
             if (by_sample) {
                 
-                load_data() %>% 
+                data %>% 
                     group_by(Estacion, Muestra) %>% 
                     summarise( Number_Families = n_distinct(Familia),
                                Total_Macro = sum(Individuos)) %>%
@@ -138,7 +78,7 @@ summary_statistics <- function(...) {
                 
             } else {
                 
-                load_data() %>% 
+                data %>% 
                     group_by(Estacion) %>% 
                     summarise( Familias = n_distinct(Familia),
                                Total_Macro = sum(Individuos)) %>%
@@ -149,28 +89,26 @@ summary_statistics <- function(...) {
             
             if (by_sample) {
                 
-                load_data() %>% 
+                data %>% 
                     group_by(Estacion, Muestra) %>% 
                     summarise( Temperatura =funct(Temperatura),
                                OxDisuelto = funct(OxDisuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
                                Turbidez = funct(Turbidez),
-                               Area = funct(Area),
                                Profundidad = funct(Profundidad),
                                Velocidad = funct(Velocidad)) %>% 
                     return()
                 
             } else {
                 
-                load_data() %>% 
+                data %>% 
                     group_by(Estacion) %>% 
                     summarise( Temperatura =funct(Temperatura),
                                OxDisuelto = funct(OxDisuelto),
                                pH = funct(pH),
                                Conductividad = funct(Conductividad),
                                Turbidez = funct(Turbidez), 
-                               Area = funct(Area),
                                Profundidad = funct(Profundidad),
                                Velocidad = funct(Velocidad),
                                Altitud = funct(Altitud)) %>%
@@ -180,12 +118,12 @@ summary_statistics <- function(...) {
         }
     }
     
-    mean <- summary_data(mean, ...)
-    median <- summary_data(median, ...)
-    sd <- summary_data(sd, ...)
-    skewness <- summary_data(skewness, ...)
-    kurtosis <- summary_data(kurtosis, ...)
-    macroinvertebrates <- summary_data(macroinvertebrates = TRUE ,...)
+    mean <- summary_data(data, mean, ...)
+    median <- summary_data(data, median, ...)
+    sd <- summary_data(data, sd, ...)
+    skewness <- summary_data(data, skewness, ...)
+    kurtosis <- summary_data(data, kurtosis, ...)
+    macroinvertebrates <- summary_data(data, macroinvertebrates = TRUE ,...)
     
     summary_stats <- list(mean = mean, median = median, sd = sd, 
                                skewness = skewness, kurtosis = kurtosis, 
@@ -193,22 +131,15 @@ summary_statistics <- function(...) {
     return(summary_stats)
 }
 
-make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
+make_manova <- function(data, funct = manova , est1, est2, global = FALSE ) {
     
     ## If run with the hotelling.test function of the Hotelling package 
     ## the results are the same
   
-    data <- load_data(ref_estations = TRUE)
-    
    
-        
-    parameters <- c("Temperatura", "OxDisuelto", "pH", 
-                    "Conductividad", "Turbidez") 
-
-    
     if (global) {
       
-      data_physicochemicals <- filter_data(data, parameters)
+      data_physicochemicals <- data %>% Tipo_estacion()
    
     
       results_manova <- funct(cbind(Temperatura, OxDisuelto, pH, 
@@ -221,7 +152,7 @@ make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
     
     else {
       
-        data_physicochemicals <- filter_data(data, parameters)
+        data_physicochemicals <- data %>% Tipo_estacion()
         
         
         data_physicochemicals <- filter(data_physicochemicals, 
@@ -240,22 +171,22 @@ make_manova <- function(funct = manova , est1, est2, global = FALSE ) {
 
 ## Graphical  eda
 
-univariate_graphical_eda <- function(type_plot, parameters = NULL){
+univariate_graphical_eda <- function(data, type_plot, parameters = NULL){
     
     ## Make the boxplot, histogram or qq plot for the passed parameters, 
     ## by default physicochemical parameters. 
     
     if (is.null(parameters)) {
       parameters <- c("Temperatura", "OxDisuelto", "pH", 
-                      "Conductividad", "Turbidez", "Area",
+                      "Conductividad", "Turbidez", 
                       "Profundidad", "Velocidad") }
   
     ggobjtect_parameters <- list()
     
-    eda_plots  <- function(parameter , type_plot = "boxplot" ){
+    eda_plots  <- function(data, parameter , type_plot = "boxplot" ){
         
         if (type_plot == "boxplot") { 
-            plot <- load_data() %>%
+            plot <- data %>%
                 ggplot(mapping = aes(x = Estacion, y = .data[[parameter]])) +
                 geom_boxplot() + theme_classic()
             
@@ -263,7 +194,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
             
         } else if (type_plot == "histogram") {
             
-            plot <- load_data() %>%
+            plot <- data %>%
                 ggplot(mapping = aes(.data[[parameter]])) +
                 geom_histogram() +
                 facet_wrap(vars(Estacion)) +
@@ -274,8 +205,8 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
             
         } else if (type_plot == "quantile-normal") {
             
-            plot <- load_data() %>%
-                ggplot(data, mapping = aes(sample = .data[[parameter]])) +
+            plot <- data %>%
+                ggplot(mapping = aes(sample = .data[[parameter]])) +
                 stat_qq() + 
                 stat_qq_line(fullrange = TRUE) +
                 facet_wrap(vars(Estacion)) + theme_classic()
@@ -288,7 +219,7 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
             
         parameter <- parameters[i]
             
-        ggobjtect_parameters[[parameter]] <- eda_plots(parameter, 
+        ggobjtect_parameters[[parameter]] <- eda_plots(data, parameter, 
                                                        type_plot)
             
     }
@@ -297,14 +228,13 @@ univariate_graphical_eda <- function(type_plot, parameters = NULL){
     
 }
           
-make_pca <- function(parameters = NULL, plot = TRUE, ... ) {
+make_pca <- function(data, parameters = NULL, plot = TRUE, ... ) {
     
     ## perform the PCA analysis and return a list with  the ggplot objects
     ## relevants to the analysis. If plot = FALSE, returns the raw results
     ## of the analysis. 
     
-    data <- load_data(ref_estations = TRUE)
-    
+   
     plots_pca_analysis <- function(results_pca, plot_type = "Estacion") {
         
         eigenvalues <- fviz_eig(results_pca, main = "", 
@@ -347,9 +277,8 @@ make_pca <- function(parameters = NULL, plot = TRUE, ... ) {
     if (is.null(parameters)) {
       
       parameters <- c("Temperatura", "OxDisuelto", "pH", 
-                      "Conductividad", "Turbidez") }
+                       "Conductividad", "Turbidez") }
         
-    data <- filter_data(data, parameters)
     data_physicochemicals <- data[parameters]
     
     results_pca <- prcomp(data_physicochemicals, scale. = TRUE)
@@ -366,19 +295,22 @@ make_pca <- function(parameters = NULL, plot = TRUE, ... ) {
         
 }
 
-make_cluster <- function() {
-        
-    data <- load_data(ref_estations = TRUE)
+make_cluster <- function(data, parameters = NULL) {
+  
+    if (is.null(parameters)) {
+      
+        parameters <- c("Temperatura", "OxDisuelto", "pH", 
+                        "Conductividad", "Turbidez") }
     
-    parameters <- c("Temperatura", "OxDisuelto", "pH", 
-                    "Conductividad", "Turbidez") 
+    data_physicochemicals <- data %>%
+                             select(-Muestra) %>%
+                             group_by(Tipo_Estacion, Estacion) %>%
+                             select(all_of(parameters)) %>%
+                             summarise(across(.cols = everything() , mean))
     
-    data_physicochemicals <- filter_data(data, parameters) %>%
-                subset(select= -Muestra) %>%
-                group_by(Tipo_Estacion, Estacion) %>%
-                summarise(across(.cols = everything() , mean))
-    
-    distance_matrix <-  data_physicochemicals[-1] %>%
+    distance_matrix <-  data_physicochemicals %>%
+                        ungroup() %>%
+                        select(-Tipo_Estacion) %>%
                         column_to_rownames(var = 'Estacion') %>%
                         scale() %>%
                         dist() 
@@ -395,7 +327,7 @@ make_cluster <- function() {
 } 
 
   
-## Fuzzy Correspondence Analysis and RLQ analysis
+## Fuzzy Correspondence Analysis and RLQ analysis ###  Refactor from here
 
 make_fca <- function(data = load_rlq(), presence_ausence = FALSE ) {
 
