@@ -430,7 +430,39 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
   return(data_frame)
 }
 
-abundance_metrics <- function(data, absolute = FALSE ) {
+abundance_metrics <- function(data, by_stations = TRUE, absolute = FALSE ) {
+  
+  ## This function takes a data frame with organisms in the columns (first row with
+  ## estations) and samples in the rows. Return a data frame with the
+  ## absolute/relative abundance by each station
+  
+  estations <- names(data)[[1]]
+  
+  if (by_stations) {
+    
+    abundance <- group_by(data, across(1)) %>%
+      summarise(across(where(is.numeric), sum)) %>%
+      column_to_rownames(var = estations)
+    
+  } else {
+    
+    abundance <- data %>%
+      summarise(across(where(is.numeric), sum))
+  }
+  
+  total <- rowSums(abundance)
+  
+  relative_abundance <- round(( abundance / total ) * 100, 2)
+  
+  if (absolute) { 
+    
+    return(abundance)
+    
+  } else {
+      
+    return(relative_abundance)
+    
+  }
   
 }
   
