@@ -17,8 +17,25 @@ always_allow_html: true
 
 knitr::opts_chunk$set(echo = FALSE)
 
-source("Code/metodos.R")
-source("Code/eda.R")
+source("../Code/metodos.R")
+source("../Code/eda.R")
+source("../Code/biological_index_COL.R")
+
+
+## Load RLQ Data
+
+RTable <- "../Data/rlq/RTable.csv"
+LTable <- "../Data/rlq/LTable.csv"
+QTable <- "../Data/rlq/QTable.csv"
+
+RLQ <- load_rlq(RTable,Ltable,QTable)
+
+## Load Complete Data
+
+complete <- read.csv("Data/muestreo_completo.csv",
+                     stringsAsFactors = FALSE)
+
+
 
 ```
 
@@ -112,6 +129,7 @@ de la literatura disponible.
 
 data  <- read.csv("Data/rasgos_funcionales_tabla.csv", check.names = FALSE)
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+
 if (doc.type == "docx") {} else {
   data %>%
     kbl(booktabs = TRUE, escape = FALSE, caption = "
@@ -160,7 +178,7 @@ por lo que fueron excluidas de los análisis posteriores.
 ```{r summary, echo=FALSE,  message=FALSE, warning=FALSE, fig.height= 6, fig.width= 11, fig.align='center' }
 
 summary_data <- (function () {
-    summary_data <- summary_statistics()
+    summary_data <- summary_statistics(data = complete)
     mean <-  summary_data$mean %>% 
              column_to_rownames("Estacion") %>%
              round(digits = 2)
@@ -170,17 +188,17 @@ summary_data <- (function () {
     data <- list(Estacion = summary_data$mean[["Estacion"]])
     
     names <- c("Estacion", "Temperatura (C°)", "Ox disuelto (mg/L)", "pH",
-             "Conductividad (µS/cm)", "Turbidez (NTU)", "Area (m²)",
+             "Conductividad (µS/cm)", "Turbidez (NTU)", 
              "Profundidad (cm)", "Velocidad (m/s)",
              "Altitud (msnm)","Familias", "Total Macro")
     
-    for (i in 1:8){
+    for (i in 1:7){
         a <- paste0( mean[[i]], '±', sd[[i]]) 
         data[[1+i]] <- a
     }
     
     data <- as.data.frame(data)
-    names(data) <-  names(summary_data$mean[1:9])
+    names(data) <-  names(summary_data$mean[1:8])
     data <- cbind(data,summary_data$mean[["Altitud"]])
     data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
     names(data) <- names
@@ -231,8 +249,15 @@ alta conductividad en la estación Frio5.
 
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center', fig.cap= " Analisis de Componentes Principales y Analisis Jerarquico de Cluster. A) Proyección de las variables fisicoquimicas en el plano del ACP. B) Dendrogama de las estaciones. Se utilizo como la distancia euclidia como metrica de similitud y se computo utilizando el algoritmo UPGMA C) Varianza explicada por los componentes del ACP. "}
-plot_pca <- make_pca(plot_type = "Tipo_Estacion")
-plot_cluster <-  make_cluster()
+
+parameters <- c("Temperatura", "OxDisuelto", "pH", "Velocidad",
+                "Profundidad","Conductividad", "Turbidez") 
+
+plot_pca <- make_pca(RLQ$R_table, plot_type = "Tipo_Estacion", 
+                     parameters = parameters )
+
+plot_cluster <-  make_cluster(RLQ$R_table, parameters = parameters)
+
 layout <- "
 AAAAAAACCCC
 AAAAAAABBBB
@@ -567,15 +592,14 @@ de las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan
 las variables a una distribución normal.  
 
 ```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 9, fig.align='center'}
-qq_plots <- univariate_graphical_eda(type_plot = 'quantile-normal')
-box_plots <-  univariate_graphical_eda(type_plot = 'boxplot')
+
+box_plots <-  univariate_graphical_eda(data = complete, type_plot = 'boxplot')
 
   box_plots$OxDisuelto + 
   box_plots$Turbidez +
   box_plots$Conductividad + 
   box_plots$Temperatura +
   box_plots$pH +
-  box_plots$Area +
   box_plots$Profundidad + 
   box_plots$Velocidad +
   plot_layout(ncol = 3, byrow = FALSE ) 
@@ -592,13 +616,13 @@ entre los pares de grupos.
 
 ```{r manova,  message=FALSE, warning=FALSE}
 results_manova <- list(
-Global =  make_manova(global = TRUE),
-NeuA_NeuB  = make_manova(est1 = "NeusaA", est2 = "NeusaB"),
-NeuA_FrioA =  make_manova(est1 = "NeusaA", est2 = "FrioA"),
-NeuA_FrioB =  make_manova(est1 = "NeusaA", est2 = "FrioB"),
-NeuB_FrioA =  make_manova(est1 = "NeusaB", est2 = "FrioA"),
-NeuB_FrioB =  make_manova(est1 = "NeusaB", est2 = "FrioB"),
-FrioA_FrioB =  make_manova(est1 = "FrioA", est2 = "FrioB")
+Global =  make_manova(data = complete, global = TRUE),
+NeuA_NeuB  = make_manova(data = complete, est1 = "NeusaA", est2 = "NeusaB"),
+NeuA_FrioA =  make_manova(data = complete, est1 = "NeusaA", est2 = "FrioA"),
+NeuA_FrioB =  make_manova(data = complete, est1 = "NeusaA", est2 = "FrioB"),
+NeuB_FrioA =  make_manova(data = complete, est1 = "NeusaB", est2 = "FrioA"),
+NeuB_FrioB =  make_manova(data = complete, est1 = "NeusaB", est2 = "FrioB"),
+FrioA_FrioB =  make_manova(data = complete, est1 = "FrioA", est2 = "FrioB")
 )
 
  for (i in 1:6) { 
