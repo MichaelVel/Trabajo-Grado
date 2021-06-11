@@ -28,13 +28,15 @@ RTable <- "../Data/rlq/RTable.csv"
 LTable <- "../Data/rlq/LTable.csv"
 QTable <- "../Data/rlq/QTable.csv"
 
-RLQ <- load_rlq(RTable,Ltable,QTable)
+RLQ <- load_rlq(RTable, LTable ,QTable)
+
+parameters <- c("Temperatura", "OxDisuelto", "pH", "Velocidad",
+                "Conductividad", "Turbidez") 
 
 ## Load Complete Data
 
-complete <- read.csv("Data/muestreo_completo.csv",
+complete <- read.csv("../Data/muestreo_completo.csv",
                      stringsAsFactors = FALSE)
-
 
 
 ```
@@ -106,9 +108,10 @@ las variables fisicoquímicas oxígeno disuelto, conductividad, pH, temperatura
 y turbidez. Los macroinvertebrados se colectaron con metodologías estándar de
 amplio  reconocimiento, red Surber, red D, red de mano (Domínguez y Fernández, 2009). 
 
-```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE,include = TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
+```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
 
-plot_est()
+estaciones <- read.csv("../Data/other/estaciones.csv")
+plot_est(estaciones)
 ```
 
 ### Rasgos Funcionales 
@@ -127,7 +130,8 @@ de la literatura disponible.
 
 ```{r table, echo=FALSE}
 
-data  <- read.csv("Data/rasgos_funcionales_tabla.csv", check.names = FALSE)
+data  <- read.csv("../Data/other/rasgos_funcionales_tabla.csv", 
+                  check.names = FALSE)
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
 if (doc.type == "docx") {} else {
@@ -250,8 +254,6 @@ alta conductividad en la estación Frio5.
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center', fig.cap= " Analisis de Componentes Principales y Analisis Jerarquico de Cluster. A) Proyección de las variables fisicoquimicas en el plano del ACP. B) Dendrogama de las estaciones. Se utilizo como la distancia euclidia como metrica de similitud y se computo utilizando el algoritmo UPGMA C) Varianza explicada por los componentes del ACP. "}
 
-parameters <- c("Temperatura", "OxDisuelto", "pH", "Velocidad",
-                "Profundidad","Conductividad", "Turbidez") 
 
 plot_pca <- make_pca(RLQ$R_table, plot_type = "Tipo_Estacion", 
                      parameters = parameters )
@@ -299,9 +301,11 @@ fuertes en relación a el gradiente ambiental.
 
 
 ```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los rios estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 85% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se pueden encontrar en la tabla 1."}
-rlq1 <- make_rlq()
-data <- load_rlq()$R_table
-estations <- cbind( Grupo =factor(data$Tipo_Estacion),rlq1$mR) 
+
+rlq1 <- make_rlq(RLQ$R_table, RLQ$L_table, RLQ$Q_table, parameters = parameters )
+
+group <- factor(RLQ[["R_table"]]$Tipo_Estacion)
+estations <- cbind(Grupo = group, rlq1$mR) 
 mean_estations <- estations %>% 
                  group_by(Grupo) %>%
                 summarise(across(.cols = everything() , mean))
@@ -439,8 +443,8 @@ son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medi
 
 ```{r biological_index}
 
-data <- read.csv("Data/abundancia.csv") %>% 
-    select(-c(Tipo_Estacion, Muestra)) %>%
+data <- read.csv("../Data/rlq/LTable.csv") %>% 
+    select(-c(Muestra)) %>%
     group_by(Estacion) %>%
     summarise(across(everything(), mean)) %>%
     column_to_rownames("Estacion") %>%
@@ -556,7 +560,7 @@ Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.t
 \blandscape
 
 ```{r rasgos }
-rasgos_func <- read.csv("Data/rasgos_funcionales.csv")
+rasgos_func <- read.csv("../Data/rlq/QTable.csv")
 rasgos <-  c("A) Tipo Alimento", 
              "B) Habitos Alimenticios", 
              "C) Respiracion",
@@ -614,6 +618,7 @@ Resultados del análisis de varianza multivariado de los grupos generados por el
 análisis de cluster. El análisis post hoc incluyo multiples tests de hotelling 
 entre los pares de grupos. 
 
+
 ```{r manova,  message=FALSE, warning=FALSE}
 results_manova <- list(
 Global =  make_manova(data = complete, global = TRUE),
@@ -639,25 +644,28 @@ FrioA_FrioB =  make_manova(data = complete, est1 = "FrioA", est2 = "FrioB")
 
 ```{r fourthcorner1, message= FALSE, warning= FALSE, include= FALSE, cache= FALSE}
 
-fourth_corner <- make_rlq(fourthcorner = TRUE)
+fourth_corner <- make_rlq(RLQ$R_table, RLQ$L_table, RLQ$Q_table,
+                          fourthcorner = TRUE, parameters = parameters)
 fourth_corner$envir
 
 f4c_traits <- as.data.frame(print(fourth_corner$traits), 
-                     stringsAsFactors = FALSE, row.names = NULL, 
-                     optional = TRUE) %>%
-subset(select= -Stat) %>%
-subset(select= -Alter) 
+                            stringsAsFactors = FALSE, 
+                            row.names = NULL, 
+                            optional = TRUE) %>%
+              subset(select= -Stat) %>%
+              subset(select= -Alter) 
  
 f4c_traits <- f4c_traits %>% 
-  subset(grepl("AxcR1", .$Test)) %>%
-  remove_rownames() %>%
-  column_to_rownames("Test")
+              subset(grepl("AxcR1", .$Test)) %>%
+              remove_rownames() %>%
+              column_to_rownames("Test")
 
 f4c_envir <- as.data.frame(print(fourth_corner$envir), 
-                     stringsAsFactors = FALSE, row.names = NULL, 
-                     optional = TRUE) %>%
-subset(select= -Stat) %>%
-subset(select= -Alter) 
+                           stringsAsFactors = FALSE,
+                           row.names = NULL, 
+                           optional = TRUE) %>%
+             subset(select= -Stat) %>%
+             subset(select= -Alter) 
  
 f4c_envir <- f4c_envir %>% 
   subset(grepl("AxcQ1", .$Test)) %>%

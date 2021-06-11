@@ -1,17 +1,14 @@
 ## Load packages 
 
 library(e1071)
-library(ggplot2)
-library(factoextra)
 library(ade4)
-library(tibble)
+library(factoextra)
 library(kableExtra)
 library(flextable)
 library(patchwork)
 library(Hotelling)
 library(gridExtra)
-library(tidyr)
-library(dplyr)
+library(tidyverse)
 
 ## Load data
 
@@ -179,7 +176,7 @@ univariate_graphical_eda <- function(data, type_plot, parameters = NULL){
     if (is.null(parameters)) {
       parameters <- c("Temperatura", "OxDisuelto", "pH", 
                       "Conductividad", "Turbidez", 
-                      "Profundidad", "Velocidad") }
+                      "Velocidad") }
   
     ggobjtect_parameters <- list()
     
@@ -329,34 +326,41 @@ make_cluster <- function(data, parameters = NULL) {
   
 ## Fuzzy Correspondence Analysis and RLQ analysis ###  Refactor from here
 
-make_fca <- function(data = load_rlq(), presence_ausence = FALSE ) {
+make_fca <- function(R_Table, L_Table, Q_Table, presence_ausence = FALSE, 
+                     parameters = NULL ) {
 
    ## This function takes as imput a fuzzy coded table of traits  in each site
    ## and a table of enviromental variables and perform a CCA. return a dudi
    ## object of the class pcai
+  
+    if (is.null(parameters)) {
+      
+        parameters <- c("Temperatura", "OxDisuelto", "pH", 
+                        "Conductividad", "Turbidez") }
 
-    abundance <- data$L_table %>%  
+    abundance <- L_Table %>%  
         select(-Tipo_Estacion) %>%
         unite(col = names, Estacion, Muestra) %>%
         column_to_rownames('names') 
     
     if (presence_ausence) {
-        abundance[abundance>0] <-1
+        abundance[abundance>0] <- 1
     }
     
-    envir <- data$R_table %>% ungroup() %>%
+    envir <- R_Table  %>%
         select(-Tipo_Estacion) %>%
         unite(col = names, Estacion, Muestra) %>%
-        column_to_rownames('names') 
+        column_to_rownames('names') %>%
+        select(all_of(parameters))
     
-    traits <- data$Q_table 
+    traits <- Q_Table 
     
-    traits_by_site <- as.matrix(abundance) %*% as.matrix(traits)
+    traits_by_site <- as.matrix(abundance) %*% as.matrix(traits) 
     traits_by_site <- as.data.frame(traits_by_site)
     traits_by_site <- traits_by_site %>%
-      prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 7, 
-                                    Habitos_Alimenticios = 7, 
-                                    Respiracion = 5,
+      prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6, 
+                                    Habitos_Alimenticios = 5, 
+                                    Respiracion = 4,
                                     Forma_Corporal = 4, 
                                     Movilidad = 6,
                                     Tamaño_Maximo= 5))
@@ -371,32 +375,40 @@ make_fca <- function(data = load_rlq(), presence_ausence = FALSE ) {
   
 }
 
-make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
-    
-      abundance <<- data$L_table %>%  
-                   select(-Tipo_Estacion) %>%
-                   unite(col = names, Estacion, Muestra) %>%
-                   column_to_rownames('names') 
-      
-      abundance_test <<- dudi.coa(abundance, scannf = FALSE, nf = 3)
+make_rlq <- function(R_Table, L_Table, Q_Table, fourthcorner = FALSE, 
+                     parameters = NULL ) {
   
-      envir <<- data$R_table %>% ungroup() %>%
-             select(-Tipo_Estacion) %>%
-             unite(col = names, Estacion, Muestra) %>%
-             column_to_rownames('names') 
+    if (is.null(parameters)) {
       
-      envir_test <<-  dudi.pca(envir, scannf = FALSE, nf = 3, 
-                              row.w = abundance_test$lw)
+        parameters <- c("Temperatura", "OxDisuelto", "pH", 
+                    "Conductividad", "Turbidez") 
+    }
+  
+    abundance <<- L_Table %>%  
+                 select(-Tipo_Estacion) %>%
+                 unite(col = names, Estacion, Muestra) %>%
+                 column_to_rownames('names') 
     
-      traits <<- data$Q_table %>%
-                prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6, 
-                                              Habitos_Alimenticios = 5, 
-                                              Respiracion = 4,
-                                              Forma_Corporal = 4, 
-                                              Movilidad = 6,
-                                              Tamaño_Maximo= 5),
-                               row.w = abundance_test$cw) 
-      traits_test <<-  dudi.fca(traits, scannf = FALSE, nf = 3)
+    abundance_test <<- dudi.coa(abundance, scannf = FALSE, nf = 3)
+
+    envir <<- R_Table %>% ungroup() %>%
+           select(-Tipo_Estacion) %>%
+           unite(col = names, Estacion, Muestra) %>%
+           column_to_rownames('names') %>%
+           select(all_of(parameters))
+    
+    envir_test <<-  dudi.pca(envir, scannf = FALSE, nf = 3, 
+                            row.w = abundance_test$lw)
+  
+    traits <<- Q_Table %>%
+              prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6, 
+                                            Habitos_Alimenticios = 5, 
+                                            Respiracion = 4,
+                                            Forma_Corporal = 4, 
+                                            Movilidad = 6,
+                                            Tamaño_Maximo= 5),
+                             row.w = abundance_test$cw) 
+    traits_test <<-  dudi.fca(traits, scannf = FALSE, nf = 3)
       
     rlq1 <- rlq(envir_test, abundance_test, traits_test,  scannf = FALSE, nf = 2)
     
@@ -413,7 +425,9 @@ make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
                                   p.adjust.method.D = "none",
                                   nrepet = 5000)
         f4c <-  list(envir = f4c_R, traits = f4c_Q)   
+        
         return(f4c)
+        
     }
     
     else {
@@ -422,23 +436,30 @@ make_rlq <- function(data = load_rlq(), fourthcorner = FALSE ) {
     }
 }
 
-make_fourthcorner <- function(data = load_rlq(), nrepet = NULL) {
+make_fourthcorner <- function(R_table, L_Table, Q_Table, nrepet = NULL) {
  
    if (is.null(nrepet)) {
       nrepet <- 1000 # the higher, the longer the run lasts
    }
   
-    abundance <- data$L_table %>%  
+   if (is.null(parameters)) {
+    
+    parameters <- c("Temperatura", "OxDisuelto", "pH", 
+                    "Conductividad", "Turbidez") 
+   }
+  
+    abundance <- L_Table %>%  
         select(-Tipo_Estacion) %>%
         unite(col = names, Estacion, Muestra) %>%
         column_to_rownames('names') 
     
-    envir <- data$R_table %>% ungroup() %>%
+    envir <- R_Table %>% ungroup() %>%
         select(-Tipo_Estacion) %>%
         unite(col = names, Estacion, Muestra) %>%
-        column_to_rownames('names') 
+        column_to_rownames('names') %>%
+        select(all_of(parameters))
       
-    traits <- data$Q_table %>%
+    traits <- Q_Table %>%
         prep.fuzzy.var(col.blocks = c(Tipo_Alimento = 6 , 
                                       Habitos_Alimenticios = 5, 
                                       Respiracion = 4,
