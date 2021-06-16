@@ -3,7 +3,7 @@ library(tidyr)
 library(dplyr)
 library(tibble)
 
-bmwp_COL <- function(data) {
+bmwp_COL <- function(data, ASPT = FALSE ) {
     
     ## Take a numeric matrix with the families in the rows and the sample sites
     ## in the colums. Return a data frame  with the BMWP Scores and 
@@ -129,35 +129,47 @@ bmwp_COL <- function(data) {
     }
       
     bmwp_scores <- colSums(data) 
-    quality_class <- vector("character", length = length(bmwp_scores))
-    quality_number <- vector("integer", length = length(bmwp_scores))
     
-    for (i in 1:length(bmwp_scores)) {
+    if (!ASPT) {
+      
+        quality_class <- vector("character", length = length(bmwp_scores))
+        quality_number <- vector("integer", length = length(bmwp_scores))
         
-      if (bmwp_scores[i] <= 10) {
-          quality_class[i] <- "Muy Pobre"
-          quality_number[i] <- 1 }
+        for (i in 1:length(bmwp_scores)) {
+            
+          if (bmwp_scores[i] <= 10) {
+              quality_class[i] <- "Muy Pobre"
+              quality_number[i] <- 1 }
+          
+          else if ( 10 < bmwp_scores[i] & bmwp_scores[i] <= 40 ) {
+              quality_class[i] <- "Pobre" 
+              quality_number[i] <- 2 }
+          
+          else if ( 40 < bmwp_scores[i] & bmwp_scores[i] <= 70 ) {
+              quality_class[i] <- "Moderada"
+              quality_number[i] <- 3 }
+          
+          else if ( 70 < bmwp_scores[i] & bmwp_scores[i] <= 100 ) {
+              quality_class[i] <- "Buena"
+              quality_number[i] <- 4 }
+          
+          else if ( 100 < bmwp_scores[i] ) {
+              quality_class[i] <- "Excelente"
+              quality_number[i] <- 5 }
+        }
+        
+        data_frame <- data.frame(bmwp_scores, quality_class, quality_number )
+        
+        return(data_frame)
+        
+    } else { 
       
-      else if ( 10 < bmwp_scores[i] & bmwp_scores[i] <= 40 ) {
-          quality_class[i] <- "Pobre" 
-          quality_number[i] <- 2 }
-      
-      else if ( 40 < bmwp_scores[i] & bmwp_scores[i] <= 70 ) {
-          quality_class[i] <- "Moderada"
-          quality_number[i] <- 3 }
-      
-      else if ( 70 < bmwp_scores[i] & bmwp_scores[i] <= 100 ) {
-          quality_class[i] <- "Buena"
-          quality_number[i] <- 4 }
-      
-      else if ( 100 < bmwp_scores[i] ) {
-          quality_class[i] <- "Excelente"
-          quality_number[i] <- 5 }
+        total_families <-nrow(data) - colSums(data == 0) # Exclude non present families
+        ASPT <- round(bmwp_scores / total_families , 2)
+        
+        return(ASPT)
     }
     
-    data_frame <- data.frame(bmwp_scores, quality_class, quality_number )
-    
-    return(data_frame)
 }
 
 hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
@@ -217,7 +229,7 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
         "Lampyridae" = 5,
         "Psephenidae" = 5,
         "Scirtidae" = 0,
-        "(Helodidae)" = 5,
+        "Helodidae" = 5,
         "Staphylinidae" = 7,
         "Elmidae" = 5,
         "Dryopidae" = 5,
@@ -230,7 +242,7 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
         "Simuliidae" = 5,
         "Tabanidae" = 6,
         "Tipulidae" = 5,
-        "Limoniidae" = 6,
+        "Limoniidae" = 6, 
         "Ceratopogonidae" = 6,
         "Dixidae" = 6,
         "Psychodidae" = 7,
@@ -244,7 +256,7 @@ hillsenhoff_index <- function(data, scores_adjusted = TRUE ) {
         "Syrphidae" = 9,
         "Coenagrionidae" = 8,
         "Lymnaeidae" = 6,
-        "Planariidae" = 1,
+        "Planariidae" = 5,
         "Lumbricidae" = 8
         
       )

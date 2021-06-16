@@ -451,12 +451,47 @@ data <- read.csv("../Data/rlq/LTable.csv") %>%
     as.matrix() %>%
     t() 
     
-bmwp_COL(data)
-hillsenhoff_index(data, scores_adjusted = FALSE)
-hillsenhoff_index(data)
+ index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
+            'ASPT' = bmwp_COL(data, ASPT = TRUE),
+            'FBI'  = hillsenhoff_index(data)$hillsenhoff_scores,
+            check.names = FALSE)
+
+
 
 ```
 
+```{r abundance}
+data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+    select(-Muestra)
+
+abundance_table <- abundance_metrics(data) %>%
+    rownames_to_column() %>%
+    mutate(EPT = Ephemeroptera + Trichoptera,
+           Turbellaria = Tricladida) %>%
+    column_to_rownames() %>%
+    select(EPT, Trichoptera, Diptera, 
+           Amphipoda, Bivalvia, Gastropoda, 
+           Hemiptera, Hirudinea, Turbellaria, 
+           Oligochaeta) %>%
+    t() %>%
+    as.data.frame()
+
+```
+
+```{r diversity}
+data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+    select(-Muestra) %>%
+    group_by(Estacion) %>%
+    summarise(across(everything(), mean)) %>%
+    column_to_rownames("Estacion") 
+
+diversity_table <- data.frame(
+                         'Shanon' = diversity(data, index = 'shannon'),
+                         'Dominancia' = diversity(data, index = 'simpson'),
+                          check.names = FALSE)
+
+# Working in beta diversity
+```
 
 ## Discusión
 

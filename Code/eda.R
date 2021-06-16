@@ -41,7 +41,7 @@ load_rlq <- function(RTable, LTable, QTable){
                  Tipo_estacion()
 
 
-    traits <- read.csv(QTable, stringsAsFactors = FALSE) %>% 
+    traits <- read.csv(QTable, stringsAsFactors = FALSE, check.names = FALSE) %>% 
               column_to_rownames( var = "Familia") %>%      
               subset(rownames(.) %in% names(abundance))               
               
