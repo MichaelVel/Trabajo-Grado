@@ -469,12 +469,13 @@ abundance_table <- abundance_metrics(data) %>%
     mutate(EPT = Ephemeroptera + Trichoptera,
            Turbellaria = Tricladida) %>%
     column_to_rownames() %>%
-    select(EPT, Trichoptera, Diptera, 
+    select(EPT, Diptera, 
            Amphipoda, Bivalvia, Gastropoda, 
            Hemiptera, Hirudinea, Turbellaria, 
            Oligochaeta) %>%
     t() %>%
-    as.data.frame()
+    as.data.frame() %>%
+    round(digits = 2)
 
 ```
 
@@ -488,9 +489,59 @@ data <- read.csv("../Data/other/abundancia_orden.csv") %>%
 diversity_table <- data.frame(
                          'Shanon' = diversity(data, index = 'shannon'),
                          'Dominancia' = diversity(data, index = 'simpson'),
-                          check.names = FALSE)
+                          check.names = FALSE) %>%
+                    round(digits = 2)
 
 # Working in beta diversity
+
+distance_matrix <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+                   select(-Muestra) %>%
+                   group_by(Estacion) %>%
+                   summarise(across(.cols = everything() , mean)) %>%
+                   ungroup() %>%
+                   column_to_rownames(var = 'Estacion') %>%
+                   vegdist(method="bray", binary= FALSE ) 
+    
+
+    cluster <-  hclust(distance_matrix, method = "average")
+    
+    dendogram <- fviz_dend(cluster, k = 1, main = "", palette = 'black')
+    
+    dendogram
+
+
+```
+
+```{r}
+
+layout <- "
+BBBAAAAA
+BBBAAAAA
+BBBAAAAA
+BBBAAAAA
+BBBAAAAA
+CCCCCCCC
+CCCCCCCC
+CCCCCCCC
+"
+
+
+heatmap_abundance <- abundance_table %>%
+                     rownames_to_column(var = 'Orden') %>%
+                     pivot_longer(!matches("Orden"),
+                                  names_to = "Estacion",
+                                  values_to = "Abundancia")
+                     
+
+ggplot(heatmap_abundance, aes(Estacion, Orden, fill= Abundancia)) + 
+  geom_tile()
+
+dendogram + 
+  tableGrob(diversity_table) + 
+  tableGrob(abundance_table)+ 
+  plot_layout(design = layout) +
+  guide_area() +
+  plot_annotation(tag_levels = 'A') 
 ```
 
 ## Discusión

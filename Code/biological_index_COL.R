@@ -2,6 +2,7 @@
 library(tidyr)
 library(dplyr)
 library(tibble)
+library(vegan)
 
 bmwp_COL <- function(data, ASPT = FALSE ) {
     
