@@ -15,7 +15,7 @@ always_allow_html: true
 
 ```{r setup, include=FALSE}
 
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
 
 source("../Code/metodos.R")
 source("../Code/eda.R")
@@ -30,7 +30,7 @@ QTable <- "../Data/rlq/QTable.csv"
 
 RLQ <- load_rlq(RTable, LTable ,QTable)
 
-parameters <- c("Temperatura", "OxDisuelto", "pH", "Velocidad",
+parameters <- c("Temperatura", "OxDisuelto", "pH", 
                 "Conductividad", "Turbidez") 
 
 ## Load Complete Data
@@ -128,20 +128,19 @@ observaciones y mediciones directas en el laboratorio, apoyadas en una revisión
 de la literatura disponible. 
 
 
-```{r table, echo=FALSE}
+```{r table_funct, echo=FALSE}
 
 data  <- read.csv("../Data/other/rasgos_funcionales_tabla.csv", 
                   check.names = FALSE)
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
-if (doc.type == "docx") {} else {
   data %>%
     kbl(booktabs = TRUE, escape = FALSE, caption = "
         Categorias de los Rasgos Funcionales. Tomado y modificado de 
         Tomanova et al. (2008) ") %>%
     collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
     kable_styling(full_width = FALSE)
-}
+
 
 ```
 
@@ -258,7 +257,22 @@ alta conductividad en la estación Frio5.
 plot_pca <- make_pca(RLQ$R_table, plot_type = "Tipo_Estacion", 
                      parameters = parameters )
 
+pca <- make_pca(RLQ$R_table, plot = FALSE)
+
+group <- factor(RLQ[["R_table"]]$Estacion)
+
+estations <- cbind(Grupo = group, as.data.frame(pca$x))
+
+mean_estations <- estations %>% 
+    group_by(Grupo) %>%
+    summarise(across(.cols = everything() , mean))
+
+plot_pca2 <- plot_pca$biplot + 
+  geom_text_repel(data= mean_estations, mapping = aes(PC1, PC2, label = Grupo), size =3.5 )
+
 plot_cluster <-  make_cluster(RLQ$R_table, parameters = parameters)
+
+dendogram <- fviz_dend(plot_cluster,  main = "", palette = 'futurama', k = 4) 
 
 layout <- "
 AAAAAAACCCC
@@ -266,16 +280,161 @@ AAAAAAABBBB
 AAAAAAABBBB
 AAAAAAABBBB
 "
-plot_pca$biplot + 
-  plot_cluster$dendogram + 
+plot_pca2 + 
+  dendogram + 
   plot_pca$eigenvalues + 
   plot_layout(design = layout, guides = 'collect') +
   guide_area() +
   plot_annotation(tag_levels = 'A') 
   
 
+
+custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
+
 ```
 
+### Indices bioticos 
+
+#### Diversidad 
+
+La diversidad alfa de las estaciones muestreadas es similar en ambos 
+rios, y en general no muestra relación con el gradiente ambiental 
+establecido (Figura 3 B). Salvo la estación Fri5, que presenta  una
+baja  riqueza de familias , las estaciones del rio frio presentan valores
+similares tanto en la riqueza de familias  como en  los indices de 
+diversidad alfa, que cuenta con una alta presencia de gastropodos y de 
+anfípodos de la familia Hyallelidae (Tabla 3).
+
+El rio neusa tambien presenta una diversidad alfa similar entre sus 
+estaciones, salvo por la estación Neu7 que presenta una mayor riqueza de 
+familias, asi como valores más altos de los indices de diversidad. Sin 
+embargo, la estructura de las comunidades del rio neusa difiere en gran 
+medida de las estaciones del rio frio, puesto que presenta una alta 
+presencia de dipteros (familias Chironomidae, Tipullidae y Simullidae) y 
+una escasa presencia de gastropodos y de anfípodos (Tabla 3). 
+
+El analisis de la diversidad beta muestra una diferenciación entre las 
+estaciones de ambos ríos, salvo por la estación Fri5 que presenta una 
+composición similar a la encontrada en las estaciones del rio neusa (Fig 3 A). 
+Sin embargo, al ver los clusteres que forman estos ríos no se ve un 
+patrón consistente con el gradiente ambiental observado (Fig 2A). 
+
+#### Bioindicadores
+
+Los valores del indice BMWP/Col, salvo las estaciones Neu1 y Fri5 que presentan 
+valores muy bajos, muestran valores  relativamente altos que indican aguas aceptables
+con un ligero nivel de contaminación. Esto es poco consistentes tanto con el ASPT como
+con el indice de hillsenhoff, puesto que estos indice muestran que la calidad de las 
+aguas en ambos rios es de dudosa calidad, con algunas estaciones presentando un estado 
+critico (Fig 3 B). Los valores de estos indices son en general inconsistentes 
+con el patron ambiental observado y con los grupos generados por el analisis 
+de cluster de las variables ambientales (Fig 2 A y Fig 2 B).
+
+
+```{r biological_index, include= FALSE}
+
+data <- read.csv("../Data/rlq/LTable.csv") %>% 
+    select(-c(Muestra)) %>%
+    group_by(Estacion) %>%
+    summarise(across(everything(), mean)) %>%
+    column_to_rownames("Estacion") %>%
+    as.matrix() %>%
+    t() 
+    
+ index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
+            'ASPT' = bmwp_COL(data, ASPT = TRUE),
+            'FBI'  = hillsenhoff_index(data)$hillsenhoff_scores,
+            check.names = FALSE)
+
+
+
+```
+
+
+```{r diversity, include=FALSE}
+
+data <- RLQ$L_table %>% 
+    select(-Muestra, -Tipo_Estacion) %>%
+    group_by(Estacion) %>%
+    summarise(across(everything(), mean)) %>%
+    column_to_rownames("Estacion") 
+
+data2 <- complete %>% 
+  group_by(Estacion, Muestra) %>% 
+  summarise( Familias = n_distinct(Familia),
+             Total_Macro = sum(Individuos)) %>%
+  select(-Muestra ) %>%
+  group_by(Estacion) %>% 
+  summarise(across(everything(), mean)) 
+
+diversity_table <- data.frame(
+                         'H' = diversity(data, index = 'shannon'),
+                         '1-D' = diversity(data, index = 'simpson'),
+                         'n' = round(data2$Total_Macro, 0), 
+                         'k' = round(data2$Familias, 0),
+                          check.names = FALSE) %>%
+                    round(digits = 2) 
+
+data_discussion <- data[c("Chironomidae", "Simuliidae", "Hyalellidae",
+                          "Physidae", "Sphaeriidae", "Naididae" )] # to discussion
+# Working in beta diversity
+
+distance_matrix <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+                   select(-Muestra) %>%
+                   group_by(Estacion) %>%
+                   summarise(across(.cols = everything() , mean)) %>%
+                   ungroup() %>%
+                   column_to_rownames(var = 'Estacion') %>%
+                   vegdist(method="bray", binary= FALSE ) 
+    
+
+    cluster <-  hclust(distance_matrix, method = "average")
+    
+    dendogram <- fviz_dend(cluster, k = 1, main = "", palette = 'black')
+    
+```
+
+
+```{r div_index_plotm,fig.height= 6, fig.width= 10, fig.align='center', fig.cap= "Diversidad e indices biologicos de las estaciones muestreadas. A) Diversidad beta. Dendograma de las estaciones basado en el indice Bray-Curtis y computado con el algoritmo UPGMA. B) Tabla de indices de diversidad alfa e indicadores biologicos. H = indice de Shannon-Weaver, 1-D = indice de diversidad de Simpson, n = promedio de individuos por muestreo, k = promedio de familias por muestreo. " }
+
+layout <- c(
+  area(t = 1, l = 1, b = 4, r = 3),
+  area(t = 1, l = 3, b = 2, r = 4)
+)
+
+div_indx <- cbind(diversity_table, index_table) %>%
+            tableGrob(theme = ttheme_default(base_size = 10)) %>%
+            gtable::gtable_add_cols(unit(0.025, "npc"), 5) %>%
+            gtable::gtable_add_cols(unit(0.0125, "npc"), 1)
+
+
+dendogram + 
+  div_indx+
+  plot_layout(design = layout, guides = 'collect') +
+  plot_annotation(tag_levels = 'A') 
+```
+
+
+```{r ab_table, fig.height= 3, fig.width= 6, fig.align='center'}
+data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+    select(-Muestra)
+
+abundance_table <- abundance_metrics(data) %>%
+    rownames_to_column() %>%
+    mutate(EPT = Ephemeroptera + Trichoptera,
+           Turbellaria = Tricladida) %>%
+    column_to_rownames() %>%
+    select(EPT, Diptera, Amphipoda, Bivalvia, Gastropoda, 
+           Hemiptera, Hirudinea, Turbellaria, Oligochaeta) %>%
+    round(digits = 2)
+
+abundance_table %>%
+  kbl(booktabs = TRUE, escape = FALSE, caption = "
+        Abundancia relativa de los ordenes presentes en las estaciones 
+      muestreadas del rio Frio y el rio Neusa. ") %>%
+     kable_styling(latex_options="scale_down")
+
+```
 
 ### Respuesta de los rasgos funcionales
 
@@ -290,12 +449,12 @@ factorial (Anexo 4) confirmando las tendencias observadas en el PCA.
 
 Cuando en el plano aumenta el oxigeno disuelto y disminuye la turbidez
 se puede ver una tendencia hacia  el aumento de organismos raspadores que se 
-alimentan principalmente de algas y detritos finos (Fig 3 A y B) de pequeños
+alimentan principalmente de algas y detritos finos (Fig 4 A y B) de pequeños
 tamaños (<1cm) con cuerpos redondeados  y/o aplanados y que presentan
-hábitos natatorios o excavadores (Fig 3 D, E y F). Cuando la acidez y la turbidez
+hábitos natatorios o excavadores (Fig 4 D, E y F). Cuando la acidez y la turbidez
 del agua aumenta la tendencia favorece a los organismos trituradores y a los 
-predadores (Fig 3 A y B) de forma cilíndrica y tamaño medio (1-2 cm) que se
-encuentran sobre la superficie bentónica (Fig 3 D, E y F). La figura 3C muestra 
+predadores (Fig 4 A y B) de forma cilíndrica y tamaño medio (1-2 cm) que se
+encuentran sobre la superficie bentónica (Fig 4 D, E y F). La figura 3C muestra 
 que las formas de respiración de los macroinvertebrados no presentan tendencias 
 fuertes en relación a el gradiente ambiental.
 
@@ -335,7 +494,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[1:6,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[1], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
       
     }
   
@@ -353,7 +512,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[7:11,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[2], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
       
     }
   
@@ -371,7 +530,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[12:15,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[3], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
       
     }
     
@@ -389,7 +548,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[16:19,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[4], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
       
     }
     
@@ -407,7 +566,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[20:25,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[5], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
       
     }
     
@@ -425,7 +584,7 @@ rasgos <-  c("A) Tipo Alimento",
         s.arrow(rlq1$co[26:30,], boxes = TRUE,  clabel = 2,
                 ylim = c(-1,1), xlim = c(-1.5,1.5),
                 sub = rasgos[6], csub = 2.5);
-        s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
+        # s.label(rlq1$l1, boxes = FALSE, add.plot = TRUE, clabel = 2);
     }
 }
   
@@ -439,112 +598,13 @@ o presentan formas  esféricas (SPH) y correlaciones positivas cuando los organi
 son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medio
 (Anexo 4). 
 
-### Indices bioticos 
-
-```{r biological_index}
-
-data <- read.csv("../Data/rlq/LTable.csv") %>% 
-    select(-c(Muestra)) %>%
-    group_by(Estacion) %>%
-    summarise(across(everything(), mean)) %>%
-    column_to_rownames("Estacion") %>%
-    as.matrix() %>%
-    t() 
-    
- index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
-            'ASPT' = bmwp_COL(data, ASPT = TRUE),
-            'FBI'  = hillsenhoff_index(data)$hillsenhoff_scores,
-            check.names = FALSE)
-
-
-
-```
-
-```{r abundance}
-data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
-    select(-Muestra)
-
-abundance_table <- abundance_metrics(data) %>%
-    rownames_to_column() %>%
-    mutate(EPT = Ephemeroptera + Trichoptera,
-           Turbellaria = Tricladida) %>%
-    column_to_rownames() %>%
-    select(EPT, Diptera, 
-           Amphipoda, Bivalvia, Gastropoda, 
-           Hemiptera, Hirudinea, Turbellaria, 
-           Oligochaeta) %>%
-    t() %>%
-    as.data.frame() %>%
-    round(digits = 2)
-
-```
-
-```{r diversity}
-data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
-    select(-Muestra) %>%
-    group_by(Estacion) %>%
-    summarise(across(everything(), mean)) %>%
-    column_to_rownames("Estacion") 
-
-diversity_table <- data.frame(
-                         'Shanon' = diversity(data, index = 'shannon'),
-                         'Dominancia' = diversity(data, index = 'simpson'),
-                          check.names = FALSE) %>%
-                    round(digits = 2)
-
-# Working in beta diversity
-
-distance_matrix <- read.csv("../Data/other/abundancia_orden.csv") %>% 
-                   select(-Muestra) %>%
-                   group_by(Estacion) %>%
-                   summarise(across(.cols = everything() , mean)) %>%
-                   ungroup() %>%
-                   column_to_rownames(var = 'Estacion') %>%
-                   vegdist(method="bray", binary= FALSE ) 
-    
-
-    cluster <-  hclust(distance_matrix, method = "average")
-    
-    dendogram <- fviz_dend(cluster, k = 1, main = "", palette = 'black')
-    
-    dendogram
-
-
-```
-
-```{r}
-
-layout <- "
-BBBAAAAA
-BBBAAAAA
-BBBAAAAA
-BBBAAAAA
-BBBAAAAA
-CCCCCCCC
-CCCCCCCC
-CCCCCCCC
-"
-
-
-heatmap_abundance <- abundance_table %>%
-                     rownames_to_column(var = 'Orden') %>%
-                     pivot_longer(!matches("Orden"),
-                                  names_to = "Estacion",
-                                  values_to = "Abundancia")
-                     
-
-ggplot(heatmap_abundance, aes(Estacion, Orden, fill= Abundancia)) + 
-  geom_tile()
-
-dendogram + 
-  tableGrob(diversity_table) + 
-  tableGrob(abundance_table)+ 
-  plot_layout(design = layout) +
-  guide_area() +
-  plot_annotation(tag_levels = 'A') 
-```
 
 ## Discusión
+
+### Estructura de las comunidades
+
+### Respusta funcional al gradiente ambiental 
+
 
 ## Conclusiones
 
@@ -656,7 +716,7 @@ rasgos <-  c("A) Tipo Alimento",
 
 rasgos_func %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Anexo1 : Clasificación de los rasgos funcionales  basados en 
+        Anexo 1. Clasificación de los rasgos funcionales  basados en 
         la metodologia del Fuzzy Code para las familias de 
         macroinvertebrados presentes en los rios de la Sabana 
         de Bogotá.") %>%
