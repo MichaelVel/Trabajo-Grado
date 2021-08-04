@@ -340,12 +340,17 @@ data <- read.csv("../Data/rlq/LTable.csv") %>%
     column_to_rownames("Estacion") %>%
     as.matrix() %>%
     t() 
-    
+
+data <- read.csv("../Data/rlq/LTable.csv") %>% 
+    unite(Names, Estacion, Muestra) %>%
+    column_to_rownames("Names") %>%
+    as.matrix() %>%
+    t()    
+
  index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
             'ASPT' = bmwp_COL(data, ASPT = TRUE),
             'FBI'  = hillsenhoff_index(data)$hillsenhoff_scores,
             check.names = FALSE)
-
 
 
 ```
@@ -369,14 +374,18 @@ data2 <- complete %>%
 
 diversity_table <- data.frame(
                          'H' = diversity(data, index = 'shannon'),
-                         '1-D' = diversity(data, index = 'simpson'),
+                         '1-D' = diversity(data, index = 'invsimpson'),
                          'n' = round(data2$Total_Macro, 0), 
                          'k' = round(data2$Familias, 0),
                           check.names = FALSE) %>%
                     round(digits = 2) 
 
 data_discussion <- data[c("Chironomidae", "Simuliidae", "Hyalellidae",
-                          "Physidae", "Sphaeriidae", "Naididae" )] # to discussion
+                          "Physidae", "Sphaeriidae", "Naididae" )]# to discussion
+data_discussion2 <- RLQ$Q_table[c("Chironomidae", "Simuliidae", "Hyalellidae",
+                          "Physidae", "Sphaeriidae", "Naididae" ),] %>%
+  t() %>% 
+  as.data.frame()
 # Working in beta diversity
 
 distance_matrix <- read.csv("../Data/other/abundancia_orden.csv") %>% 
@@ -434,6 +443,7 @@ abundance_table %>%
       muestreadas del rio Frio y el rio Neusa. ") %>%
      kable_styling(latex_options="scale_down")
 
+View(abundance_metrics(RLQ$L_table[-2],absolute = TRUE))
 ```
 
 ### Respuesta de los rasgos funcionales
@@ -464,7 +474,7 @@ fuertes en relación a el gradiente ambiental.
 rlq1 <- make_rlq(RLQ$R_table, RLQ$L_table, RLQ$Q_table, parameters = parameters )
 
 group <- factor(RLQ[["R_table"]]$Tipo_Estacion)
-estations <- cbind(Grupo = group, rlq1$mR) 
+estations <- cbind(Grupo = group, rlq1$lR) 
 mean_estations <- estations %>% 
                  group_by(Grupo) %>%
                 summarise(across(.cols = everything() , mean))
