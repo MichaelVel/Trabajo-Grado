@@ -2,10 +2,13 @@
 title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
 date: "26/05/2021"
+fontsize: 12pt
 header-includes:
 - \usepackage{pdflscape}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
+- \usepackage{caption}
+- \captionsetup[figure]{font=small}
 output:
   pdf_document: default
   html_document: default
@@ -44,7 +47,7 @@ complete <- read.csv("../Data/muestreo_completo.csv",
 ## Introducción
 
 Las condiciones ambientales de una gran cantidad de ríos en las áreas tropicales
-se ha ido deteriorando a raíz del  rápido crecimiento de las poblaciones humanas,
+se ha ido deteríorando a raíz del  rápido crecimiento de las poblaciones humanas,
 los cambios en el uso del suelo, el desarrollo agrícola e industrial, y las
 actividades extractivas (Dudgeon, 2017). Desde los años 90 se ha venido implementando
 el monitoreo con índices que integran las variables fisicoquímicas para la medición 
@@ -101,17 +104,18 @@ Los macroinvertebrados utilizados provienen de una serie de muestreos realizados
 entre el año 2017 y el año 2019 en 11 estaciones de muestreo ubicadas en los ríos
 Frío y Neusa, en los municipios de Cajicá, Chía y Cogua (Figura 1), en el
 marco del “Programa nacional para la conservación de la especie endémica de
-Colombia pez capitán de la sabana (*Eremophilus mutisii*)” liderado por el Ministerio del
+Colombia pez capitán de la sabana (*Eremophilus mutisii*)” liderado por el Ministerío del
 Medio Ambiente y la Universidad Manuela Beltrán (Lemus-Portillo *et al*., 2020). En cada
 punto de muestreo se tomaron datos hidrológicos y se midieron *in situ*
 las variables fisicoquímicas oxígeno disuelto, conductividad, pH, temperatura
 y turbidez. Los macroinvertebrados se colectaron con metodologías estándar de
 amplio  reconocimiento, red Surber, red D, red de mano (Domínguez y Fernández, 2009). 
 
-```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE, fig.height= 5, fig.width= 7, fig.align='center', echo=FALSE, fig.cap= " Estaciones de muestreo en los rios Neusa (derecha)y Frio (izquierda)."}
+```{r sampling estation, message=FALSE, warning=FALSE, cache=TRUE, fig.height= 4, fig.width= 6, fig.align='center', echo=FALSE, fig.cap= " Localización espacial de las estaciones de muestreo. El area de muestreo del rio frio se ubico en la cuenca baja del rio Frío (izquierda), municipio de Cajicá y municipio  de Chia, Longitud del recorrido aprox 13,5 km . El area de muestreo del rio Neusa tiene ubicado en el municipio de Cogua, tiene puntos de muestreo antes y despues de la represa del Neusa. Longitud del recorrido aprox 13 km"}
 
 estaciones <- read.csv("../Data/other/estaciones.csv")
 plot_est(estaciones)
+
 ```
 
 ### Rasgos Funcionales 
@@ -124,7 +128,7 @@ incluyen rasgos tróficos (alimentación y hábitos alimenticios), fisiológicos
 y fijación al sustrato). Siguiendo la metodología del 'Fuzzy coding'  
 (Usseglio‐Polatera, 1994) a cada familia se le asignó un valor entre 0 y 3 para 
 cada una de las categorías de los rasgos funcionales (Tabla 1) por medio de 
-observaciones y mediciones directas en el laboratorio, apoyadas en una revisión 
+observaciones y mediciones directas en el laboratorío, apoyadas en una revisión 
 de la literatura disponible. 
 
 
@@ -168,15 +172,15 @@ resumidas en la tabla 2. Los resultados del análisis  de cluster muestran que
 las estaciones evaluadas se pueden clasificar en cuatro grupos diferentes (Fig 2B),
 que muestra una clara diferencia entre las estaciones del río Frío y las estaciones
 del río Frío. En el río Frío se observa que las estaciones ubicadas en la vereda Canelon
-de Cajicá forman un grupo (FrioB) y la estación ubicada en la zona urbana de Chía
-forma el otro (FrioA). En el río Neusa se observa una diferencia de las estaciones
+de Cajicá forman un grupo (FríoB) y la estación ubicada en la zona urbana de Chía
+forma el otro (FríoA). En el río Neusa se observa una diferencia de las estaciones
 en las condiciones físico químicas antes del embalse del Neusa (NeusaA) y después
 (NeusaB). Los resultados del MANOVA y del análisis post hoc entre estos cuatro grupos
 indica que existen diferencias significativas entre ellos (Anexo 3).  
 
 Las características hidrologicas de los ríos no varían en gran medida entre las
 estaciones (Tabla 2 y Anexo 2) y por lo tanto aportan poco al gradiente ambiental, 
-por lo que fueron excluidas de los análisis posteriores.  
+por lo que fueron excluidas de los análisis posteríores.  
 
 ```{r summary, echo=FALSE,  message=FALSE, warning=FALSE, fig.height= 6, fig.width= 11, fig.align='center' }
 
@@ -193,7 +197,7 @@ summary_data <- (function () {
     names <- c("Estacion", "Temperatura (C°)", "Ox disuelto (mg/L)", "pH",
              "Conductividad (µS/cm)", "Turbidez (NTU)", 
              "Profundidad (cm)", "Velocidad (m/s)",
-             "Altitud (msnm)","Familias", "Total Macro")
+             "Altitud (msnm)")
     
     for (i in 1:7){
         a <- paste0( mean[[i]], '±', sd[[i]]) 
@@ -203,14 +207,11 @@ summary_data <- (function () {
     data <- as.data.frame(data)
     names(data) <-  names(summary_data$mean[1:8])
     data <- cbind(data,summary_data$mean[["Altitud"]])
-    data <- left_join(data, summary_data$macroinvertebrates, by = "Estacion")
     names(data) <- names
     
     data <- data %>%
-      column_to_rownames("Estacion") %>%
-      as.matrix(data) %>%
-      t() %>%
-      as.data.frame()
+      column_to_rownames("Estacion")
+        
 
     
     return(data)
@@ -220,8 +221,15 @@ summary_data <- (function () {
   summary_data %>%
       kbl(booktabs = TRUE, escape = FALSE, 
           caption = "Condiciones ambientales de los rios Neusa y Frio
-                     en las estaciones trabajadas ") %>% 
-      kable_styling(latex_options="scale_down")
+                     en las estaciones trabajadas ",
+          col.names = linebreak( c("Temperatura\n(C°)", 
+                                   "Ox disuelto\n(mg/L)", "pH",
+                                   "Conductividad\n(µS/cm)", "Turbidez\n(NTU)", 
+                                   "Profundidad\n(cm)", "Velocidad\n(m/s)",
+                                   "Altitud\n(msnm)"), 
+                                 align = "c")) %>% 
+      kable_styling(latex_options="scale_down") %>%
+      pack_rows(index=c("Rio Frío" = 5, "Rio Neusa" = 6))
     
 
 ```
@@ -237,18 +245,18 @@ las aguas.  Si bien también se observa un gradiente de temperatura, este no
 necesariamente esta relacionado con el gradiente ambiental, sino que se debe a 
 las diferencias de altura entre estaciones (Tabla 2).  
 
-Las mediciones de pH realizadas en el río Frio muestran una  alta variabilidad
+Las mediciones de pH realizadas en el río Frío muestran una  alta variabilidad
 entre los muestreos que contrasta con las mediciones del río Neusa que en general
 son más homogéneas y presentan un pH neutro. La conductividad también presenta 
 un comportamiento diferencial entre los ríos. En el caso del río Neusa, las 
-estaciones anteriores a la represa (Neusa A) presentan valores más elevados que
-los presentes en las estaciones posteriores a la represa (Neusa B), sin embargo 
+estaciones anteríores a la represa (Neusa A) presentan valores más elevados que
+los presentes en las estaciones posteríores a la represa (Neusa B), sin embargo 
 cabe resaltar que en las estaciones del grupo Neusa A, la varibilidad  entre 
 muestreos es mucho más elevada (Anexo 2) que en el resto de estaciones,  razón 
 por la cual esta alta conductividad podría deberse a razones puntuales en
-los periodos de muestreo.  En el río Frio el gradiente de conductividad es el 
-esperado, sin muchas diferencias entre las estaciones río arriba (Frio B) y una 
-alta conductividad en la estación Frio5. 
+los períodos de muestreo.  En el río Frío el gradiente de conductividad es el 
+esperado, sin muchas diferencias entre las estaciones río arriba (Frío B) y una 
+alta conductividad en la estación Frío5. 
 
 
 ```{r eda,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 6, fig.width= 9, fig.align='center', fig.cap= " Analisis de Componentes Principales y Analisis Jerarquico de Cluster. A) Proyección de las variables fisicoquimicas en el plano del ACP. B) Dendrogama de las estaciones. Se utilizo como la distancia euclidia como metrica de similitud y se computo utilizando el algoritmo UPGMA C) Varianza explicada por los componentes del ACP. "}
@@ -298,24 +306,24 @@ custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
 #### Diversidad 
 
 La diversidad alfa de las estaciones muestreadas es similar en ambos 
-rios, y en general no muestra relación con el gradiente ambiental 
+ríos, y en general no muestra relación con el gradiente ambiental 
 establecido (Figura 3 B). Salvo la estación Fri5, que presenta  una
-baja  riqueza de familias , las estaciones del rio frio presentan valores
+baja  riqueza de familias , las estaciones del río Frío presentan valores
 similares tanto en la riqueza de familias  como en  los indices de 
 diversidad alfa, que cuenta con una alta presencia de gastropodos y de 
 anfípodos de la familia Hyallelidae (Tabla 3).
 
-El rio neusa tambien presenta una diversidad alfa similar entre sus 
+El río Neusa también presenta una diversidad alfa similar entre sus 
 estaciones, salvo por la estación Neu7 que presenta una mayor riqueza de 
-familias, asi como valores más altos de los indices de diversidad. Sin 
-embargo, la estructura de las comunidades del rio neusa difiere en gran 
-medida de las estaciones del rio frio, puesto que presenta una alta 
+familias, así como valores más altos de los indices de diversidad. Sin 
+embargo, la estructura de las comunidades del río Neusa difiere en gran 
+medida de las estaciones del río Frío, puesto que presenta una alta 
 presencia de dipteros (familias Chironomidae, Tipullidae y Simullidae) y 
 una escasa presencia de gastropodos y de anfípodos (Tabla 3). 
 
-El analisis de la diversidad beta muestra una diferenciación entre las 
+El análisis de la diversidad beta muestra una diferenciación entre las 
 estaciones de ambos ríos, salvo por la estación Fri5 que presenta una 
-composición similar a la encontrada en las estaciones del rio neusa (Fig 3 A). 
+composición similar a la encontrada en las estaciones del río Neusa (Fig 3 A). 
 Sin embargo, al ver los clusteres que forman estos ríos no se ve un 
 patrón consistente con el gradiente ambiental observado (Fig 2A). 
 
@@ -325,9 +333,9 @@ Los valores del indice BMWP/Col, salvo las estaciones Neu1 y Fri5 que presentan
 valores muy bajos, muestran valores  relativamente altos que indican aguas aceptables
 con un ligero nivel de contaminación. Esto es poco consistentes tanto con el ASPT como
 con el indice de hillsenhoff, puesto que estos indice muestran que la calidad de las 
-aguas en ambos rios es de dudosa calidad, con algunas estaciones presentando un estado 
+aguas en ambos ríos es de dudosa calidad, con algunas estaciones presentando un estado 
 critico (Fig 3 B). Los valores de estos indices son en general inconsistentes 
-con el patron ambiental observado y con los grupos generados por el analisis 
+con el patrón ambiental observado y con los grupos generados por el análisis 
 de cluster de las variables ambientales (Fig 2 A y Fig 2 B).
 
 
@@ -341,13 +349,7 @@ data <- read.csv("../Data/rlq/LTable.csv") %>%
     as.matrix() %>%
     t() 
 
-data <- read.csv("../Data/rlq/LTable.csv") %>% 
-    unite(Names, Estacion, Muestra) %>%
-    column_to_rownames("Names") %>%
-    as.matrix() %>%
-    t()    
-
- index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
+index_table <- data.frame( 'BMWP COL' = bmwp_COL(data)$bmwp_scores,
             'ASPT' = bmwp_COL(data, ASPT = TRUE),
             'FBI'  = hillsenhoff_index(data)$hillsenhoff_scores,
             check.names = FALSE)
@@ -364,21 +366,27 @@ data <- RLQ$L_table %>%
     summarise(across(everything(), mean)) %>%
     column_to_rownames("Estacion") 
 
-data2 <- complete %>% 
+macroab1 <- complete %>% 
   group_by(Estacion, Muestra) %>% 
   summarise( Familias = n_distinct(Familia),
              Total_Macro = sum(Individuos)) %>%
   select(-Muestra ) %>%
   group_by(Estacion) %>% 
-  summarise(across(everything(), mean)) 
+  summarise(across(everything(), mean))  
+
+macroab2 <- summary_statistics(data = complete)$macroinvertebrates
 
 diversity_table <- data.frame(
-                         'H' = diversity(data, index = 'shannon'),
-                         '1-D' = diversity(data, index = 'invsimpson'),
-                         'n' = round(data2$Total_Macro, 0), 
-                         'k' = round(data2$Familias, 0),
-                          check.names = FALSE) %>%
-                    round(digits = 2) 
+                         'H' = round(diversity(data, index = 'shannon'), 2),
+                         '1-D' = round(diversity(data, index = 'invsimpson'), 2),
+                         'n' = paste0(round(macroab1$Total_Macro, 0),
+                                      " (",macroab2$Total_Macro, ")"), 
+                         'k' = paste0(round(macroab1$Familias, 0),
+                                      " (",macroab2$Familias, ")"), 
+                          check.names = FALSE) 
+               
+
+
 
 data_discussion <- data[c("Chironomidae", "Simuliidae", "Hyalellidae",
                           "Physidae", "Sphaeriidae", "Naididae" )]# to discussion
@@ -440,10 +448,9 @@ abundance_table <- abundance_metrics(data) %>%
 abundance_table %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
         Abundancia relativa de los ordenes presentes en las estaciones 
-      muestreadas del rio Frio y el rio Neusa. ") %>%
+      muestreadas del río Frío y el río Neusa. ") %>%
      kable_styling(latex_options="scale_down")
 
-View(abundance_metrics(RLQ$L_table[-2],absolute = TRUE))
 ```
 
 ### Respuesta de los rasgos funcionales
@@ -461,7 +468,7 @@ Cuando en el plano aumenta el oxigeno disuelto y disminuye la turbidez
 se puede ver una tendencia hacia  el aumento de organismos raspadores que se 
 alimentan principalmente de algas y detritos finos (Fig 4 A y B) de pequeños
 tamaños (<1cm) con cuerpos redondeados  y/o aplanados y que presentan
-hábitos natatorios o excavadores (Fig 4 D, E y F). Cuando la acidez y la turbidez
+hábitos natatoríos o excavadores (Fig 4 D, E y F). Cuando la acidez y la turbidez
 del agua aumenta la tendencia favorece a los organismos trituradores y a los 
 predadores (Fig 4 A y B) de forma cilíndrica y tamaño medio (1-2 cm) que se
 encuentran sobre la superficie bentónica (Fig 4 D, E y F). La figura 3C muestra 
@@ -469,7 +476,7 @@ que las formas de respiración de los macroinvertebrados no presentan tendencias
 fuertes en relación a el gradiente ambiental.
 
 
-```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los rios estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 85% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se pueden encontrar en la tabla 1."}
+```{r rlq ,  message=FALSE, warning=FALSE, cache= FALSE, echo=FALSE, fig.height= 11, fig.width= 10, fig.cap= "Analisis RLQ de los ríos estudiados. A-F) Proyección de las categorias en el plano factorial del análisis RLQ. El primer eje RLQ concentra el 85% de la variación. El valor de d representa el tamaño de la cuadricula. Los codigos de las categorias se pueden encontrar en la tabla 1."}
 
 rlq1 <- make_rlq(RLQ$R_table, RLQ$L_table, RLQ$Q_table, parameters = parameters )
 
@@ -613,10 +620,111 @@ son trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medi
 
 ### Estructura de las comunidades
 
-### Respusta funcional al gradiente ambiental 
+Las comunidades que se encuentran en las estaciones del río Neusa y del río Frío
+muestran variaciones en su composición, siendo las mayores diferencias las que se
+encuentran en términos de abundancia relativa de los dípteros y anfípodos presentes
+en sus estaciones (Tabla 3).
+
+En el río Neusa, las comunidades presentes en las estaciones anteríores (FríoA)  y
+posteríores (FríoB) a la represa son similares y se encuentran en gran parte
+conformadas por las familias Chironomidae (40-50%) y  Simuliidae (20-40%), esta
+última abundante en aguas limpias y bien oxigenadas (Ríos-Touma et al., 2014).
+Mientras que en las estaciones río arriba de la represa es posible encontrar
+tanto familias de aguas limpias como Leptoceridae, también es posible encontrar
+familias en mayor o menor medida resistentes a la polución como los bivalvos
+Sphaeriidae y los dípteros Tipulidae, en las estaciones río abajo es posible
+encontrar familias tolerantes a la polución como son Baetidae, Aeshnidae y
+Naididae, evidenciando que las estaciones río arriba se encuentran ligeramente
+en mejor estado.
+
+Las estaciones del río Frío se caracterizan por poseer una fauna de macroinvertebrados
+dominada por amphipodos Hyalellidae y gasterópodos de la familia Physidae que
+comprenden 60-80% de las comunidades, siendo los insectos poco abundantes en sus
+aguas. Si bien, los insectos suelen representar gran parte de los macroinvertebrados
+en los ríos tropicales de alta montaña (Dudgeon, 2008), no es infrecuente que
+otros grupos de macroinvertebrados sean los organismos dominantes (Ward, 1994;
+Turcotte y Harper, 1982). La familia Hyalellidae suele ser un organismo frecuente
+en ambientes lénticos y lóticos de alta montaña (Jacobson y Marin, 2007), siendo
+considerado un organismo resistente a la contaminación (Jacobsen y  Encalada, 1998;
+ Ríos-Touma et al., 2014).  
+
+La baja abundancia de dípteros Chironomidae, una de las familias de macroinvertebrados
+más frecuentes en aguas continentales, en las estaciones del río frío  es
+contrastante con  estudios realizado en otros ríos de la sabana de Bogotá
+(Meneses-Campos et al., 2019) e inclusive en la parte alta del río frío
+(Forero,2017), en los que ,en condiciones fisicoquímicas similares a las reportadas
+en las estaciones muestreadas, la presencia de Chironomidae fue mucho mayor,
+siendo una de los taxones dominante en las comunidades.
+
+Al observarse los índices de diversidad de Shannon y Simpson (Fig 3 B), se observa
+que las estaciones presentan valores cercanos, sin que se vea una clara  relación
+con el análisis de cluster de las variables fisicoquímicas, y con el gradiente
+ambiental observado (Fig 2 A y B).
+
+El análisis de diversidad beta (Fig 3A), muestra que las comunidades de macroinvertebrados
+de ambos ríos son diferentes, con la excepción de la estación Fri 5 que tiene
+una composición más parecida a la presente en el río Neusa. La estación Fri5,
+ubicada en el municipio de Chía, presenta unas condiciones muy  diferentes a las
+demás estaciones del río Frío. En esta estación, la comunidad se encuentra
+representada en gran parte por Chironomidae y por Hirudíneos, siendo la presencia
+de los amphipodos muy reducida. Si bien, los índices de diversidad presentan
+valores más altos en esta estación respecto a las demás del río Frío, el bajo
+número de familias e individuos por muestreo, indican que esta estación
+presenta una muy baja diversidad.
+
+
+### Respuesta funcional
+
+Cuando se habla de organización funcional de una comunidad, uno de los rasgos
+mejor estudiados de las comunidades de macroinvertebrados son los  grupos funcionales
+de alimentación (FFG), siendo a menudo utilizados en el monitoreo ambiental de la
+Calidad de las aguas (Tomanova et al., 2006; Pinilla 2010; Vera-Sanchez y Pinilla, 2020).
+Si bien, en el presente trabajo no fue posible establecer correlaciones significativas
+entre las variables medioambientales y la mayoria de las  categorias de los
+rasgos funcionales (Anexo 4), vale la pena mencionar algunas tendencias observadas
+en los FFG de las comunidades trabajadas.
+
+Como se ve en el análisis RLQ (Fig 4B), Los organismos colectores-recolectores no
+tienen una relación fuerte con ninguna de las variables medioambientales, siendo
+además muy abundantes en todas las estaciones (Chironomidae en el río Neusa y
+Hyalellidae en el río Frío). Los organismos colectores-recolectores han sido
+relacionados con sitios contaminados en ríos tropicales de tierras bajas, así
+como en ríos de zonas templadas (Usseglio-Polatera y Beisel, 2002; Lecerf et al.,
+2006, Tomanova et al., 2008), pese a esto, en ríos tropicales de alta montaña
+se consideran organismos bastante frecuentes usualmente representando una gran
+parte de las comunidades de macroinvertebrados (Dudgeon, 2008), por lo cual no es
+extraño encontrarlos a lo largo de todo el gradiente ambiental.
+
+Existe una tendencia en los ríos tropicales de alta montaña a una alta diversidad
+de los organismos predadores (Dudgeon, 2008), siendo esto también observado en
+los ríos frío y Neusa, donde las familias predadoras representan aproximadamente
+un 37% del total de familias encontradas. Los organismos trituradores fueron en
+general poco abundantes y poco diversos en la mayoría de las estaciones, siguiendo
+un patrón que se ha observado en las aguas tropicales en general (Dudgeon, 2008),
+sin embargo en la estación Frío 4, son un poco más frecuentes, posiblemente
+relacionado con la hojarasca producida por  la vegetación aledaña al río
+(principalmente Eucaliptos), muy abundante en esta estación.
+
+Debido a la falta de información a nivel taxonómico y ecológico de los macroinvertebrados
+de las aguas subtropicales, el método 'fuzzy coding' ha permitido el desarrollo
+de herramientas de monitoreo a nivel de familia que permiten  evaluar los
+patrones de cambio de la diversidad funcional a lo largo de gradientes de contaminación
+ambiental (Usseglio-Polatera et al., 2000; Tomanova et al., 2008). Si bien, este
+nivel de resolución taxonómica ha demostrado ser una buena alternativa a el uso
+de las especies en estudios de ecología tropical (Melo, 2005), la alta diversidad
+ecológica y fisiológica que presentan familias como Chironomidae, pueden limitar
+este enfoque en los estudios de diversidad funcional.
+
+Nuevos estudios a nivel de género en las comunidades de macroinvertebrados de
+los ríos de la Sabana de Bogotá pueden permitir el desarrollo de alternativas al
+'fuzzy coding' como la presentada por Colzani et al. (2013) basada tambien en
+categorías, pero que permite el cálculo de índices funcionales como la riqueza,
+la igualdad o la divergencia funcional. Estos índices pueden ser fácilmente integrados
+en índices multimetricos de biomonitoreo  (Saito et al., 2014).
 
 
 ## Conclusiones
+
 
 \newpage
 
@@ -628,6 +736,10 @@ Archiv Fuer Hydrobiologie, 142(4), 415-432.
 
 Chevenet, F., Dolédec, S. and Chessel, D. (1994) A fuzzy coding approach for the analysis 
 of long-term ecological data. Freshwater Biology, 31, 295–309.
+
+Colzani, E., Siqueira, T., Suriano, M. T., & Roque, F. O. (2013). Responses of 
+Aquatic Insect Functional Diversity to Landscape Changes in Atlantic Forest.
+Biotropica, 45(3), 343–350. https://doi.org/10.1111/btp.12022
 
 Cummins, K. W., Merritt, R. W., & Andrade, P. C. (2005). The use of invertebrate
 functional groups to characterize ecosystem attributes in selected streams and rivers in
@@ -667,14 +779,38 @@ Fierro, P., Valdovinos, C., Vargas-Chacoff, L., Bertrán, C., & Arismendi, I. (2
 Macroinvertebrates and Fishes as Bioindicators of Stream Water Pollution. Water Quality. 
 https://doi.org/10.5772/65084  
 
+Forero, J. (2017). Macroinvertebrados bentónicos y su relación con la calidad
+del agua en la cuenca alta de del Río Frío (Tabio, Cundinamarca). Bogota-
+Colombia: PONTIFICIA UNIVERSIDAD JAVERIANA. Recup eradoel Julio de, 31.
+
 Gayraud, S., Statzner, B., Bady, P., Haybachp, A., Schöll, F., Usseglio‐Polatera, P., &
 Bacchi, M. (2003). Invertebrate traits for the biomonitoring of large European rivers: An
-initial assessment of alternative metrics. Freshwater Biology, 48(11), 2045-2064.  
+initial assessment of alternative metrics. Freshwater Biology, 48(11), 2045-2064. 
+
+Jacobsen, D., & Encalada, A. (1998). The macroinvertebrate fauna of Ecuadorian
+highland streams in the wet and dry season. Fundamental and Applied Limnology /
+Archiv Für Hydrobiologie, 142, 53–70.
+
+Jacobsen, D., & Marín, R. (2008). Bolivian Altiplano streams with low richness of
+macroinvertebrates and large diel fluctuations in temperature and dissolved oxygen.
+Aquatic Ecology, 42, 643–656. https://doi.org/10.1007/s10452-007-9127-x
 
 Lemus-Portillo, C., Echavarria-Pedraza, M. C., Rojas, J. E., Alvarez-Diaz, J. E.,
 León-Pardo, K. J., Aguilar-Orjuela, S., & Maldonado, J. F. (2020). Estado de conservación
 y distribución del pez de agua dulce Capitán de la Sabana Eremophilus mutisii 
 en Cundinamarca, Colombia. Actualidades Biológicas, 42(112).  
+
+Lecerf A, Usseglio-Polatera P, Charcosset JY, Lambrigot D, Bracht B, Chauvet E. 2006. 
+Assessment of functional integrity of eutrophic streams using litter breakdown and 
+benthic macroinvertebrates. Archiv fur Hydrobiologie 165: 105–126.
+
+Meneses-Campo, Y., Castro-Rebolledo, M. I., & Jaramillo-Londoño, A. M. (2019).
+Comparación de la calidad del agua en dos ríos altoandinos mediante el uso de los 
+índices bmwp/col. y ABI. Acta Biológica Colombiana, 24(2), 299–310.
+
+Melo AS. 2005. Effects of taxonomic and numeric resolution on the ability to 
+detect ecological patterns at a local scale using stream
+macroinvertebrates. Archiv fur Hydrobiologie 164: 309–323.
 
 Metcalfe, J. L. (1989). Biological water quality assessment of running waters 
 based on macroinvertebrate communities: History and present status in Europe. 
@@ -684,15 +820,23 @@ Motta Díaz, A. J., Longo, M., & Aranguren-Riaño, N. (2020). Variación tempora
 diversidad taxonómica y rasgos funcionales de los macroinvertebrados acuáticos en ríos
 temporales en la isla de Providencia, Colombia. Actualidades Biológicas, 39(107), 82-100.  
 
-Statzner, B., Bady, P., Dolédec, S., & Schöll, F. (2005). Invertebrate traits for the
-biomonitoring of large European rivers: An initial assessment of trait patterns in least
-impacted river reaches. Freshwater Biology, 50(12), 2136-2161.  
-
 Pinilla, G. (2010). An index of limnological conditions for urban wetlands of 
 Bogotá city, Colombia. Ecological Indicators, 10(4), 848–856. https://doi.org/10.1016/j.ecolind.2010.01.006  
 
 R Core Team (2020). R: A language and environment for statistical computing.
 R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
+
+Ríos-Touma, B., Acosta, R., & Prat, N. (2014). The Andean Biotic Index (ABI):
+Revised tolerance to pollution values for macroinvertebrate families and index 
+performance evaluation. Revista de Biología Tropical, 62, 249–273.
+
+Saito, V. S., Siqueira, T., & Fonseca-Gessner, A. A. (2015). Should phylogenetic 
+and functional diversity metrics compose macroinvertebrate multimetric indices 
+for stream biomonitoring?. Hydrobiologia, 745(1), 167-179.
+
+Statzner, B., Bady, P., Dolédec, S., & Schöll, F. (2005). Invertebrate traits for the
+biomonitoring of large European rivers: An initial assessment of trait patterns in least
+impacted river reaches. Freshwater Biology, 50(12), 2136-2161.  
 
 Tomanova, S., Moya, N., & Oberdorff, T. (2008). Using macroinvertebrate biological traits
 for assessing biotic integrity of neotropical streams. River Research and Applications,
@@ -703,11 +847,28 @@ Energía calórica, biomasa y estructura de los macroinvertebrados acuáticos en
 La Nitrera, Concordia, Antioquia, Colombia. Acta Biológica Colombiana, 25(1), 29-36.  
 
 Torres-Zambrano, N. N., & Torres-Zambrano, D. R. (2016). Macroinvertebrados acuáticos
-de la quebrada Los Alisos, Firavitoba—Boyacá. Intropica, 11, 47-56.  
+de la quebrada Los Alisos, Firavitoba—Boyacá. Intropica, 11, 47-56
+
+Turcotte, P., and Harper, P.P. (1982). Drift patterns in a high Andean stream.
+Hydrobiologia 89, 141–151.
 
 Usseglio‐Polatera, P. (1994). Theoretical habitat templets, species traits, and
 species richness: Aquatic insects in the Upper Rhône River and its floodplain.
 Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.tb01749.x  
+
+Usseglio-Polatera P, Beisel JN. (2002). Longitudinal changes in macroinvertebrate
+assemblages in the Meuse river: anthropogenic effects versus
+natural change. River Research and Applications 18: 197–211.
+
+Usseglio-Polatera P, Bournaud M, Richoux P, Tachet H. (2000). 
+Biomonitoring through biological traits of benthic macroinvertebrates: how to use
+
+Sánchez, D. A. V., & Pinilla, G. A. (2020). Aproximación preliminar a un índice
+multimétrico de macroinvertebrados (IMARBO) para evaluar el estado ecológico de
+ríos de las cuencas alta y media del río Chicamocha en Boyacá, Colombia. 
+Gestión y Ambiente, 23(1), 3-4.
+
+Ward, J.V. (1994). Ecology of alpine streams. Freshwater Biology 32, 277–294.
 
 
 ## Anexos
@@ -716,7 +877,7 @@ Freshwater Biology, 31(3), 417–437. https://doi.org/10.1111/j.1365-2427.1994.t
 \blandscape
 
 ```{r rasgos }
-rasgos_func <- read.csv("../Data/rlq/QTable.csv")
+rasgos_func <- read.csv("../Data/rlq/QTable.csv", check.names = FALSE)
 rasgos <-  c("A) Tipo Alimento", 
              "B) Habitos Alimenticios", 
              "C) Respiracion",
@@ -728,7 +889,7 @@ rasgos_func %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
         Anexo 1. Clasificación de los rasgos funcionales  basados en 
         la metodologia del Fuzzy Code para las familias de 
-        macroinvertebrados presentes en los rios de la Sabana 
+        macroinvertebrados presentes en los ríos de la Sabana 
         de Bogotá.") %>%
      kable_styling(latex_options="scale_down") %>%
      add_header_above(c("",
