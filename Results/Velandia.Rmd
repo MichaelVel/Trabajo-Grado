@@ -1,7 +1,7 @@
 ---
 title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
-date: "26/05/2021"
+date: "4/08/2021"
 fontsize: 12pt
 header-includes:
 - \usepackage{pdflscape}
@@ -724,6 +724,31 @@ en índices multimetricos de biomonitoreo  (Saito et al., 2014).
 
 
 ## Conclusiones
+
+En los ríos Frío y Neusa fue posible identificar cuatro zonas con diferencias en
+sus características físicoquímicas, el curso alto del río neusa presenta aguas
+bien oxigenadas, claras y con una alta conductividad; el curso bajo del río neusa
+también presenta una buena oxigenación, aguas un poco más turbias y una baja
+conductividad; las aguas del río Frío a la altura del municipio de Cajicá presenta
+aguas con una baja concentración de oxígeno, turbias y con una conductividad
+relativamente baja; y el cauce del río Frío en el área urbana de Chía presenta
+concentraciones muy bajas de oxígeno, una alta conductividad y un pH ácido.
+
+Las estructura de las comunidades por su parte muestra que las comunidades de los
+macroinvertebrados variaron entre los dos ríos, cambiando su fauna dominante, y
+las familias presentes. En el río Neusa no hay mayores diferencias entre las
+comunidades río arriba y río abajo de la represa. El río Frío por su parte si
+presenta diferencias entre las estaciones ubicadas en Cajicá y la estación que se
+encuentra en el municipio de Chía, teniendo esta última una muy baja riqueza de
+familias.
+
+Es posible establecer la existencia de una relación entre Los rasgos funcionales
+de las comunidades de macroinvertebrados y el gradiente ambiental observado, sin
+embargo estas relaciones son débiles, puesto que en general no presentan una
+correlación con las variables medioambientales medidas . El presente trabajo
+representa una primera aproximación para el estudio de la diversidad funcional
+en los ríos de la Sabana de Bogotá, siendo necesarios nuevos estudios a nivel
+de Género que contribuyan a profundizar en el tema.
 
 
 \newpage
