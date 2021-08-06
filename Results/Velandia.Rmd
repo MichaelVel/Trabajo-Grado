@@ -1,5 +1,5 @@
 ---
-title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como varibles indicadoras de calidad en dos ríos de la sabana de Bogotá"
+title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como variables indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
 date: "4/08/2021"
 fontsize: 12pt
@@ -10,9 +10,9 @@ header-includes:
 - \usepackage{caption}
 - \captionsetup[figure]{font=small}
 output:
-  pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
+  pdf_document: default
 always_allow_html: true
 ---
 
@@ -138,13 +138,20 @@ data  <- read.csv("../Data/other/rasgos_funcionales_tabla.csv",
                   check.names = FALSE)
 doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
 
-  data %>%
-    kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Categorias de los Rasgos Funcionales. Tomado y modificado de 
-        Tomanova et al. (2008) ") %>%
-    collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
-    kable_styling(full_width = FALSE)
+table_pdf <- expression(
+    data %>%
+        kbl(booktabs = TRUE, escape = FALSE, caption = "
+            Categorias de los Rasgos Funcionales. Tomado y modificado de 
+            Tomanova et al. (2008) ") %>%
+        collapse_rows(columns = 1, valign = "middle", latex_hline = "major") %>% 
+        kable_styling(full_width = FALSE)
+)
 
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
 
 ```
 
@@ -218,8 +225,9 @@ summary_data <- (function () {
 })()
 
 
-  summary_data %>%
-      kbl(booktabs = TRUE, escape = FALSE, 
+table_pdf <- expression(
+summary_data %>%
+     kbl(booktabs = TRUE, escape = FALSE, 
           caption = "Condiciones ambientales de los rios Neusa y Frio
                      en las estaciones trabajadas ",
           col.names = linebreak( c("Temperatura\n(C°)", 
@@ -229,8 +237,14 @@ summary_data <- (function () {
                                    "Altitud\n(msnm)"), 
                                  align = "c")) %>% 
       kable_styling(latex_options="scale_down") %>%
-      pack_rows(index=c("Rio Frío" = 5, "Rio Neusa" = 6))
-    
+      pack_rows(index=c("Rio Frío" = 5, "Rio Neusa" = 6))   
+)
+
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
 
 ```
 
@@ -445,11 +459,20 @@ abundance_table <- abundance_metrics(data) %>%
            Hemiptera, Hirudinea, Turbellaria, Oligochaeta) %>%
     round(digits = 2)
 
+
+table_pdf <- expression(
 abundance_table %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
         Abundancia relativa de los ordenes presentes en las estaciones 
       muestreadas del río Frío y el río Neusa. ") %>%
-     kable_styling(latex_options="scale_down")
+     kable_styling(latex_options="scale_down")   
+)
+
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
 
 ```
 
@@ -910,6 +933,8 @@ rasgos <-  c("A) Tipo Alimento",
              "E) Movilidad",
              "F) Tamaño Maximo")
 
+
+table_pdf <- expression(
 rasgos_func %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
         Anexo 1. Clasificación de los rasgos funcionales  basados en 
@@ -923,7 +948,14 @@ rasgos_func %>%
                       "Respiracion" = 4,
                       "Forma Corporal" = 4, 
                       "Movilidad" = 6,
-                      "Tamaño Maximo" = 5))
+                      "Tamaño Maximo" = 5))   
+)
+
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
 
 ```
 \elandscape
@@ -1021,14 +1053,24 @@ f4c_envir <- f4c_envir %>%
 ```{r fourthcorner2, message= FALSE, warning= FALSE }
 res_4c <- rbind(f4c_traits, f4c_envir)
 
-res_4c %>%
+
+
+table_pdf <- expression(
+ res_4c %>%
       kbl(booktabs = TRUE, escape = FALSE,
           caption = "Anexo 4: Resultados del Analisis Fourthcorner de las correlaciones
                      (Pearson) entre el primer eje del plano factorial RLQ y los
                       rasgos funcionales y las variables ambientales.
                       Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 ") %>%
       kableExtra::group_rows("Traits", 1, 30) %>%
-      kableExtra::group_rows("Enviromental", 31, 35)
+      kableExtra::group_rows("Enviromental", 31, 35)  
+)
+
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
 
 ```
 

@@ -9,6 +9,7 @@ library(patchwork)
 library(Hotelling)
 library(gridExtra)
 library(tidyverse)
+library(ggrepel)
 
 ## Load data
 
@@ -313,13 +314,8 @@ make_cluster <- function(data, parameters = NULL) {
                         dist() 
     
     cluster <-  hclust(distance_matrix, method = "average")
-    
-    dendogram <- fviz_dend(cluster, k = 4, main = "", palette = 'futurama') +
-                geom_hline(yintercept = 1.8, linetype = "dashed", colour = 'blue')
-    
-    results <- list(hc = cluster, dendogram = dendogram)
-    
-    return(results)
+
+    return(cluster)
  
 } 
 

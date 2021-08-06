@@ -40,7 +40,7 @@ siendo una de los taxones dominante en las comunidades.
 Al observarse los indices de diversidad de Shannon y Simpson (Fig3 B), se observa
 que las estaciones presentan valores cercanos, sin que se vea una clara  relación
 con el analisis de cluster de las variables fisicoquimicas, y con el gradiente
-ambiental observado (Fig 2 A y B). Ampliar con Bibliografia
+ambiental observado (Fig 2 A y B). 
 
 El analisis de diversidad beta (Fig 3A), muestra que las comunidades de macroinvertebrados
 de ambos rios son diferentes, con la excepción de la estación Fri5 que tiene 
@@ -53,17 +53,26 @@ valores más altos en esta estación respecto a las demas del rio frio, el bajo
 numero de familias e individuos por muestreo, indican que esta estación
 presenta una muy baja diversidad. 
 
-
 ## Respuesta funcional 
 
-Como se ve en el analisis RLQ (Fig 4B), Los organismos colectores-recolectores no tienen
-una relación fuerte con ninguna de las variables medioambientales, siendo ademas
-muy abundantes en todas las estaciones (Chironomidae en el rio Neusa y
+Cuando se habla de organización funcional de una comunidad, uno de los rasgos 
+mejor estudiados de las comunidades de macroinvertibradas son los  grupos funcionales
+de alimentación (FFG), siendo a menudo utilizados en el monitoreo ambiental de la 
+calidad de las aguas (Tomanova et al., 2006; Pinilla; Vera-Sanchez y Pinilla, 2020).
+Si bien, en el presente trabajo no fue posible establecer correlaciónes significativas
+entre las variables medioambientales y la mayoria de las  categorias de los 
+rasgos funcionales (Anexo4), vale la pena mencionar algunas tendencias observadas
+en los FFG de las comunidades trabajadas. 
+
+Como se ve en el analisis RLQ (Fig 4B), Los organismos colectores-recolectores no
+tienen una relación fuerte con ninguna de las variables medioambientales, siendo
+ademas muy abundantes en todas las estaciones (Chironomidae en el rio Neusa y
 Hyallelidae en el rio Frio). Los organismos colectores-recolectores han sido
 relacionados con sitios contaminados en rios tropicales de tierras bajas, asi 
-como en rios de zonas templadas (Lecerf et al., 2006, Tomanova et al., 2006: 
-Usseglio-Polatera y Beisel, 2002), sin embargo en rios tropicales de alta montaña
-se consideran organismos bastante frecuentes (Dudgeon, 2008), por lo cual no es
+como en rios de zonas templadas (Usseglio-Polatera y Beisel, 2002; Lecerf et al., 
+2006, Tomanova et al., 2008), pese a esto, en rios tropicales de alta montaña
+se consideran organismos bastante frecuentes usualmente representando una gran
+parte de las comunidades de macroinvetebrados (Dudgeon, 2008), por lo cual no es
 extraño encontrarlos a lo largo de todo el gradiente ambiental.
 
 Existe una tendencia en los rios tropicales de alta montaña a una alta diversidad
@@ -72,26 +81,25 @@ los rios frio y neusa, donde las familias predadoras representan aproximadamente
 un 37% del total de familias encontradas. Los organismos trituradores fueron en 
 general poco abundantes y poco diversos en la mayoria de las estaciones, siguiendo
 un patron que se ha observado en las aguas tropicales en general (Dudgeon, 2008), 
-sin embargo en la estación Frio4, son un poco ̧más frecuentes, posiblemente 
+sin embargo en la estación Frio4, son un poco más frecuentes, posiblemente 
 relacionado con la hojarasca producida por  la vegetación aledaña al rio
-(principalmente Eucaliptos), muy abundante en esta estacíón. 
+(principalmente Eucaliptos), muy abundante en esta estación. 
 
-La mayor parte de las categorias de los grupos funcionales, no presentan correlación
-significativa con el eje principal del analisis RLQ (Anexo4), siendo excepciones
-los organismos raspadores asociados a las aguas limpias y bien oxigenadas del rio Frio,
-y los organismos con una forma corporal cilindrica, muy abundantes en las aguas turbias y poco oxigenadas
-del rio frio. 
+Debido a la falta de información a nivel taxonomico y ecologico de los macroinvertebrados 
+de las aguas neotropicales, el metodo 'fuzzy coding' ha permitido el desarrollo 
+de herramientas de biomonitoreo a nivel de familia que permiten  evaluar los 
+patrones de cambio de la diversidad funcional a lo largo de gradientes de contaminación
+ambiental (Usseglio-Polatera et al., 2000; Tomanova et al., 2008). Si bien, este 
+nivel de resolución taxonomica ha demostrado ser una buena alternativa a el uso
+de las especies en estudios de ecologia tropical (Melo, 2005), la alta diversidad 
+ecologica y fisiologica que presentan familias como Chironomidae, pueden limitar 
+este enfoque en los estudios de diversidad funcional. 
+
+Nuevos estudios a nivel de genero en las comunidades de macroinvertebrados de 
+los rios de la Sabana de Bogotá pueden permitir el desarrollo de alternativas al
+'fuzzy coding' como la presentada por Colzani et al. (2013) basada tambien en 
+categorias, pero que permite el calculo de indices funcionales como la riqueza, 
+la igualdad o la divergencia funcional. Estos indices pueden ser facilmente integrados
+en indices multimetricos de biomonitoreo  (Saito et al., 2014). 
 
 
-
-
-
-    
-    Rasgos que muestran una respuesta al gradiente ambiental. sugerir otros
-    rasgos que podrian ser de utilidad.
-    
-    Las respuestas funcionales muestran una historia diferente a la que 
-    muestran los indices bioticos. Posibles causas. 
-
-    Comparacion y Critica a tomanova2008 = Utilidad de el fuzzy code para el analisis de 
-    calidad del agua. Que otros metodos se han utilizado 

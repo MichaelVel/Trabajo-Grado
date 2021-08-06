@@ -49,5 +49,33 @@ plot_est <-  function(data) { ## Function to be passed to the document
 }
 
 
-
+parse_table <- function(doc.type = NULL, latex = NULL, docx = NULL, html = NULL) {
+  
+  if (is.null(doc.type)) {
+      doc.type <- knitr::opts_knit$get('rmarkdown.pandoc.to')
+  }
+  
+  if (doc.type == "latex") {
+      if (!is.null(latex)) { 
+          return(eval(expr = latex))
+    }  
+  } 
+  
+  if (doc.type == "docx") {
+      if (!is.null(docx)) {  
+          return(eval(expr = docx))        
+    }  
+  } 
+  
+  if (doc.type == "html") {
+      if (!is.null(html)) {
+          return(eval(expr = html))
+    }
+  }
+  
+  else {
+      return(invisible())
+  }
+  
+}
 
