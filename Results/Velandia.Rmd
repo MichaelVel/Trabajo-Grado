@@ -421,6 +421,7 @@ data_discussion2 <- RLQ$Q_table[c("Chironomidae", "Simuliidae", "Hyalellidae",
                           "Physidae", "Sphaeriidae", "Naididae" ),] %>%
   t() %>% 
   as.data.frame()
+
 # Working in beta diversity
 
 distance_matrix <- read.csv("../Data/other/abundancia_orden.csv") %>% 
@@ -460,24 +461,22 @@ dendogram +
 
 
 ```{r ab_table, fig.height= 3, fig.width= 6, fig.align='center'}
-data <- read.csv("../Data/other/abundancia_orden.csv") %>% 
+data <- RLQ$L_table %>% 
     select(-Muestra)
 
 abundance_table <- abundance_metrics(data) %>%
     rownames_to_column() %>%
-    mutate(EPT = Ephemeroptera + Trichoptera,
-           Turbellaria = Tricladida) %>%
     column_to_rownames() %>%
-    select(EPT, Diptera, Amphipoda, Bivalvia, Gastropoda, 
-           Hemiptera, Hirudinea, Turbellaria, Oligochaeta) %>%
+    select(Chironomidae, Simuliidae, Hyalellidae,
+           Physidae, Sphaeriidae, Naididae) %>%
     round(digits = 2)
 
 
 table_pdf <- expression(
 abundance_table %>%
   kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Abundancia relativa de los ordenes presentes en las estaciones 
-      muestreadas del río Frío y el río Neusa. ") %>%
+        Abundancia relativa de las familias presentes en las estaciones 
+      muestreadas del río Frío y el río Neusa.") %>%
      kable_styling(latex_options="scale_down")   
 )
 
@@ -1007,14 +1006,7 @@ box_plots <-  univariate_graphical_eda(data = complete, type_plot = 'boxplot')
 
 
 
-### Anexo 3
-
-Resultados del análisis de varianza multivariado de los grupos generados por el 
-análisis de cluster. El análisis post hoc incluyo multiples tests de hotelling 
-entre los pares de grupos. 
-
-
-```{r manova,  message=FALSE, warning=FALSE}
+```{r manova,  message=FALSE, warning=FALSE, eval=FALSE}
 results_manova <- list(
 Global =  make_manova(data = complete, global = TRUE),
 NeuA_NeuB  = make_manova(data = complete, est1 = "NeusaA", est2 = "NeusaB"),
@@ -1074,6 +1066,8 @@ f4c_envir <- f4c_envir %>%
 ```{r fourthcorner2, message= FALSE, warning= FALSE }
 res_4c <- rbind(f4c_traits, f4c_envir)
 
+res_4c <- as.data.frame(apply(res_4c, 2, 
+      function(x) gsub("(?<=\\d\\.\\d{2}).*", '', x, perl = T)))
 
 
 table_pdf <- expression(
