@@ -1,20 +1,29 @@
 ---
 title: "Selección de Rasgos Funcionales de las comunidades de macroinvertebrados para su uso como variables indicadoras de calidad en dos ríos de la sabana de Bogotá"
 author: "Michael Sebastián Velandia Garavito"
-date: "4/08/2021"
-fontsize: 12pt
+lang: es
 header-includes:
-- \usepackage{pdflscape}
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
 - \usepackage{caption}
 - \captionsetup[figure]{font=small}
 output:
-  word_document: default
+  pdf_document: 
+    template: eisvogel.latex
+    toc: true
+    toc_depth: 3
+    includes:
+      before_body: "cover.tex"
   html_document: default
-  pdf_document: default
+  word_document: default
 always_allow_html: true
+header-left: "\\ "
+header-right: "\\ "
+footer-left:  "\\ "
 ---
+
+
+\newpage
 
 ```{r setup, include=FALSE}
 
@@ -196,10 +205,10 @@ zona urbana de Chía se separan en otro grupo (FríoA). En el río Neusa las est
 antes del embalse del Neusa (NeusaA) se diferencian fisicoquímicamente de aquellas
 después del reservorio (NeusaB). Los resultados del MANOVA y del análisis *post hoc*
 entre estos cuatro grupos indica que existen diferencias significativas 
-entre ellos (Anexo 3).
+entre ellos.
 
 Las características hidrológicas (profundidad media y velocidad de la corriente) 
-de los ríos no variaron en gran medida entre las estaciones (Tabla 2 y Anexo 2)
+de los ríos no variaron en gran medida entre las estaciones (Tabla 2 y Anexo 1)
 y por lo tanto aportaron poco al gradiente ambiental, por lo que se excluyeron 
 de los análisis posteriores. 
 
@@ -279,7 +288,7 @@ conductividad también tuvo un comportamiento diferencial entre los ríos. En el
 caso del río Neusa, las estaciones anteriores a la represa (Neusa A) obtuvieron
 registros más elevados que los de las estaciones posteriores a la represa (Neusa B).
 Sin embargo, cabe resaltar que en las estaciones del grupo Neusa A, la 
-variabilidad entre muestreos fue mucho más elevada (Anexo 2) que en el resto de 
+variabilidad entre muestreos fue mucho más elevada (Anexo 1) que en el resto de 
 sitios; al parecer, esta alta conductividad podría deberse a diferencias entre 
 los períodos de muestreo. En el río Frío el gradiente de conductividad fue el 
 esperado, sin muchas diferencias entre las estaciones río arriba (Frío B) y una 
@@ -330,7 +339,7 @@ custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
 
 ### Indices bioticos 
 
-#### Diversidad 
+#### Diversidad: 
 
 La diversidad alfa de las estaciones muestreadas fue similar en ambos ríos, y en
 general no mostró relación con el gradiente ambiental establecido (Fig 3B). Salvo
@@ -353,7 +362,7 @@ la encontrada en las estaciones del río Neusa (Fig 3A). Sin embargo, al ver los
 clústeres que forman estos ríos, no se vio un patrón consistente con el gradiente
 ambiental detectado (Fig 2A).
 
-#### Bioindicadores
+#### Bioindicadores:
 
 Los valores del índice BMWP/Col mostraron valores relativamente altos que indican
 aguas aceptables con un ligero nivel de contaminación, a excepción de las estaciones
@@ -497,7 +506,7 @@ en las tablas de condiciones ambientales (R) y de rasgos funcionales (Q).
 
 El análisis ‘fourthcorner’ reveló que existen correlaciones significativas 
 (p = 0,05) entre la temperatura, la turbidez y el oxígeno disuelto con el primer
-eje del plano factorial (Anexo 4), lo cual confirma las tendencias observadas
+eje del plano factorial (Anexo 3), lo cual confirma las tendencias observadas
 en el PCA.
 
 Cuando en el plano factorial aumenta el oxígeno disuelto y disminuye la turbidez,
@@ -648,7 +657,7 @@ con el hallazgo de correlaciones negativas (p = 0,5) entre el primer eje del pla
 factorial y los organismos que se alimentan de algas (Miph) o presentan formas
 esféricas (SPH), así como correlaciones positivas cuando los organismos son 
 trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medio 
-(Anexo 4).
+(Anexo 3).
 
 ## Discusión
 
@@ -716,7 +725,7 @@ alimentación (FFG), que se utilizan a menudo en el monitoreo ambiental de la
 calidad del agua (Tomanova *et al*., 2008; Pinilla, 2010; Vera-Sánchez y Pinilla,
 2020). En el presente trabajo no fue posible establecer correlaciones significativas 
 entre las variables medioambientales y la mayoría de las categorías de los rasgos 
-funcionales (Anexo 4), pero vale la pena mencionar algunas tendencias observadas 
+funcionales (Anexo 3), pero vale la pena mencionar algunas tendencias observadas 
 en los FFG de las comunidades trabajadas. Como se vio en el análisis RLQ (Fig 4B),
 los organismos colectores-recolectores no tuvieron una relación fuerte con ninguna
 de las variables medioambientales, aunque fueron muy abundantes en todas las estaciones
@@ -784,15 +793,6 @@ de la diversidad funcional en los ríos de la Sabana de Bogotá, y muestra que e
 necesario abordar nuevos estudios a nivel de género que contribuyan a profundizar 
 en el tema.
 
-## Agradecimientos
-
-El autor agradece al Centro de Estudios en Hidrobiología de la Universidad Manuela 
-Beltrán (CEH-UMB) y en especial al profesor Ciromar Lemus, quien facilitó el acceso
-a las muestras de macroinvertebrados para su análisis y aportó la información de 
-las variables fisicoquímicas medidas in situ. También se agradece a la Universidad
-Nacional de Colombia, a la Facultad de Ciencias y al Departamento de Biología 
-por el apoyo logístico para el uso del estereoscopio empleado para la identificación 
-de los especímenes.
 
 \newpage
 
@@ -938,58 +938,10 @@ Gestión y Ambiente, 23(1), 3-4.
 
 Ward, J.V. (1994). Ecology of alpine streams. Freshwater Biology 32, 277–294.
 
-
+\newpage
 ## Anexos
 
-\newpage
-\blandscape
-
-```{r rasgos }
-rasgos_func <- read.csv("../Data/rlq/QTable.csv", check.names = FALSE)
-rasgos <-  c("A) Tipo Alimento", 
-             "B) Habitos Alimenticios", 
-             "C) Respiracion",
-             "D) Forma Corporal", 
-             "E) Movilidad",
-             "F) Tamaño Maximo")
-
-
-table_pdf <- expression(
-rasgos_func %>%
-  kbl(booktabs = TRUE, escape = FALSE, caption = "
-        Anexo 1. Clasificación de los rasgos funcionales  basados en 
-        la metodologia del Fuzzy Code para las familias de 
-        macroinvertebrados presentes en los ríos de la Sabana 
-        de Bogotá.") %>%
-     kable_styling(latex_options="scale_down") %>%
-     add_header_above(c("",
-                      "Tipo Alimento" = 6, 
-                      "Habitos Alimenticios" = 5, 
-                      "Respiracion" = 4,
-                      "Forma Corporal" = 4, 
-                      "Movilidad" = 6,
-                      "Tamaño Maximo" = 5))   
-)
-
-table_word <- expression(
-    NULL
-)
-
-parse_table(latex = table_pdf, docx = table_word)
-
-```
-\elandscape
-
-\newpage
-
-### Anexo 2
-
-El análisis univariado de las variables fisicoquimicas e hidrologicas. En las 
-figuras se observan los diagramas de caja que corresponde a un análisis descriptivo
-de las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan 
-las variables a una distribución normal.  
-
-```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 9, fig.width= 9, fig.align='center'}
+```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 8, fig.width= 9, fig.align='center', fig.cap= 'Anexo 1. El análisis univariado de las variables fisicoquimicas e hidrologicas. En las figuras se observan los diagramas de caja que corresponde a un análisis descriptivode las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan las variables a una distribución normal. '}
 
 box_plots <-  univariate_graphical_eda(data = complete, type_plot = 'boxplot')
 
@@ -1027,6 +979,46 @@ FrioA_FrioB =  make_manova(data = complete, est1 = "FrioA", est2 = "FrioB")
  }
 
 ```
+
+
+\blandscape
+
+```{r rasgos }
+rasgos_func <- read.csv("../Data/rlq/QTable.csv", check.names = FALSE)
+rasgos <-  c("A) Tipo Alimento", 
+             "B) Habitos Alimenticios", 
+             "C) Respiracion",
+             "D) Forma Corporal", 
+             "E) Movilidad",
+             "F) Tamaño Maximo")
+
+
+table_pdf <- expression(
+rasgos_func %>%
+  kbl(booktabs = TRUE, escape = FALSE, caption = "
+        Anexo 2. Clasificación de los rasgos funcionales  basados en 
+        la metodologia del Fuzzy Code para las familias de 
+        macroinvertebrados presentes en los ríos de la Sabana 
+        de Bogotá.") %>%
+     kable_styling(latex_options="scale_down") %>%
+     add_header_above(c("",
+                      "Tipo Alimento" = 6, 
+                      "Habitos Alimenticios" = 5, 
+                      "Respiracion" = 4,
+                      "Forma Corporal" = 4, 
+                      "Movilidad" = 6,
+                      "Tamaño Maximo" = 5))   
+)
+
+table_word <- expression(
+    NULL
+)
+
+parse_table(latex = table_pdf, docx = table_word)
+
+```
+\elandscape
+\newpage
 
 
 ```{r fourthcorner1, message= FALSE, warning= FALSE, include= FALSE, cache= FALSE}
@@ -1073,7 +1065,7 @@ res_4c <- as.data.frame(apply(res_4c, 2,
 table_pdf <- expression(
  res_4c %>%
       kbl(booktabs = TRUE, escape = FALSE,
-          caption = "Anexo 4: Resultados del Analisis Fourthcorner de las correlaciones
+          caption = " Anexo 3. Resultados del Analisis Fourthcorner de las correlaciones
                      (Pearson) entre el primer eje del plano factorial RLQ y los
                       rasgos funcionales y las variables ambientales.
                       Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 ") %>%
