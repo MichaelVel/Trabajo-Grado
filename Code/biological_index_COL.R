@@ -6,7 +6,7 @@ library(vegan)
 
 SCORES <-list(
 
-        BMWP <- list(
+        BMWP = list(
        
             "Tubificidae" = 1,
             "Naididae" = 1,
@@ -113,7 +113,7 @@ SCORES <-list(
             "Polythoridae" = 10, 
             "Psephenidae" = 10
     ),
-        IBF_ad <-list(  
+        IBF_ad = list(  
 
             "Glossiphoniidae" = 7,
             "Tubificidae" = 9,
@@ -194,7 +194,7 @@ SCORES <-list(
             "Lumbricidae" = 8
     ),
         
-    IBF  <- list(
+    IBF  = list(
 
               "Ameletidae" = 0,
               "Baetidae" = 5,
