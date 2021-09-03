@@ -7,6 +7,8 @@ header-includes:
 - \newcommand{\elandscape}{\end{landscape}}
 - \usepackage{caption}
 - \captionsetup[figure]{font=small}
+- \usepackage{booktabs}
+- \usepackage{sectsty} \sectionfont{\centering}
 output:
   pdf_document: 
     template: eisvogel.latex
@@ -53,7 +55,63 @@ complete <- read.csv("../Data/muestreo_completo.csv",
 
 ```
 
-## Introducción
+
+# RESUMEN 
+
+En el área de la bioindicación, los rasgos funcionales han ganado cada vez más
+relevancia gracias a su relación clave con el funcionamiento de los ecosistemas.
+En Colombia existen pocos estudios que aborden el tema, la mayoría de ellos en
+tierras bajas. El objetivo del trabajo fue evaluar la respuesta de los rasgos 
+funcionales de las comunidades de macroinvertebrados de ríos de la sabana de 
+Bogotá a la variación en la calidad del agua y compararla con la respuesta de
+indices bióticos conocidos. Se muestrearon macroinvertebrados de 11 estaciones
+ubicadas en los ríos Frío y Neusa en el departamento de Cundinamarca, Colombia.
+Se calcularon indices de diversidad (Shannon y Simpson) e indices bióticos 
+(BMWP-Col, ASPT y FBI). Para la evaluación de la respuesta funcional al gradiente
+ambiental se seleccionaron 30 categorías de  seis rasgos funcionales (a nivel de
+familia) y se realizó un análisis de co-inercia RLQ, complementado con un análisis 
+‘fourth corner’. Los resultados de los indices bioticos y de diversidad  no 
+muestran una buena respuesta al gradiente ambiental observado. En comparación 
+los resultados del análisis RLQ sugiere una relación mas clara  entre los rasgos 
+funcionales de los macroinvertebrados con el gradiente ambiental. El análisis 
+'fourth courner' sin embargo muestra que solo tres de las categorías presentan
+correlaciones significativas con el gradiente ambiental. El presente trabajo 
+soporta el potencial que tienen los rasgos funcionales como  complemento a los 
+indices tradicionales de bioindicación en los sistemas lóticos de la Sabana de
+Bogotá, sin embargo se sugieren nuevos estudios a nivel de  genero que 
+contribuyan a profundizar en el estudio de la diversidad funcional de estos
+sistemas.  
+
+**Palabras Claves**: Diversidad Funcional, Índices, Riqueza, Grupos Funcionales  
+\newpage
+
+# ABSTRACT 
+
+In Biomonitoring, functional traits have gained increasingly relevance because its
+link with the ecosystem functioning. In Colombia there are few studies that 
+address the topic, most of them in lowlands. The objective of the work was to 
+evaluate the response of the functional traits of macroinvertebrate communities 
+of streams in the 'Sabana de Bogotá' to the variation in water quality and 
+compare it with the response of known biotic indices. Macroinvertebrates were 
+sampled from 11 stations located in the 'Frio' and 'Neusa' rivers in the department
+of Cundinamarca, Colombia. Diversity Indices (Shannon and Simpson) and Biotic 
+Indices (BMWP-COL, ASPT and FBI) were calculated. For the evaluation of the 
+functional response to the environmental gradient, 30 categories of six functional
+traits (at family level) were selected and an combination of RLQ co-inertia analysis
+and 'Fourth Corner' analysis were performed. The results of biotic and diversity
+indications do not show a good response to the observed environmental gradient.
+In comparison, the results of the RLQ analysis suggests a clearer ratio between 
+the functional traits of the macroinvertebrates with the environmental gradient.
+The 'Fourth Courner' analysis however shows that only three of the categories 
+present significant correlations with the environmental gradient. The present 
+work supports the potential of functional traits as a complement to traditional
+biological index in the streams of the 'Sabana of Bogotá', however further studies 
+at genus level of functional diversity in these systems are needed.
+
+**Keywords**: Functional Diversity, Index, Richness, Functional Groups  
+\newpage
+
+# INTRODUCCIÓN
 
 Las condiciones ambientales de una gran cantidad de ríos en las áreas tropicales
 se ha deteriorado gradualmente a raíz del rápido crecimiento de las poblaciones 
@@ -107,9 +165,9 @@ una comparación con las mediciones obtenidas por los índices biológicos
 tradicionales.
 
 
-## Metodología  
+# METODOLOGÍA  
 
-### Área de estudio y muestreo 
+## Área de estudio y muestreo 
 
 Los macroinvertebrados utilizados provinieron de una serie de muestreos 
 realizados entrelos años 2017 y 2019 en 11 estaciones de muestreo ubicadas en 
@@ -130,14 +188,14 @@ plot_est(estaciones)
 
 ```
 
-### Índices ecológicos y de calidad del agua
+## Índices ecológicos y de calidad del agua
 
 Con base en la composición de invertebrados acuáticos se calcularon los índices
 de diversidad de Shannon-Weaver y de Simpson, así como los índices de calidad 
 del agua BMWP/Col y ASPT (“average score per taxón”) (Roldán, 2003) y el índice 
 biótico de familias (FBI) de Hilsenhoff (1987).
 
-### Rasgos Funcionales 
+## Rasgos Funcionales 
 
 Los organismos, pertenecientes a la colección de macroinvertebrados de la 
 Universidad Manuela Beltrán, se identificaron hasta Familia. Los rasgos 
@@ -177,7 +235,7 @@ parse_table(latex = table_pdf, docx = table_word)
 
 ```
 
-### Métodos numéricos y estadísticos
+## Métodos numéricos y estadísticos
 
 Con el fin de establecer el gradiente ambiental, se realizó un análisis de clúster
 y un análisis de componentes principales (PCA). Para establecer diferencias entre
@@ -191,9 +249,11 @@ se realizó un análisis *‘fourth corner’* (Dray y Legendre, 2008). Todos lo
 se hicieron con el software R versión 3.6.3 (R Core Team, 2020), utilizando 
 el paquete ade4 (Dray y Dufour, 2007).
 
-## Resultados
+\newpage  
 
-### Evaluación gradiente ambiental 
+# RESULTADOS
+
+## Evaluación gradiente ambiental 
 
 Las características medioambientales de las estaciones evaluadas se resumen en 
 la tabla 2. Los resultados del análisis de clúster muestran que las estaciones
@@ -337,9 +397,9 @@ custom_palette <- c("#FF6F00FF", "#C71000FF", "#008EA0FF", "#8A4198FF")
 
 ```
 
-### Indices bioticos 
+## Indices bioticos 
 
-#### Diversidad: 
+### Diversidad: 
 
 La diversidad alfa de las estaciones muestreadas fue similar en ambos ríos, y en
 general no mostró relación con el gradiente ambiental establecido (Fig 3B). Salvo
@@ -362,7 +422,7 @@ la encontrada en las estaciones del río Neusa (Fig 3A). Sin embargo, al ver los
 clústeres que forman estos ríos, no se vio un patrón consistente con el gradiente
 ambiental detectado (Fig 2A).
 
-#### Bioindicadores:
+### Bioindicadores:
 
 Los valores del índice BMWP/Col mostraron valores relativamente altos que indican
 aguas aceptables con un ligero nivel de contaminación, a excepción de las estaciones
@@ -497,7 +557,7 @@ parse_table(latex = table_pdf, docx = table_word)
 
 ```
 
-### Respuesta de los rasgos funcionales
+## Respuesta de los rasgos funcionales
 
 Las proyecciones de las categorías de cada rasgo funcional se proyectaron en el 
 plano factorial producido por el análisis RLQ (Fig 3), siendo el primer eje el 
@@ -659,9 +719,9 @@ esféricas (SPH), así como correlaciones positivas cuando los organismos son
 trituradores (SH), presentan formas cilíndricas (CYL) o son de tamaño medio 
 (Anexo 3).
 
-## Discusión
+# DISCUSIÓN
 
-### Estructura de las comunidades
+## Estructura de las comunidades
 
 Las comunidades de invertebrados que se encuentran en las estaciones de los ríos
 Neusa y Frío muestran variaciones en su composición, especialmente en términos de 
@@ -717,7 +777,7 @@ por muestreo en Fri5 indica que esta estación no fue especialmente diversa ni r
 en taxones de invertebrados.
 
 
-### Respuesta funcional
+## Respuesta funcional
 
 Cuando se habla de organización funcional de una comunidad, uno de los rasgos 
 mejor estudiados de los macroinvertebrados es el de los grupos funcionales de 
@@ -766,8 +826,9 @@ diversidad funcional, que permite el cálculo de otro tipo de índices funcional
 como la riqueza, la igualdad o la divergencia funcionales. Estos índices pueden 
 integrarse fácilmente en índices multimétricos de biomonitoreo (Saito *et al*., 2014).
 
+\newpage
 
-## Conclusiones
+# CONCLUSIONES
 
 En los ríos Frío y Neusa fue posible identificar cuatro zonas con diferencias en
 sus características fisicoquímicas. El curso alto del río Neusa presenta aguas
@@ -796,7 +857,7 @@ en el tema.
 
 \newpage
 
-## Bibliografía
+# REFERENCIAS
 
 Charvet, S., Kosmala, A., & Statzner, B. (1998). Biomonitoring through biological traits of
 benthic macroinvertebrates: Perspectives for a general tool in stream management.
@@ -939,7 +1000,7 @@ Gestión y Ambiente, 23(1), 3-4.
 Ward, J.V. (1994). Ecology of alpine streams. Freshwater Biology 32, 277–294.
 
 \newpage
-## Anexos
+# ANEXOS
 
 ```{r anexos_eda, message=FALSE, warning=FALSE, cache=FALSE,include = TRUE, echo = FALSE, fig.height= 8, fig.width= 9, fig.align='center', fig.cap= 'Anexo 1. El análisis univariado de las variables fisicoquimicas e hidrologicas. En las figuras se observan los diagramas de caja que corresponde a un análisis descriptivode las variables. Los gráficos cuantil-cuantil indican que tan bien se ajustan las variables a una distribución normal. '}
 
